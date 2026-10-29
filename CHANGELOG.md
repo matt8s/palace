@@ -27,6 +27,21 @@ See the [developer notes on schema versioning](https://awslabs.github.io/palace/
     gave a garbage element size and could randomly drop Floquet orders from the solve and
     the `port-floquet-S.csv` output.
     [PR 1091](https://github.com/awslabs/palace/pull/1091).
+  - Fixed the S-parameters of numeric wave ports with lossy port modes, for example with
+    `"Conductivity"` or `"Impedance"` boundaries on the port boundary, or lossy dielectrics:
+    a uniform lossy line was not matched to its ports (|S11| up to 0.45 for strongly lossy
+    microstrips) and its S-matrix was not passive. The wave port boundary condition and
+    excitation now use the complex propagation constant of the port mode, including its
+    attenuation, instead of its real part, and the S-parameters are the unconjugated
+    (reciprocity) projection of the field onto the port mode, under which lossy modes are
+    orthogonal, instead of the conjugated (power) projection. The port modes keep their unit
+    power normalization, with a phase such that their unconjugated reaction is real. The
+    characteristic impedance `Z_PV` of a lossy port mode is now complex, `|V|² / P*` with the
+    complex power `P` of the mode, consistent with the total-field impedance in `port-Z.csv`.
+    Results are unchanged for lossless port modes. Circuit synthesis still models the wave
+    port lines as lossless, and now warns when the attenuation of the port mode is not
+    negligible.
+    [Issue 1109](https://github.com/awslabs/palace/issues/1109).
 
 ## [0.19.0] - 2026-11-02
 
