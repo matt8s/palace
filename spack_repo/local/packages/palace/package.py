@@ -172,9 +172,11 @@ class Palace(CMakePackage, CudaPackage, ROCmPackage):
         depends_on("strumpack+openmp", when="+openmp")
         depends_on("strumpack~openmp", when="~openmp")
 
-    # BoomerAMG relaxation without the exchange of a zero initial guess, and for several
-    # right-hand sides at once (the superbuild patches in extern/patch/hypre). Kept off
-    # the `with` blocks so the Palace variants are not folded into the patch condition.
+    # BoomerAMG relaxation without the exchange of a zero initial guess and for several
+    # right-hand sides at once, and AMS solves with the coarse levels of its auxiliary
+    # space hierarchies gathered on fewer processes (the superbuild patches in
+    # extern/patch/hypre). Kept off the `with` blocks so the Palace variants are not
+    # folded into the patch condition.
     depends_on("hypre", when="@develop", patches=[patch("hypre-3.2.0.diff", when="@3.2.0")])
 
     conflicts("~arpack~slepc", msg="At least one eigenvalue solver is required")
