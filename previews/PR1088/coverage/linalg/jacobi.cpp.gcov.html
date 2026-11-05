@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-10-23 01:41:56</td>
+            <td class="headerValue">2026-11-05 18:04:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -82,18 +82,18 @@
 <span id="L12"><span class="lineNum">      12</span>              : namespace</span>
 <span id="L13"><span class="lineNum">      13</span>              : {</span>
 <span id="L14"><span class="lineNum">      14</span>              : </span>
-<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC tlaBgGNC">          73 : bool HasFiniteNonzeroDiagonal(MPI_Comm comm, const Vector &amp;real,</span></span>
+<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC tlaBgGNC">          33 : bool HasFiniteNonzeroDiagonal(MPI_Comm comm, const Vector &amp;real,</span></span>
 <span id="L16"><span class="lineNum">      16</span>              :                               const Vector *imag = nullptr)</span>
 <span id="L17"><span class="lineNum">      17</span>              : {</span>
-<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">          73 :   int valid = 1;</span></span>
-<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">          73 :   if (real.Size() &gt; 0)</span></span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">          33 :   int valid = 1;</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">          33 :   if (real.Size() &gt; 0)</span></span>
 <span id="L20"><span class="lineNum">      20</span>              :   {</span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">          72 :     const auto *R = real.HostRead();</span></span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">          72 :     const auto *I = imag ? imag-&gt;HostRead() : nullptr;</span></span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">        8766 :     for (int i = 0; i &lt; real.Size(); i++)</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">          33 :     const auto *R = real.HostRead();</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">          33 :     const auto *I = imag ? imag-&gt;HostRead() : nullptr;</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">         107 :     for (int i = 0; i &lt; real.Size(); i++)</span></span>
 <span id="L24"><span class="lineNum">      24</span>              :     {</span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">        8698 :       if (!(std::isfinite(R[i]) &amp;&amp; R[i] != 0.0) ||</span></span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">        1172 :           (I &amp;&amp; !(std::isfinite(I[i]) &amp;&amp; I[i] == 0.0)))</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">          78 :       if (!(std::isfinite(R[i]) &amp;&amp; R[i] != 0.0) ||</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">          34 :           (I &amp;&amp; !(std::isfinite(I[i]) &amp;&amp; I[i] == 0.0)))</span></span>
 <span id="L27"><span class="lineNum">      27</span>              :       {</span>
 <span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">           4 :         valid = 0;</span></span>
 <span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">           4 :         break;</span></span>
@@ -101,41 +101,41 @@
 <span id="L31"><span class="lineNum">      31</span>              :     }</span>
 <span id="L32"><span class="lineNum">      32</span>              :   }</span>
 <span id="L33"><span class="lineNum">      33</span>              :   Mpi::GlobalMin(1, &amp;valid, comm);</span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">          73 :   return valid;</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">          33 :   return valid;</span></span>
 <span id="L35"><span class="lineNum">      35</span>              : }</span>
 <span id="L36"><span class="lineNum">      36</span>              : </span>
-<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">          52 : double GetLambdaMax(MPI_Comm comm, const Operator &amp;A, const Vector &amp;dinv)</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">          18 : double GetLambdaMax(MPI_Comm comm, const Operator &amp;A, const Vector &amp;dinv)</span></span>
 <span id="L38"><span class="lineNum">      38</span>              : {</span>
 <span id="L39"><span class="lineNum">      39</span>              :   // D⁻¹A is generally not Hermitian. With Σ = sgn(D), it is similar to ΣS for the</span>
 <span id="L40"><span class="lineNum">      40</span>              :   // Hermitian S = |D|⁻¹ᐟ²A|D|⁻¹ᐟ², so ρ(D⁻¹A) ≤ ‖S‖₂, with equality when Σ commutes with S:</span>
 <span id="L41"><span class="lineNum">      41</span>              :   // for a diagonal of uniform sign (A definite of either sign), and for a negative definite</span>
 <span id="L42"><span class="lineNum">      42</span>              :   // A with essential DOFs eliminated using a unit diagonal.</span>
-<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">          61 :   MFEM_VERIFY(HasFiniteNonzeroDiagonal(comm, dinv),</span></span>
+<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">          27 :   MFEM_VERIFY(HasFiniteNonzeroDiagonal(comm, dinv),</span></span>
 <span id="L44"><span class="lineNum">      44</span>              :               &quot;Jacobi smoother spectral estimation requires a finite, nonzero operator &quot;</span>
 <span id="L45"><span class="lineNum">      45</span>              :               &quot;diagonal!&quot;);</span>
-<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">          49 :   Vector dinv_sqrt(dinv);</span></span>
-<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">          49 :   dinv_sqrt.Abs();</span></span>
-<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">          49 :   linalg::Sqrt(dinv_sqrt);</span></span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">          15 :   Vector dinv_sqrt(dinv);</span></span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">          15 :   dinv_sqrt.Abs();</span></span>
+<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">          15 :   linalg::Sqrt(dinv_sqrt);</span></span>
 <span id="L49"><span class="lineNum">      49</span>              :   DiagonalOperator DinvSqrt(dinv_sqrt);</span>
-<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">          49 :   ProductOperator ADinvSqrt(A, DinvSqrt);</span></span>
-<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">          49 :   ProductOperator S(DinvSqrt, ADinvSqrt);</span></span>
-<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">          98 :   return linalg::SpectralNorm(comm, S, true);</span></span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">          15 :   ProductOperator ADinvSqrt(A, DinvSqrt);</span></span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">          15 :   ProductOperator S(DinvSqrt, ADinvSqrt);</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">          30 :   return linalg::SpectralNorm(comm, S, true);</span></span>
 <span id="L53"><span class="lineNum">      53</span>              : }</span>
 <span id="L54"><span class="lineNum">      54</span>              : </span>
-<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">          21 : double GetLambdaMax(MPI_Comm comm, const ComplexOperator &amp;A, const ComplexVector &amp;dinv)</span></span>
+<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">          15 : double GetLambdaMax(MPI_Comm comm, const ComplexOperator &amp;A, const ComplexVector &amp;dinv)</span></span>
 <span id="L56"><span class="lineNum">      56</span>              : {</span>
-<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">          21 :   if (A.IsReal())</span></span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">          15 :   if (A.IsReal())</span></span>
 <span id="L58"><span class="lineNum">      58</span>              :   {</span>
-<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">          30 :     MFEM_VERIFY(HasFiniteNonzeroDiagonal(comm, dinv.Real(), &amp;dinv.Imag()),</span></span>
+<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">          24 :     MFEM_VERIFY(HasFiniteNonzeroDiagonal(comm, dinv.Real(), &amp;dinv.Imag()),</span></span>
 <span id="L60"><span class="lineNum">      60</span>              :                 &quot;Jacobi smoother spectral estimation requires a finite, nonzero real &quot;</span>
 <span id="L61"><span class="lineNum">      61</span>              :                 &quot;operator diagonal!&quot;);</span>
-<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">          18 :     ComplexVector dinv_sqrt(dinv);</span></span>
-<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">          18 :     dinv_sqrt.Real().Abs();</span></span>
-<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">          18 :     linalg::Sqrt(dinv_sqrt.Real());</span></span>
+<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">          12 :     ComplexVector dinv_sqrt(dinv);</span></span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">          12 :     dinv_sqrt.Real().Abs();</span></span>
+<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">          12 :     linalg::Sqrt(dinv_sqrt.Real());</span></span>
 <span id="L65"><span class="lineNum">      65</span>              :     ComplexDiagonalOperator DinvSqrt(dinv_sqrt);</span>
-<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">          18 :     ComplexProductOperator ADinvSqrt(A, DinvSqrt);</span></span>
-<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">          18 :     ComplexProductOperator S(DinvSqrt, ADinvSqrt);</span></span>
-<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">          18 :     return linalg::SpectralNorm(comm, S, true);</span></span>
+<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">          12 :     ComplexProductOperator ADinvSqrt(A, DinvSqrt);</span></span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">          12 :     ComplexProductOperator S(DinvSqrt, ADinvSqrt);</span></span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">          12 :     return linalg::SpectralNorm(comm, S, true);</span></span>
 <span id="L69"><span class="lineNum">      69</span>              :   }</span>
 <span id="L70"><span class="lineNum">      70</span>              :   ComplexDiagonalOperator Dinv(dinv);</span>
 <span id="L71"><span class="lineNum">      71</span> <span class="tlaUNC tlaBgUNC">           0 :   ComplexProductOperator DinvA(Dinv, A);</span></span>
@@ -143,15 +143,15 @@
 <span id="L73"><span class="lineNum">      73</span>              : }</span>
 <span id="L74"><span class="lineNum">      74</span>              : </span>
 <span id="L75"><span class="lineNum">      75</span>              : template &lt;bool Transpose = false&gt;</span>
-<span id="L76"><span class="lineNum">      76</span> <span class="tlaGNC tlaBgGNC">        7331 : inline void Apply(const Vector &amp;dinv, const Vector &amp;x, Vector &amp;y)</span></span>
+<span id="L76"><span class="lineNum">      76</span> <span class="tlaGNC tlaBgGNC">       30957 : inline void Apply(const Vector &amp;dinv, const Vector &amp;x, Vector &amp;y)</span></span>
 <span id="L77"><span class="lineNum">      77</span>              : {</span>
-<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">        7331 :   const bool use_dev = dinv.UseDevice() || x.UseDevice() || y.UseDevice();</span></span>
+<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">       30957 :   const bool use_dev = dinv.UseDevice() || x.UseDevice() || y.UseDevice();</span></span>
 <span id="L79"><span class="lineNum">      79</span>              :   const int N = dinv.Size();</span>
-<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">        7331 :   const auto *DI = dinv.Read(use_dev);</span></span>
-<span id="L81"><span class="lineNum">      81</span> <span class="tlaGNC">        7331 :   const auto *X = x.Read(use_dev);</span></span>
-<span id="L82"><span class="lineNum">      82</span> <span class="tlaGNC">        7331 :   auto *Y = y.Write(use_dev);</span></span>
-<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">        7331 :   mfem::forall_switch(use_dev, N, [=] MFEM_HOST_DEVICE(int i) { Y[i] = DI[i] * X[i]; });</span></span>
-<span id="L84"><span class="lineNum">      84</span> <span class="tlaGNC">        7331 : }</span></span>
+<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">       30957 :   const auto *DI = dinv.Read(use_dev);</span></span>
+<span id="L81"><span class="lineNum">      81</span> <span class="tlaGNC">       30957 :   const auto *X = x.Read(use_dev);</span></span>
+<span id="L82"><span class="lineNum">      82</span> <span class="tlaGNC">       30957 :   auto *Y = y.Write(use_dev);</span></span>
+<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">       30957 :   mfem::forall_switch(use_dev, N, [=] MFEM_HOST_DEVICE(int i) { Y[i] = DI[i] * X[i]; });</span></span>
+<span id="L84"><span class="lineNum">      84</span> <span class="tlaGNC">       30957 : }</span></span>
 <span id="L85"><span class="lineNum">      85</span>              : </span>
 <span id="L86"><span class="lineNum">      86</span>              : template &lt;bool Transpose = false&gt;</span>
 <span id="L87"><span class="lineNum">      87</span> <span class="tlaGNC">         429 : inline void Apply(const ComplexVector &amp;dinv, const ComplexVector &amp;x, ComplexVector &amp;y)</span></span>
@@ -187,42 +187,42 @@
 <span id="L117"><span class="lineNum">     117</span>              : }  // namespace</span>
 <span id="L118"><span class="lineNum">     118</span>              : </span>
 <span id="L119"><span class="lineNum">     119</span>              : template &lt;OperatorType OperType&gt;</span>
-<span id="L120"><span class="lineNum">     120</span> <span class="tlaGNC">         387 : void JacobiSmoother&lt;OperType&gt;::SetOperator(const OperType &amp;op)</span></span>
+<span id="L120"><span class="lineNum">     120</span> <span class="tlaGNC">         959 : void JacobiSmoother&lt;OperType&gt;::SetOperator(const OperType &amp;op)</span></span>
 <span id="L121"><span class="lineNum">     121</span>              : {</span>
-<span id="L122"><span class="lineNum">     122</span> <span class="tlaGNC">         387 :   dinv.SetSize(op.Height());</span></span>
+<span id="L122"><span class="lineNum">     122</span> <span class="tlaGNC">         959 :   dinv.SetSize(op.Height());</span></span>
 <span id="L123"><span class="lineNum">     123</span> <span class="tlaGNC">          21 :   dinv.UseDevice(true);</span></span>
-<span id="L124"><span class="lineNum">     124</span> <span class="tlaGNC">         387 :   op.AssembleDiagonal(dinv);</span></span>
-<span id="L125"><span class="lineNum">     125</span> <span class="tlaGNC">         387 :   dinv.Reciprocal();</span></span>
+<span id="L124"><span class="lineNum">     124</span> <span class="tlaGNC">         959 :   op.AssembleDiagonal(dinv);</span></span>
+<span id="L125"><span class="lineNum">     125</span> <span class="tlaGNC">         959 :   dinv.Reciprocal();</span></span>
 <span id="L126"><span class="lineNum">     126</span>              : </span>
 <span id="L127"><span class="lineNum">     127</span>              :   // Damping factor. If the given damping is zero, estimate the spectral radius-minimizing</span>
 <span id="L128"><span class="lineNum">     128</span>              :   // damping factor.</span>
-<span id="L129"><span class="lineNum">     129</span> <span class="tlaGNC">         387 :   if (omega == 0.0)</span></span>
+<span id="L129"><span class="lineNum">     129</span> <span class="tlaGNC">         959 :   if (omega == 0.0)</span></span>
 <span id="L130"><span class="lineNum">     130</span>              :   {</span>
-<span id="L131"><span class="lineNum">     131</span> <span class="tlaGNC">          73 :     const auto lambda_max = GetLambdaMax(comm, op, dinv);</span></span>
-<span id="L132"><span class="lineNum">     132</span> <span class="tlaGNC">          67 :     MFEM_VERIFY(std::isfinite(lambda_max) &amp;&amp; lambda_max &gt; 0.0,</span></span>
+<span id="L131"><span class="lineNum">     131</span> <span class="tlaGNC">          33 :     const auto lambda_max = GetLambdaMax(comm, op, dinv);</span></span>
+<span id="L132"><span class="lineNum">     132</span> <span class="tlaGNC">          27 :     MFEM_VERIFY(std::isfinite(lambda_max) &amp;&amp; lambda_max &gt; 0.0,</span></span>
 <span id="L133"><span class="lineNum">     133</span>              :                 &quot;Encountered invalid maximum eigenvalue in Jacobi smoother!&quot;);</span>
-<span id="L134"><span class="lineNum">     134</span> <span class="tlaGNC">          67 :     const auto lambda_min = (sf_max - 1.0) * lambda_max;</span></span>
-<span id="L135"><span class="lineNum">     135</span> <span class="tlaGNC">          67 :     const auto denominator = lambda_min + lambda_max;</span></span>
-<span id="L136"><span class="lineNum">     136</span> <span class="tlaGNC">          76 :     MFEM_VERIFY(std::isfinite(denominator) &amp;&amp; denominator &gt; 0.0,</span></span>
+<span id="L134"><span class="lineNum">     134</span> <span class="tlaGNC">          27 :     const auto lambda_min = (sf_max - 1.0) * lambda_max;</span></span>
+<span id="L135"><span class="lineNum">     135</span> <span class="tlaGNC">          27 :     const auto denominator = lambda_min + lambda_max;</span></span>
+<span id="L136"><span class="lineNum">     136</span> <span class="tlaGNC">          36 :     MFEM_VERIFY(std::isfinite(denominator) &amp;&amp; denominator &gt; 0.0,</span></span>
 <span id="L137"><span class="lineNum">     137</span>              :                 &quot;Automatic Jacobi damping requires a finite, strictly positive damping &quot;</span>
 <span id="L138"><span class="lineNum">     138</span>              :                 &quot;denominator!&quot;);</span>
-<span id="L139"><span class="lineNum">     139</span> <span class="tlaGNC">          64 :     omega = 2.0 / denominator;</span></span>
+<span id="L139"><span class="lineNum">     139</span> <span class="tlaGNC">          24 :     omega = 2.0 / denominator;</span></span>
 <span id="L140"><span class="lineNum">     140</span>              :   }</span>
-<span id="L141"><span class="lineNum">     141</span> <span class="tlaGNC">         378 :   if (omega != 1.0)</span></span>
+<span id="L141"><span class="lineNum">     141</span> <span class="tlaGNC">         950 :   if (omega != 1.0)</span></span>
 <span id="L142"><span class="lineNum">     142</span>              :   {</span>
-<span id="L143"><span class="lineNum">     143</span> <span class="tlaGNC">          64 :     dinv *= omega;</span></span>
+<span id="L143"><span class="lineNum">     143</span> <span class="tlaGNC">          24 :     dinv *= omega;</span></span>
 <span id="L144"><span class="lineNum">     144</span>              :   }</span>
 <span id="L145"><span class="lineNum">     145</span>              : </span>
-<span id="L146"><span class="lineNum">     146</span> <span class="tlaGNC">         378 :   this-&gt;height = op.Height();</span></span>
-<span id="L147"><span class="lineNum">     147</span> <span class="tlaGNC">         378 :   this-&gt;width = op.Width();</span></span>
-<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">         378 : }</span></span>
+<span id="L146"><span class="lineNum">     146</span> <span class="tlaGNC">         950 :   this-&gt;height = op.Height();</span></span>
+<span id="L147"><span class="lineNum">     147</span> <span class="tlaGNC">         950 :   this-&gt;width = op.Width();</span></span>
+<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">         950 : }</span></span>
 <span id="L149"><span class="lineNum">     149</span>              : </span>
 <span id="L150"><span class="lineNum">     150</span>              : template &lt;OperatorType OperType&gt;</span>
-<span id="L151"><span class="lineNum">     151</span> <span class="tlaGNC">        7760 : void JacobiSmoother&lt;OperType&gt;::Mult(const VecType &amp;x, VecType &amp;y) const</span></span>
+<span id="L151"><span class="lineNum">     151</span> <span class="tlaGNC">       31386 : void JacobiSmoother&lt;OperType&gt;::Mult(const VecType &amp;x, VecType &amp;y) const</span></span>
 <span id="L152"><span class="lineNum">     152</span>              : {</span>
 <span id="L153"><span class="lineNum">     153</span>              :   MFEM_ASSERT(!this-&gt;initial_guess, &quot;JacobiSmoother does not use initial guess!&quot;);</span>
-<span id="L154"><span class="lineNum">     154</span> <span class="tlaGNC">        7760 :   Apply(dinv, x, y);</span></span>
-<span id="L155"><span class="lineNum">     155</span> <span class="tlaGNC">        7760 : }</span></span>
+<span id="L154"><span class="lineNum">     154</span> <span class="tlaGNC">       31386 :   Apply(dinv, x, y);</span></span>
+<span id="L155"><span class="lineNum">     155</span> <span class="tlaGNC">       31386 : }</span></span>
 <span id="L156"><span class="lineNum">     156</span>              : </span>
 <span id="L157"><span class="lineNum">     157</span>              : template class JacobiSmoother&lt;Operator&gt;;</span>
 <span id="L158"><span class="lineNum">     158</span>              : template class JacobiSmoother&lt;ComplexOperator&gt;;</span>

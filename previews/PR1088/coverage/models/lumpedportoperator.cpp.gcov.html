@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-10-23 01:41:56</td>
+            <td class="headerValue">2026-11-05 18:04:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">84.0&nbsp;%</td>
@@ -88,28 +88,28 @@
 <span id="L18"><span class="lineNum">      18</span>              : </span>
 <span id="L19"><span class="lineNum">      19</span>              : using namespace std::complex_literals;</span>
 <span id="L20"><span class="lineNum">      20</span>              : </span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC tlaBgGNC">         257 : LumpedPortData::LumpedPortData(const config::LumpedPortData &amp;data,</span></span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">         257 :                                const MaterialOperator &amp;mat_op, const mfem::ParMesh &amp;mesh)</span></span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">         257 :   : mat_op(mat_op), excitation(data.excitation), active(data.active),</span></span>
-<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">         257 :     include_in_synthesis(data.include_in_synthesis)</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC tlaBgGNC">         263 : LumpedPortData::LumpedPortData(const config::LumpedPortData &amp;data,</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">         263 :                                const MaterialOperator &amp;mat_op, const mfem::ParMesh &amp;mesh)</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">         263 :   : mat_op(mat_op), excitation(data.excitation), active(data.active),</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">         263 :     include_in_synthesis(data.include_in_synthesis)</span></span>
 <span id="L25"><span class="lineNum">      25</span>              : {</span>
 <span id="L26"><span class="lineNum">      26</span>              :   // Check inputs. Only one of the circuit or per square properties should be specified</span>
 <span id="L27"><span class="lineNum">      27</span>              :   // for the port boundary.</span>
-<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">         257 :   bool has_circ = (std::abs(data.R) + std::abs(data.L) + std::abs(data.C) &gt; 0.0);</span></span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">         257 :   bool has_surf = (std::abs(data.Rs) + std::abs(data.Ls) + std::abs(data.Cs) &gt; 0.0);</span></span>
-<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">         257 :   MFEM_VERIFY(has_circ || has_surf,</span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">         263 :   bool has_circ = (std::abs(data.R) + std::abs(data.L) + std::abs(data.C) &gt; 0.0);</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">         263 :   bool has_surf = (std::abs(data.Rs) + std::abs(data.Ls) + std::abs(data.Cs) &gt; 0.0);</span></span>
+<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">         263 :   MFEM_VERIFY(has_circ || has_surf,</span></span>
 <span id="L31"><span class="lineNum">      31</span>              :               &quot;Lumped port boundary has no R/L/C or Rs/Ls/Cs defined, needs &quot;</span>
 <span id="L32"><span class="lineNum">      32</span>              :               &quot;at least one!&quot;);</span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">         257 :   MFEM_VERIFY(!(has_circ &amp;&amp; has_surf),</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">         263 :   MFEM_VERIFY(!(has_circ &amp;&amp; has_surf),</span></span>
 <span id="L34"><span class="lineNum">      34</span>              :               &quot;Lumped port boundary has both R/L/C and Rs/Ls/Cs defined, &quot;</span>
 <span id="L35"><span class="lineNum">      35</span>              :               &quot;should only use one!&quot;);</span>
 <span id="L36"><span class="lineNum">      36</span>              : </span>
-<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">         257 :   if (HasExcitation())</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">         263 :   if (HasExcitation())</span></span>
 <span id="L38"><span class="lineNum">      38</span>              :   {</span>
-<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">         203 :     if (has_circ)</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">         207 :     if (has_circ)</span></span>
 <span id="L40"><span class="lineNum">      40</span>              :     {</span>
-<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">         203 :       MFEM_VERIFY(data.R &gt;= 0.0, &quot;Excited lumped port must have non-negative resistance!&quot;);</span></span>
-<span id="L42"><span class="lineNum">      42</span> <span class="tlaGNC">         203 :       MFEM_VERIFY(data.L &gt;= 0.0 &amp;&amp; data.C &gt;= 0.0,</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">         207 :       MFEM_VERIFY(data.R &gt;= 0.0, &quot;Excited lumped port must have non-negative resistance!&quot;);</span></span>
+<span id="L42"><span class="lineNum">      42</span> <span class="tlaGNC">         207 :       MFEM_VERIFY(data.L &gt;= 0.0 &amp;&amp; data.C &gt;= 0.0,</span></span>
 <span id="L43"><span class="lineNum">      43</span>              :                   &quot;Excited lumped port must have non-negative inductance and capacitance!&quot;);</span>
 <span id="L44"><span class="lineNum">      44</span>              :     }</span>
 <span id="L45"><span class="lineNum">      45</span>              :     else</span>
@@ -121,29 +121,29 @@
 <span id="L51"><span class="lineNum">      51</span>              :   }</span>
 <span id="L52"><span class="lineNum">      52</span>              : </span>
 <span id="L53"><span class="lineNum">      53</span>              :   // Construct the port elements allowing for a possible multielement lumped port.</span>
-<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC tlaBgGNC">         676 :   for (const auto &amp;elem : data.elements)</span></span>
+<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC tlaBgGNC">         688 :   for (const auto &amp;elem : data.elements)</span></span>
 <span id="L55"><span class="lineNum">      55</span>              :   {</span>
 <span id="L56"><span class="lineNum">      56</span>              :     mfem::Array&lt;int&gt; attr_list;</span>
-<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">         419 :     attr_list.Append(elem.attributes.data(), elem.attributes.size());</span></span>
-<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">         419 :     switch (elem.coordinate_system)</span></span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">         425 :     attr_list.Append(elem.attributes.data(), elem.attributes.size());</span></span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">         425 :     switch (elem.coordinate_system)</span></span>
 <span id="L59"><span class="lineNum">      59</span>              :     {</span>
 <span id="L60"><span class="lineNum">      60</span> <span class="tlaUNC tlaBgUNC">           0 :       case CoordinateSystem::CYLINDRICAL:</span></span>
 <span id="L61"><span class="lineNum">      61</span> <span class="tlaUNC">           0 :         elems.push_back(</span></span>
 <span id="L62"><span class="lineNum">      62</span> <span class="tlaUNC">           0 :             std::make_unique&lt;CoaxialElementData&gt;(elem.direction, attr_list, mesh));</span></span>
 <span id="L63"><span class="lineNum">      63</span> <span class="tlaUNC">           0 :         break;</span></span>
-<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC tlaBgGNC">         419 :       case CoordinateSystem::CARTESIAN:</span></span>
-<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">         838 :         elems.push_back(</span></span>
-<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">         419 :             std::make_unique&lt;UniformElementData&gt;(elem.direction, attr_list, mesh));</span></span>
-<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">         419 :         break;</span></span>
+<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC tlaBgGNC">         425 :       case CoordinateSystem::CARTESIAN:</span></span>
+<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">         850 :         elems.push_back(</span></span>
+<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">         425 :             std::make_unique&lt;UniformElementData&gt;(elem.direction, attr_list, mesh));</span></span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">         425 :         break;</span></span>
 <span id="L68"><span class="lineNum">      68</span>              :     }</span>
 <span id="L69"><span class="lineNum">      69</span>              :   }</span>
 <span id="L70"><span class="lineNum">      70</span>              : </span>
 <span id="L71"><span class="lineNum">      71</span>              :   // Populate the property data for the lumped port.</span>
-<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">         514 :   if (std::abs(data.Rs) + std::abs(data.Ls) + std::abs(data.Cs) == 0.0)</span></span>
+<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">         526 :   if (std::abs(data.Rs) + std::abs(data.Ls) + std::abs(data.Cs) == 0.0)</span></span>
 <span id="L73"><span class="lineNum">      73</span>              :   {</span>
-<span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC">         257 :     R = data.R;</span></span>
-<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">         257 :     L = data.L;</span></span>
-<span id="L76"><span class="lineNum">      76</span> <span class="tlaGNC">         257 :     C = data.C;</span></span>
+<span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC">         263 :     R = data.R;</span></span>
+<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">         263 :     L = data.L;</span></span>
+<span id="L76"><span class="lineNum">      76</span> <span class="tlaGNC">         263 :     C = data.C;</span></span>
 <span id="L77"><span class="lineNum">      77</span>              :   }</span>
 <span id="L78"><span class="lineNum">      78</span>              :   else</span>
 <span id="L79"><span class="lineNum">      79</span>              :   {</span>
@@ -176,7 +176,7 @@
 <span id="L106"><span class="lineNum">     106</span> <span class="tlaUNC">           0 :       L = 1.0 / ooL;</span></span>
 <span id="L107"><span class="lineNum">     107</span>              :     }</span>
 <span id="L108"><span class="lineNum">     108</span>              :   }</span>
-<span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC tlaBgGNC">         257 : }</span></span>
+<span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC tlaBgGNC">         263 : }</span></span>
 <span id="L110"><span class="lineNum">     110</span>              : </span>
 <span id="L111"><span class="lineNum">     111</span>              : std::complex&lt;double&gt;</span>
 <span id="L112"><span class="lineNum">     112</span> <span class="tlaGNC">          54 : LumpedPortData::GetCharacteristicImpedance(double omega,</span></span>
@@ -480,13 +480,13 @@
 <span id="L410"><span class="lineNum">     410</span> <span class="tlaUNC">           0 :   return dot;</span></span>
 <span id="L411"><span class="lineNum">     411</span>              : }</span>
 <span id="L412"><span class="lineNum">     412</span>              : </span>
-<span id="L413"><span class="lineNum">     413</span> <span class="tlaGNC tlaBgGNC">         241 : LumpedPortOperator::LumpedPortOperator(</span></span>
+<span id="L413"><span class="lineNum">     413</span> <span class="tlaGNC tlaBgGNC">         255 : LumpedPortOperator::LumpedPortOperator(</span></span>
 <span id="L414"><span class="lineNum">     414</span>              :     const std::map&lt;int, config::LumpedPortData&gt; &amp;lumpedport, const Units &amp;units,</span>
-<span id="L415"><span class="lineNum">     415</span> <span class="tlaGNC">         241 :     const MaterialOperator &amp;mat_op, const mfem::ParMesh &amp;mesh)</span></span>
+<span id="L415"><span class="lineNum">     415</span> <span class="tlaGNC">         255 :     const MaterialOperator &amp;mat_op, const mfem::ParMesh &amp;mesh)</span></span>
 <span id="L416"><span class="lineNum">     416</span>              : {</span>
-<span id="L417"><span class="lineNum">     417</span> <span class="tlaGNC">         241 :   SetUpBoundaryProperties(lumpedport, mat_op, mesh);</span></span>
-<span id="L418"><span class="lineNum">     418</span> <span class="tlaGNC">         241 :   PrintBoundaryInfo(units, mesh);</span></span>
-<span id="L419"><span class="lineNum">     419</span> <span class="tlaGNC">         241 : }</span></span>
+<span id="L417"><span class="lineNum">     417</span> <span class="tlaGNC">         255 :   SetUpBoundaryProperties(lumpedport, mat_op, mesh);</span></span>
+<span id="L418"><span class="lineNum">     418</span> <span class="tlaGNC">         255 :   PrintBoundaryInfo(units, mesh);</span></span>
+<span id="L419"><span class="lineNum">     419</span> <span class="tlaGNC">         255 : }</span></span>
 <span id="L420"><span class="lineNum">     420</span>              : </span>
 <span id="L421"><span class="lineNum">     421</span> <span class="tlaUNC tlaBgUNC">           0 : LumpedPortOperator::LumpedPortOperator(const IoData &amp;iodata, const MaterialOperator &amp;mat_op,</span></span>
 <span id="L422"><span class="lineNum">     422</span> <span class="tlaUNC">           0 :                                        const mfem::ParMesh &amp;mesh)</span></span>
@@ -494,52 +494,52 @@
 <span id="L424"><span class="lineNum">     424</span>              : {</span>
 <span id="L425"><span class="lineNum">     425</span> <span class="tlaUNC">           0 : }</span></span>
 <span id="L426"><span class="lineNum">     426</span>              : </span>
-<span id="L427"><span class="lineNum">     427</span> <span class="tlaGNC tlaBgGNC">         241 : void LumpedPortOperator::SetUpBoundaryProperties(</span></span>
+<span id="L427"><span class="lineNum">     427</span> <span class="tlaGNC tlaBgGNC">         255 : void LumpedPortOperator::SetUpBoundaryProperties(</span></span>
 <span id="L428"><span class="lineNum">     428</span>              :     const std::map&lt;int, config::LumpedPortData&gt; &amp;lumpedport, const MaterialOperator &amp;mat_op,</span>
 <span id="L429"><span class="lineNum">     429</span>              :     const mfem::ParMesh &amp;mesh)</span>
 <span id="L430"><span class="lineNum">     430</span>              : {</span>
 <span id="L431"><span class="lineNum">     431</span>              :   // Check that lumped port boundary attributes have been specified correctly.</span>
-<span id="L432"><span class="lineNum">     432</span> <span class="tlaGNC">         241 :   if (!lumpedport.empty())</span></span>
+<span id="L432"><span class="lineNum">     432</span> <span class="tlaGNC">         255 :   if (!lumpedport.empty())</span></span>
 <span id="L433"><span class="lineNum">     433</span>              :   {</span>
-<span id="L434"><span class="lineNum">     434</span> <span class="tlaGNC">         197 :     int bdr_attr_max = mesh.bdr_attributes.Size() ? mesh.bdr_attributes.Max() : 0;</span></span>
+<span id="L434"><span class="lineNum">     434</span> <span class="tlaGNC">         199 :     int bdr_attr_max = mesh.bdr_attributes.Size() ? mesh.bdr_attributes.Max() : 0;</span></span>
 <span id="L435"><span class="lineNum">     435</span>              :     mfem::Array&lt;int&gt; bdr_attr_marker(bdr_attr_max), port_marker(bdr_attr_max);</span>
 <span id="L436"><span class="lineNum">     436</span>              :     bdr_attr_marker = 0;</span>
 <span id="L437"><span class="lineNum">     437</span>              :     port_marker = 0;</span>
-<span id="L438"><span class="lineNum">     438</span> <span class="tlaGNC">        5150 :     for (auto attr : mesh.bdr_attributes)</span></span>
+<span id="L438"><span class="lineNum">     438</span> <span class="tlaGNC">        5200 :     for (auto attr : mesh.bdr_attributes)</span></span>
 <span id="L439"><span class="lineNum">     439</span>              :     {</span>
-<span id="L440"><span class="lineNum">     440</span> <span class="tlaGNC">        4953 :       bdr_attr_marker[attr - 1] = 1;</span></span>
+<span id="L440"><span class="lineNum">     440</span> <span class="tlaGNC">        5001 :       bdr_attr_marker[attr - 1] = 1;</span></span>
 <span id="L441"><span class="lineNum">     441</span>              :     }</span>
-<span id="L442"><span class="lineNum">     442</span> <span class="tlaGNC">         454 :     for (const auto &amp;[idx, data] : lumpedport)</span></span>
+<span id="L442"><span class="lineNum">     442</span> <span class="tlaGNC">         462 :     for (const auto &amp;[idx, data] : lumpedport)</span></span>
 <span id="L443"><span class="lineNum">     443</span>              :     {</span>
-<span id="L444"><span class="lineNum">     444</span> <span class="tlaGNC">         676 :       for (const auto &amp;elem : data.elements)</span></span>
+<span id="L444"><span class="lineNum">     444</span> <span class="tlaGNC">         688 :       for (const auto &amp;elem : data.elements)</span></span>
 <span id="L445"><span class="lineNum">     445</span>              :       {</span>
-<span id="L446"><span class="lineNum">     446</span> <span class="tlaGNC">        1159 :         for (auto attr : elem.attributes)</span></span>
+<span id="L446"><span class="lineNum">     446</span> <span class="tlaGNC">        1183 :         for (auto attr : elem.attributes)</span></span>
 <span id="L447"><span class="lineNum">     447</span>              :         {</span>
-<span id="L448"><span class="lineNum">     448</span> <span class="tlaGNC">         740 :           MFEM_VERIFY(attr &gt; 0 &amp;&amp; attr &lt;= bdr_attr_max,</span></span>
+<span id="L448"><span class="lineNum">     448</span> <span class="tlaGNC">         758 :           MFEM_VERIFY(attr &gt; 0 &amp;&amp; attr &lt;= bdr_attr_max,</span></span>
 <span id="L449"><span class="lineNum">     449</span>              :                       &quot;Port boundary attribute tags must be non-negative and correspond to &quot;</span>
 <span id="L450"><span class="lineNum">     450</span>              :                       &quot;boundaries in the mesh!&quot;);</span>
-<span id="L451"><span class="lineNum">     451</span> <span class="tlaGNC">         740 :           MFEM_VERIFY(bdr_attr_marker[attr - 1],</span></span>
+<span id="L451"><span class="lineNum">     451</span> <span class="tlaGNC">         758 :           MFEM_VERIFY(bdr_attr_marker[attr - 1],</span></span>
 <span id="L452"><span class="lineNum">     452</span>              :                       &quot;Unknown port boundary attribute &quot; &lt;&lt; attr &lt;&lt; &quot;!&quot;);</span>
-<span id="L453"><span class="lineNum">     453</span> <span class="tlaGNC">         740 :           MFEM_VERIFY(!data.active || !port_marker[attr - 1],</span></span>
+<span id="L453"><span class="lineNum">     453</span> <span class="tlaGNC">         758 :           MFEM_VERIFY(!data.active || !port_marker[attr - 1],</span></span>
 <span id="L454"><span class="lineNum">     454</span>              :                       &quot;Boundary attribute is assigned to more than one lumped port!&quot;);</span>
-<span id="L455"><span class="lineNum">     455</span> <span class="tlaGNC">         740 :           port_marker[attr - 1] = 1;</span></span>
+<span id="L455"><span class="lineNum">     455</span> <span class="tlaGNC">         758 :           port_marker[attr - 1] = 1;</span></span>
 <span id="L456"><span class="lineNum">     456</span>              :         }</span>
 <span id="L457"><span class="lineNum">     457</span>              :       }</span>
 <span id="L458"><span class="lineNum">     458</span>              :     }</span>
 <span id="L459"><span class="lineNum">     459</span>              :   }</span>
 <span id="L460"><span class="lineNum">     460</span>              : </span>
 <span id="L461"><span class="lineNum">     461</span>              :   // Set up lumped port data structures.</span>
-<span id="L462"><span class="lineNum">     462</span> <span class="tlaGNC">         498 :   for (const auto &amp;[idx, data] : lumpedport)</span></span>
+<span id="L462"><span class="lineNum">     462</span> <span class="tlaGNC">         518 :   for (const auto &amp;[idx, data] : lumpedport)</span></span>
 <span id="L463"><span class="lineNum">     463</span>              :   {</span>
-<span id="L464"><span class="lineNum">     464</span> <span class="tlaGNC">         257 :     ports.try_emplace(idx, data, mat_op, mesh);</span></span>
+<span id="L464"><span class="lineNum">     464</span> <span class="tlaGNC">         263 :     ports.try_emplace(idx, data, mat_op, mesh);</span></span>
 <span id="L465"><span class="lineNum">     465</span>              :   }</span>
-<span id="L466"><span class="lineNum">     466</span> <span class="tlaGNC">         241 : }</span></span>
+<span id="L466"><span class="lineNum">     466</span> <span class="tlaGNC">         255 : }</span></span>
 <span id="L467"><span class="lineNum">     467</span>              : </span>
-<span id="L468"><span class="lineNum">     468</span> <span class="tlaGNC">         241 : void LumpedPortOperator::PrintBoundaryInfo(const Units &amp;units, const mfem::ParMesh &amp;mesh)</span></span>
+<span id="L468"><span class="lineNum">     468</span> <span class="tlaGNC">         255 : void LumpedPortOperator::PrintBoundaryInfo(const Units &amp;units, const mfem::ParMesh &amp;mesh)</span></span>
 <span id="L469"><span class="lineNum">     469</span>              : {</span>
-<span id="L470"><span class="lineNum">     470</span> <span class="tlaGNC">         241 :   if (ports.empty())</span></span>
+<span id="L470"><span class="lineNum">     470</span> <span class="tlaGNC">         255 :   if (ports.empty())</span></span>
 <span id="L471"><span class="lineNum">     471</span>              :   {</span>
-<span id="L472"><span class="lineNum">     472</span> <span class="tlaGNC">          44 :     return;</span></span>
+<span id="L472"><span class="lineNum">     472</span> <span class="tlaGNC">          56 :     return;</span></span>
 <span id="L473"><span class="lineNum">     473</span>              :   }</span>
 <span id="L474"><span class="lineNum">     474</span>              :   fmt::memory_buffer buffer{};</span>
 <span id="L475"><span class="lineNum">     475</span>              :   auto out = fmt::appender{buffer};</span>
@@ -547,65 +547,65 @@
 <span id="L477"><span class="lineNum">     477</span>              : </span>
 <span id="L478"><span class="lineNum">     478</span>              :   // Print out BC info for all port attributes, for both active and inactive ports.</span>
 <span id="L479"><span class="lineNum">     479</span>              :   fmt::format_to(out, &quot;\nConfiguring Robin impedance BC for lumped ports at attributes:\n&quot;);</span>
-<span id="L480"><span class="lineNum">     480</span> <span class="tlaGNC">         454 :   for (const auto &amp;[idx, data] : ports)</span></span>
+<span id="L480"><span class="lineNum">     480</span> <span class="tlaGNC">         462 :   for (const auto &amp;[idx, data] : ports)</span></span>
 <span id="L481"><span class="lineNum">     481</span>              :   {</span>
-<span id="L482"><span class="lineNum">     482</span> <span class="tlaGNC">         676 :     for (const auto &amp;elem : data.elems)</span></span>
+<span id="L482"><span class="lineNum">     482</span> <span class="tlaGNC">         688 :     for (const auto &amp;elem : data.elems)</span></span>
 <span id="L483"><span class="lineNum">     483</span>              :     {</span>
-<span id="L484"><span class="lineNum">     484</span> <span class="tlaGNC">        1159 :       for (auto attr : elem-&gt;GetAttrList())</span></span>
+<span id="L484"><span class="lineNum">     484</span> <span class="tlaGNC">        1183 :       for (auto attr : elem-&gt;GetAttrList())</span></span>
 <span id="L485"><span class="lineNum">     485</span>              :       {</span>
 <span id="L486"><span class="lineNum">     486</span>              :         fmt::format_to(out, &quot; {:d}:&quot;, attr);</span>
-<span id="L487"><span class="lineNum">     487</span> <span class="tlaGNC">         740 :         if (std::abs(data.R) &gt; 0.0)</span></span>
+<span id="L487"><span class="lineNum">     487</span> <span class="tlaGNC">         758 :         if (std::abs(data.R) &gt; 0.0)</span></span>
 <span id="L488"><span class="lineNum">     488</span>              :         {</span>
-<span id="L489"><span class="lineNum">     489</span> <span class="tlaGNC">         701 :           double Rs = data.R * data.GetToSquare(*elem);</span></span>
+<span id="L489"><span class="lineNum">     489</span> <span class="tlaGNC">         713 :           double Rs = data.R * data.GetToSquare(*elem);</span></span>
 <span id="L490"><span class="lineNum">     490</span>              :           fmt::format_to(out, &quot; Rs = {:.3e} Ω/sq,&quot;,</span>
 <span id="L491"><span class="lineNum">     491</span>              :                          units.Dimensionalize&lt;VT::IMPEDANCE&gt;(Rs));</span>
 <span id="L492"><span class="lineNum">     492</span>              :         }</span>
-<span id="L493"><span class="lineNum">     493</span> <span class="tlaGNC">         740 :         if (std::abs(data.L) &gt; 0.0)</span></span>
+<span id="L493"><span class="lineNum">     493</span> <span class="tlaGNC">         758 :         if (std::abs(data.L) &gt; 0.0)</span></span>
 <span id="L494"><span class="lineNum">     494</span>              :         {</span>
-<span id="L495"><span class="lineNum">     495</span> <span class="tlaGNC">         168 :           double Ls = data.L * data.GetToSquare(*elem);</span></span>
+<span id="L495"><span class="lineNum">     495</span> <span class="tlaGNC">         174 :           double Ls = data.L * data.GetToSquare(*elem);</span></span>
 <span id="L496"><span class="lineNum">     496</span>              :           fmt::format_to(out, &quot; Ls = {:.3e} H/sq,&quot;,</span>
 <span id="L497"><span class="lineNum">     497</span>              :                          units.Dimensionalize&lt;VT::INDUCTANCE&gt;(Ls));</span>
 <span id="L498"><span class="lineNum">     498</span>              :         }</span>
-<span id="L499"><span class="lineNum">     499</span> <span class="tlaGNC">         740 :         if (std::abs(data.C) &gt; 0.0)</span></span>
+<span id="L499"><span class="lineNum">     499</span> <span class="tlaGNC">         758 :         if (std::abs(data.C) &gt; 0.0)</span></span>
 <span id="L500"><span class="lineNum">     500</span>              :         {</span>
-<span id="L501"><span class="lineNum">     501</span> <span class="tlaGNC">         162 :           double Cs = data.C / data.GetToSquare(*elem);</span></span>
+<span id="L501"><span class="lineNum">     501</span> <span class="tlaGNC">         168 :           double Cs = data.C / data.GetToSquare(*elem);</span></span>
 <span id="L502"><span class="lineNum">     502</span>              :           fmt::format_to(out, &quot; Cs = {:.3e} F/sq,&quot;,</span>
 <span id="L503"><span class="lineNum">     503</span>              :                          units.Dimensionalize&lt;VT::CAPACITANCE&gt;(Cs));</span>
 <span id="L504"><span class="lineNum">     504</span>              :         }</span>
 <span id="L505"><span class="lineNum">     505</span>              :         fmt::format_to(out, &quot; n = ({:+.1f})\n&quot;,</span>
-<span id="L506"><span class="lineNum">     506</span> <span class="tlaGNC">        1480 :                        fmt::join(mesh::GetSurfaceNormal(mesh, attr), &quot;,&quot;));</span></span>
+<span id="L506"><span class="lineNum">     506</span> <span class="tlaGNC">        1516 :                        fmt::join(mesh::GetSurfaceNormal(mesh, attr), &quot;,&quot;));</span></span>
 <span id="L507"><span class="lineNum">     507</span>              :       }</span>
 <span id="L508"><span class="lineNum">     508</span>              :     }</span>
 <span id="L509"><span class="lineNum">     509</span>              :   }</span>
 <span id="L510"><span class="lineNum">     510</span>              : </span>
 <span id="L511"><span class="lineNum">     511</span>              :   // Print out port info for all active ports.</span>
 <span id="L512"><span class="lineNum">     512</span>              :   fmt::memory_buffer buffer_active{};</span>
-<span id="L513"><span class="lineNum">     513</span> <span class="tlaGNC">         454 :   for (const auto &amp;[idx, data] : ports)</span></span>
+<span id="L513"><span class="lineNum">     513</span> <span class="tlaGNC">         462 :   for (const auto &amp;[idx, data] : ports)</span></span>
 <span id="L514"><span class="lineNum">     514</span>              :   {</span>
-<span id="L515"><span class="lineNum">     515</span> <span class="tlaGNC">         257 :     if (!data.active)</span></span>
+<span id="L515"><span class="lineNum">     515</span> <span class="tlaGNC">         263 :     if (!data.active)</span></span>
 <span id="L516"><span class="lineNum">     516</span>              :     {</span>
 <span id="L517"><span class="lineNum">     517</span> <span class="tlaUNC tlaBgUNC">           0 :       continue;</span></span>
 <span id="L518"><span class="lineNum">     518</span>              :     }</span>
-<span id="L519"><span class="lineNum">     519</span> <span class="tlaGNC tlaBgGNC">         257 :     std::vector&lt;std::string&gt; active_port_str;</span></span>
-<span id="L520"><span class="lineNum">     520</span> <span class="tlaGNC">         257 :     if (std::abs(data.R) &gt; 0.0)</span></span>
+<span id="L519"><span class="lineNum">     519</span> <span class="tlaGNC tlaBgGNC">         263 :     std::vector&lt;std::string&gt; active_port_str;</span></span>
+<span id="L520"><span class="lineNum">     520</span> <span class="tlaGNC">         263 :     if (std::abs(data.R) &gt; 0.0)</span></span>
 <span id="L521"><span class="lineNum">     521</span>              :     {</span>
-<span id="L522"><span class="lineNum">     522</span> <span class="tlaGNC">         238 :       active_port_str.emplace_back(</span></span>
-<span id="L523"><span class="lineNum">     523</span> <span class="tlaGNC">         476 :           fmt::format(&quot;R = {:.3e} Ω&quot;, units.Dimensionalize&lt;VT::IMPEDANCE&gt;(data.R)));</span></span>
+<span id="L522"><span class="lineNum">     522</span> <span class="tlaGNC">         242 :       active_port_str.emplace_back(</span></span>
+<span id="L523"><span class="lineNum">     523</span> <span class="tlaGNC">         484 :           fmt::format(&quot;R = {:.3e} Ω&quot;, units.Dimensionalize&lt;VT::IMPEDANCE&gt;(data.R)));</span></span>
 <span id="L524"><span class="lineNum">     524</span>              :     }</span>
-<span id="L525"><span class="lineNum">     525</span> <span class="tlaGNC">         257 :     if (std::abs(data.L) &gt; 0.0)</span></span>
+<span id="L525"><span class="lineNum">     525</span> <span class="tlaGNC">         263 :     if (std::abs(data.L) &gt; 0.0)</span></span>
 <span id="L526"><span class="lineNum">     526</span>              :     {</span>
-<span id="L527"><span class="lineNum">     527</span> <span class="tlaGNC">          43 :       active_port_str.emplace_back(</span></span>
-<span id="L528"><span class="lineNum">     528</span> <span class="tlaGNC">          86 :           fmt::format(&quot;L = {:.3e} H&quot;, units.Dimensionalize&lt;VT::INDUCTANCE&gt;(data.L)));</span></span>
+<span id="L527"><span class="lineNum">     527</span> <span class="tlaGNC">          45 :       active_port_str.emplace_back(</span></span>
+<span id="L528"><span class="lineNum">     528</span> <span class="tlaGNC">          90 :           fmt::format(&quot;L = {:.3e} H&quot;, units.Dimensionalize&lt;VT::INDUCTANCE&gt;(data.L)));</span></span>
 <span id="L529"><span class="lineNum">     529</span>              :     }</span>
-<span id="L530"><span class="lineNum">     530</span> <span class="tlaGNC">         257 :     if (std::abs(data.C) &gt; 0.0)</span></span>
+<span id="L530"><span class="lineNum">     530</span> <span class="tlaGNC">         263 :     if (std::abs(data.C) &gt; 0.0)</span></span>
 <span id="L531"><span class="lineNum">     531</span>              :     {</span>
-<span id="L532"><span class="lineNum">     532</span> <span class="tlaGNC">          37 :       active_port_str.emplace_back(</span></span>
-<span id="L533"><span class="lineNum">     533</span> <span class="tlaGNC">          74 :           fmt::format(&quot;C = {:.3e} F&quot;, units.Dimensionalize&lt;VT::CAPACITANCE&gt;(data.C)));</span></span>
+<span id="L532"><span class="lineNum">     532</span> <span class="tlaGNC">          39 :       active_port_str.emplace_back(</span></span>
+<span id="L533"><span class="lineNum">     533</span> <span class="tlaGNC">          78 :           fmt::format(&quot;C = {:.3e} F&quot;, units.Dimensionalize&lt;VT::CAPACITANCE&gt;(data.C)));</span></span>
 <span id="L534"><span class="lineNum">     534</span>              :     }</span>
 <span id="L535"><span class="lineNum">     535</span>              :     fmt::format_to(fmt::appender{buffer_active}, &quot; Index = {:d}: {}\n&quot;, idx,</span>
-<span id="L536"><span class="lineNum">     536</span> <span class="tlaGNC">         257 :                    fmt::join(active_port_str, &quot;, &quot;));</span></span>
-<span id="L537"><span class="lineNum">     537</span> <span class="tlaGNC">         257 :   }</span></span>
-<span id="L538"><span class="lineNum">     538</span> <span class="tlaGNC">         197 :   if (buffer_active.size() &gt; 0)</span></span>
+<span id="L536"><span class="lineNum">     536</span> <span class="tlaGNC">         263 :                    fmt::join(active_port_str, &quot;, &quot;));</span></span>
+<span id="L537"><span class="lineNum">     537</span> <span class="tlaGNC">         263 :   }</span></span>
+<span id="L538"><span class="lineNum">     538</span> <span class="tlaGNC">         199 :   if (buffer_active.size() &gt; 0)</span></span>
 <span id="L539"><span class="lineNum">     539</span>              :   {</span>
 <span id="L540"><span class="lineNum">     540</span>              :     fmt::format_to(out, &quot;\nConfiguring lumped port circuit properties:\n&quot;);</span>
 <span id="L541"><span class="lineNum">     541</span>              :     buffer.append(buffer_active);</span>
@@ -613,29 +613,29 @@
 <span id="L543"><span class="lineNum">     543</span>              :   }</span>
 <span id="L544"><span class="lineNum">     544</span>              : </span>
 <span id="L545"><span class="lineNum">     545</span>              :   // Print some information for excited lumped ports.</span>
-<span id="L546"><span class="lineNum">     546</span> <span class="tlaGNC">         454 :   for (const auto &amp;[idx, data] : ports)</span></span>
+<span id="L546"><span class="lineNum">     546</span> <span class="tlaGNC">         462 :   for (const auto &amp;[idx, data] : ports)</span></span>
 <span id="L547"><span class="lineNum">     547</span>              :   {</span>
-<span id="L548"><span class="lineNum">     548</span> <span class="tlaGNC">         257 :     if (!data.HasExcitation())</span></span>
+<span id="L548"><span class="lineNum">     548</span> <span class="tlaGNC">         263 :     if (!data.HasExcitation())</span></span>
 <span id="L549"><span class="lineNum">     549</span>              :     {</span>
-<span id="L550"><span class="lineNum">     550</span> <span class="tlaGNC">          54 :       continue;</span></span>
+<span id="L550"><span class="lineNum">     550</span> <span class="tlaGNC">          56 :       continue;</span></span>
 <span id="L551"><span class="lineNum">     551</span>              :     }</span>
 <span id="L552"><span class="lineNum">     552</span>              : </span>
-<span id="L553"><span class="lineNum">     553</span> <span class="tlaGNC">         514 :     for (const auto &amp;elem : data.elems)</span></span>
+<span id="L553"><span class="lineNum">     553</span> <span class="tlaGNC">         522 :     for (const auto &amp;elem : data.elems)</span></span>
 <span id="L554"><span class="lineNum">     554</span>              :     {</span>
-<span id="L555"><span class="lineNum">     555</span> <span class="tlaGNC">         810 :       for (auto attr : elem-&gt;GetAttrList())</span></span>
+<span id="L555"><span class="lineNum">     555</span> <span class="tlaGNC">         826 :       for (auto attr : elem-&gt;GetAttrList())</span></span>
 <span id="L556"><span class="lineNum">     556</span>              :       {</span>
 <span id="L557"><span class="lineNum">     557</span>              :         fmt::format_to(fmt::appender{buffer_active}, &quot; {:d}: Index = {:d}\n&quot;, attr, idx);</span>
 <span id="L558"><span class="lineNum">     558</span>              :       }</span>
 <span id="L559"><span class="lineNum">     559</span>              :     }</span>
 <span id="L560"><span class="lineNum">     560</span>              :   }</span>
-<span id="L561"><span class="lineNum">     561</span> <span class="tlaGNC">         197 :   if (buffer_active.size() &gt; 0)</span></span>
+<span id="L561"><span class="lineNum">     561</span> <span class="tlaGNC">         199 :   if (buffer_active.size() &gt; 0)</span></span>
 <span id="L562"><span class="lineNum">     562</span>              :   {</span>
 <span id="L563"><span class="lineNum">     563</span>              :     fmt::format_to(out,</span>
 <span id="L564"><span class="lineNum">     564</span>              :                    &quot;\nConfiguring lumped port excitation source term at attributes:\n&quot;);</span>
 <span id="L565"><span class="lineNum">     565</span>              :     buffer.append(buffer_active);</span>
 <span id="L566"><span class="lineNum">     566</span>              :   }</span>
 <span id="L567"><span class="lineNum">     567</span>              : </span>
-<span id="L568"><span class="lineNum">     568</span> <span class="tlaGNC">         394 :   Mpi::Print(&quot;{}&quot;, fmt::to_string(buffer));</span></span>
+<span id="L568"><span class="lineNum">     568</span> <span class="tlaGNC">         398 :   Mpi::Print(&quot;{}&quot;, fmt::to_string(buffer));</span></span>
 <span id="L569"><span class="lineNum">     569</span>              : }</span>
 <span id="L570"><span class="lineNum">     570</span>              : </span>
 <span id="L571"><span class="lineNum">     571</span> <span class="tlaGNC">         437 : const LumpedPortData &amp;LumpedPortOperator::GetPort(int idx) const</span></span>
@@ -854,61 +854,61 @@
 <span id="L784"><span class="lineNum">     784</span>              :   return voltages;</span>
 <span id="L785"><span class="lineNum">     785</span>              : }</span>
 <span id="L786"><span class="lineNum">     786</span>              : </span>
-<span id="L787"><span class="lineNum">     787</span> <span class="tlaGNC tlaBgGNC">         241 : mfem::Array&lt;int&gt; LumpedPortOperator::GetAttrList() const</span></span>
+<span id="L787"><span class="lineNum">     787</span> <span class="tlaGNC tlaBgGNC">         510 : mfem::Array&lt;int&gt; LumpedPortOperator::GetAttrList() const</span></span>
 <span id="L788"><span class="lineNum">     788</span>              : {</span>
 <span id="L789"><span class="lineNum">     789</span>              :   mfem::Array&lt;int&gt; attr_list;</span>
-<span id="L790"><span class="lineNum">     790</span> <span class="tlaGNC">         498 :   for (const auto &amp;[idx, data] : ports)</span></span>
+<span id="L790"><span class="lineNum">     790</span> <span class="tlaGNC">        1036 :   for (const auto &amp;[idx, data] : ports)</span></span>
 <span id="L791"><span class="lineNum">     791</span>              :   {</span>
-<span id="L792"><span class="lineNum">     792</span> <span class="tlaGNC">         257 :     if (!data.active)</span></span>
+<span id="L792"><span class="lineNum">     792</span> <span class="tlaGNC">         526 :     if (!data.active)</span></span>
 <span id="L793"><span class="lineNum">     793</span>              :     {</span>
 <span id="L794"><span class="lineNum">     794</span> <span class="tlaUNC tlaBgUNC">           0 :       continue;</span></span>
 <span id="L795"><span class="lineNum">     795</span>              :     }</span>
-<span id="L796"><span class="lineNum">     796</span> <span class="tlaGNC tlaBgGNC">         676 :     for (const auto &amp;elem : data.elems)</span></span>
+<span id="L796"><span class="lineNum">     796</span> <span class="tlaGNC tlaBgGNC">        1376 :     for (const auto &amp;elem : data.elems)</span></span>
 <span id="L797"><span class="lineNum">     797</span>              :     {</span>
 <span id="L798"><span class="lineNum">     798</span>              :       attr_list.Append(elem-&gt;GetAttrList());</span>
 <span id="L799"><span class="lineNum">     799</span>              :     }</span>
 <span id="L800"><span class="lineNum">     800</span>              :   }</span>
-<span id="L801"><span class="lineNum">     801</span> <span class="tlaGNC">         241 :   return attr_list;</span></span>
+<span id="L801"><span class="lineNum">     801</span> <span class="tlaGNC">         510 :   return attr_list;</span></span>
 <span id="L802"><span class="lineNum">     802</span>              : }</span>
 <span id="L803"><span class="lineNum">     803</span>              : </span>
-<span id="L804"><span class="lineNum">     804</span> <span class="tlaGNC">         241 : mfem::Array&lt;int&gt; LumpedPortOperator::GetRsAttrList() const</span></span>
+<span id="L804"><span class="lineNum">     804</span> <span class="tlaGNC">         255 : mfem::Array&lt;int&gt; LumpedPortOperator::GetRsAttrList() const</span></span>
 <span id="L805"><span class="lineNum">     805</span>              : {</span>
 <span id="L806"><span class="lineNum">     806</span>              :   mfem::Array&lt;int&gt; attr_list;</span>
-<span id="L807"><span class="lineNum">     807</span> <span class="tlaGNC">         498 :   for (const auto &amp;[idx, data] : ports)</span></span>
+<span id="L807"><span class="lineNum">     807</span> <span class="tlaGNC">         518 :   for (const auto &amp;[idx, data] : ports)</span></span>
 <span id="L808"><span class="lineNum">     808</span>              :   {</span>
-<span id="L809"><span class="lineNum">     809</span> <span class="tlaGNC">         257 :     if (!data.active)</span></span>
+<span id="L809"><span class="lineNum">     809</span> <span class="tlaGNC">         263 :     if (!data.active)</span></span>
 <span id="L810"><span class="lineNum">     810</span>              :     {</span>
 <span id="L811"><span class="lineNum">     811</span> <span class="tlaUNC tlaBgUNC">           0 :       continue;</span></span>
 <span id="L812"><span class="lineNum">     812</span>              :     }</span>
-<span id="L813"><span class="lineNum">     813</span> <span class="tlaGNC tlaBgGNC">         257 :     if (std::abs(data.R) &gt; 0.0)</span></span>
+<span id="L813"><span class="lineNum">     813</span> <span class="tlaGNC tlaBgGNC">         263 :     if (std::abs(data.R) &gt; 0.0)</span></span>
 <span id="L814"><span class="lineNum">     814</span>              :     {</span>
-<span id="L815"><span class="lineNum">     815</span> <span class="tlaGNC">         638 :       for (const auto &amp;elem : data.elems)</span></span>
+<span id="L815"><span class="lineNum">     815</span> <span class="tlaGNC">         646 :       for (const auto &amp;elem : data.elems)</span></span>
 <span id="L816"><span class="lineNum">     816</span>              :       {</span>
 <span id="L817"><span class="lineNum">     817</span>              :         attr_list.Append(elem-&gt;GetAttrList());</span>
 <span id="L818"><span class="lineNum">     818</span>              :       }</span>
 <span id="L819"><span class="lineNum">     819</span>              :     }</span>
 <span id="L820"><span class="lineNum">     820</span>              :   }</span>
-<span id="L821"><span class="lineNum">     821</span> <span class="tlaGNC">         241 :   return attr_list;</span></span>
+<span id="L821"><span class="lineNum">     821</span> <span class="tlaGNC">         255 :   return attr_list;</span></span>
 <span id="L822"><span class="lineNum">     822</span>              : }</span>
 <span id="L823"><span class="lineNum">     823</span>              : </span>
-<span id="L824"><span class="lineNum">     824</span> <span class="tlaGNC">         241 : mfem::Array&lt;int&gt; LumpedPortOperator::GetLsAttrList() const</span></span>
+<span id="L824"><span class="lineNum">     824</span> <span class="tlaGNC">         255 : mfem::Array&lt;int&gt; LumpedPortOperator::GetLsAttrList() const</span></span>
 <span id="L825"><span class="lineNum">     825</span>              : {</span>
 <span id="L826"><span class="lineNum">     826</span>              :   mfem::Array&lt;int&gt; attr_list;</span>
-<span id="L827"><span class="lineNum">     827</span> <span class="tlaGNC">         498 :   for (const auto &amp;[idx, data] : ports)</span></span>
+<span id="L827"><span class="lineNum">     827</span> <span class="tlaGNC">         518 :   for (const auto &amp;[idx, data] : ports)</span></span>
 <span id="L828"><span class="lineNum">     828</span>              :   {</span>
-<span id="L829"><span class="lineNum">     829</span> <span class="tlaGNC">         257 :     if (!data.active)</span></span>
+<span id="L829"><span class="lineNum">     829</span> <span class="tlaGNC">         263 :     if (!data.active)</span></span>
 <span id="L830"><span class="lineNum">     830</span>              :     {</span>
 <span id="L831"><span class="lineNum">     831</span> <span class="tlaUNC tlaBgUNC">           0 :       continue;</span></span>
 <span id="L832"><span class="lineNum">     832</span>              :     }</span>
-<span id="L833"><span class="lineNum">     833</span> <span class="tlaGNC tlaBgGNC">         257 :     if (std::abs(data.L) &gt; 0.0)</span></span>
+<span id="L833"><span class="lineNum">     833</span> <span class="tlaGNC tlaBgGNC">         263 :     if (std::abs(data.L) &gt; 0.0)</span></span>
 <span id="L834"><span class="lineNum">     834</span>              :     {</span>
-<span id="L835"><span class="lineNum">     835</span> <span class="tlaGNC">         128 :       for (const auto &amp;elem : data.elems)</span></span>
+<span id="L835"><span class="lineNum">     835</span> <span class="tlaGNC">         132 :       for (const auto &amp;elem : data.elems)</span></span>
 <span id="L836"><span class="lineNum">     836</span>              :       {</span>
 <span id="L837"><span class="lineNum">     837</span>              :         attr_list.Append(elem-&gt;GetAttrList());</span>
 <span id="L838"><span class="lineNum">     838</span>              :       }</span>
 <span id="L839"><span class="lineNum">     839</span>              :     }</span>
 <span id="L840"><span class="lineNum">     840</span>              :   }</span>
-<span id="L841"><span class="lineNum">     841</span> <span class="tlaGNC">         241 :   return attr_list;</span></span>
+<span id="L841"><span class="lineNum">     841</span> <span class="tlaGNC">         255 :   return attr_list;</span></span>
 <span id="L842"><span class="lineNum">     842</span>              : }</span>
 <span id="L843"><span class="lineNum">     843</span>              : </span>
 <span id="L844"><span class="lineNum">     844</span> <span class="tlaUNC tlaBgUNC">           0 : mfem::Array&lt;int&gt; LumpedPortOperator::GetCsAttrList() const</span></span>

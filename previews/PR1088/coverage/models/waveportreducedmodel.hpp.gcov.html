@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-10-23 01:41:56</td>
+            <td class="headerValue">2026-11-05 18:04:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">66.7&nbsp;%</td>
@@ -93,7 +93,7 @@
 <span id="L23"><span class="lineNum">      23</span>              : class WavePortReducedModel</span>
 <span id="L24"><span class="lineNum">      24</span>              : {</span>
 <span id="L25"><span class="lineNum">      25</span>              : public:</span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC tlaBgGNC">         197 :   struct Stats</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC tlaBgGNC">         221 :   struct Stats</span></span>
 <span id="L27"><span class="lineNum">      27</span>              :   {</span>
 <span id="L28"><span class="lineNum">      28</span>              :     std::size_t exact_solves = 0;</span>
 <span id="L29"><span class="lineNum">      29</span>              :     std::size_t reduced_solves = 0;</span>
@@ -111,12 +111,12 @@
 <span id="L41"><span class="lineNum">      41</span>              :   void ConfigureTraining(std::size_t max_basis_size);</span>
 <span id="L42"><span class="lineNum">      42</span>              :   void Enable(bool enable, double adaptive_tol, const ComplexOperator *truth_operator,</span>
 <span id="L43"><span class="lineNum">      43</span>              :               std::complex&lt;double&gt; truth_omega, double truth_sigma);</span>
-<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">         367 :   void ResetSolution() { has_solution = false; }</span></span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">         391 :   void ResetSolution() { has_solution = false; }</span></span>
 <span id="L45"><span class="lineNum">      45</span>              : </span>
-<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">         989 :   bool IsEnabled() const { return enabled; }</span></span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">        1061 :   bool IsEnabled() const { return enabled; }</span></span>
 <span id="L47"><span class="lineNum">      47</span>              :   bool IsReady() const</span>
 <span id="L48"><span class="lineNum">      48</span>              :   {</span>
-<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">         348 :     return enabled &amp;&amp; affine_model_ready &amp;&amp; solver_comm != MPI_COMM_NULL &amp;&amp;</span></span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">         372 :     return enabled &amp;&amp; affine_model_ready &amp;&amp; solver_comm != MPI_COMM_NULL &amp;&amp;</span></span>
 <span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">          78 :            basis.size() &gt;= static_cast&lt;std::size_t&gt;(num_modes);</span></span>
 <span id="L51"><span class="lineNum">      51</span>              :   }</span>
 <span id="L52"><span class="lineNum">      52</span>              :   bool TrySolve(double omega, double sigma);</span>
@@ -131,7 +131,7 @@
 <span id="L61"><span class="lineNum">      61</span>              :   std::size_t GetBasisSize() const { return basis.size(); }</span>
 <span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">          30 :   double GetTolerance() const { return tolerance; }</span></span>
 <span id="L63"><span class="lineNum">      63</span>              :   bool HasBasis() const { return !basis.empty(); }</span>
-<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">         531 :   bool HasSolution() const { return has_solution; }</span></span>
+<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">         579 :   bool HasSolution() const { return has_solution; }</span></span>
 <span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">          63 :   std::complex&lt;double&gt; GetEigenvalue(int i) const { return eigenvalues.at(i); }</span></span>
 <span id="L66"><span class="lineNum">      66</span> <span class="tlaUNC tlaBgUNC">           0 :   void GetEigenvector(int i, ComplexVector &amp;x) const { x = eigenvectors.at(i); }</span></span>
 <span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC tlaBgGNC">          63 :   double GetBackwardError(int i) const { return errors.at(i); }</span></span>

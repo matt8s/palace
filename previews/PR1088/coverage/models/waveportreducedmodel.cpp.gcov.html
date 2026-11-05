@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-10-23 01:41:56</td>
+            <td class="headerValue">2026-11-05 18:04:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -89,14 +89,14 @@
 <span id="L19"><span class="lineNum">      19</span>              : namespace palace</span>
 <span id="L20"><span class="lineNum">      20</span>              : {</span>
 <span id="L21"><span class="lineNum">      21</span>              : </span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC tlaBgGNC">         167 : WavePortReducedModel::WavePortReducedModel(</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC tlaBgGNC">         191 : WavePortReducedModel::WavePortReducedModel(</span></span>
 <span id="L23"><span class="lineNum">      23</span>              :     int num_modes, double eig_tol, int nd_size, int h1_size, MPI_Comm solver_comm,</span>
 <span id="L24"><span class="lineNum">      24</span>              :     bool wave_port, const mode_assembly::ModeOperatorModel &amp;mode_op_model,</span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">         167 :     const ComplexOperator &amp;opB)</span></span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">         167 :   : num_modes(num_modes), eig_tol(eig_tol), nd_size(nd_size), h1_size(h1_size),</span></span>
-<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">         167 :     solver_comm(solver_comm), wave_port(wave_port), mode_op_model(mode_op_model), opB(opB)</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">         191 :     const ComplexOperator &amp;opB)</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">         191 :   : num_modes(num_modes), eig_tol(eig_tol), nd_size(nd_size), h1_size(h1_size),</span></span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">         191 :     solver_comm(solver_comm), wave_port(wave_port), mode_op_model(mode_op_model), opB(opB)</span></span>
 <span id="L28"><span class="lineNum">      28</span>              : {</span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">         167 : }</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">         191 : }</span></span>
 <span id="L30"><span class="lineNum">      30</span>              : </span>
 <span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">          15 : void WavePortReducedModel::ConfigureTraining(std::size_t max_basis_size)</span></span>
 <span id="L32"><span class="lineNum">      32</span>              : {</span>
@@ -125,10 +125,10 @@
 <span id="L55"><span class="lineNum">      55</span>              :   }</span>
 <span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">          15 : }</span></span>
 <span id="L57"><span class="lineNum">      57</span>              : </span>
-<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">         217 : void WavePortReducedModel::RecordExactSolve()</span></span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">         241 : void WavePortReducedModel::RecordExactSolve()</span></span>
 <span id="L59"><span class="lineNum">      59</span>              : {</span>
-<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">         217 :   stats.exact_solves++;</span></span>
-<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">         217 : }</span></span>
+<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">         241 :   stats.exact_solves++;</span></span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">         241 : }</span></span>
 <span id="L62"><span class="lineNum">      62</span>              : </span>
 <span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">          75 : void WavePortReducedModel::RecordReducedSolve()</span></span>
 <span id="L64"><span class="lineNum">      64</span>              : {</span>
@@ -332,13 +332,13 @@
 <span id="L262"><span class="lineNum">     262</span>              :   return true;</span>
 <span id="L263"><span class="lineNum">     263</span>              : }</span>
 <span id="L264"><span class="lineNum">     264</span>              : </span>
-<span id="L265"><span class="lineNum">     265</span> <span class="tlaGNC">         217 : void WavePortReducedModel::ObserveExactEigenvectors(int num_converged,</span></span>
+<span id="L265"><span class="lineNum">     265</span> <span class="tlaGNC">         241 : void WavePortReducedModel::ObserveExactEigenvectors(int num_converged,</span></span>
 <span id="L266"><span class="lineNum">     266</span>              :                                                     const EigenvalueSolver &amp;eigen,</span>
 <span id="L267"><span class="lineNum">     267</span>              :                                                     const std::vector&lt;int&gt; &amp;mode_perm)</span>
 <span id="L268"><span class="lineNum">     268</span>              : {</span>
-<span id="L269"><span class="lineNum">     269</span> <span class="tlaGNC">         217 :   if (num_converged &lt;= 0 || basis_cap == 0)</span></span>
+<span id="L269"><span class="lineNum">     269</span> <span class="tlaGNC">         241 :   if (num_converged &lt;= 0 || basis_cap == 0)</span></span>
 <span id="L270"><span class="lineNum">     270</span>              :   {</span>
-<span id="L271"><span class="lineNum">     271</span> <span class="tlaGNC">         181 :     return;</span></span>
+<span id="L271"><span class="lineNum">     271</span> <span class="tlaGNC">         205 :     return;</span></span>
 <span id="L272"><span class="lineNum">     272</span>              :   }</span>
 <span id="L273"><span class="lineNum">     273</span>              :   const std::size_t old_basis_size = basis.size();</span>
 <span id="L274"><span class="lineNum">     274</span>              :   const int n = std::min(num_modes, num_converged);</span>

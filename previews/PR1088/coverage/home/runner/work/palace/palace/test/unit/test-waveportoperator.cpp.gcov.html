@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntryHi">99.5&nbsp;%</td>
-            <td class="headerCovTableEntry">373</td>
-            <td class="headerCovTableEntry">371</td>
+            <td class="headerCovTableEntry">379</td>
+            <td class="headerCovTableEntry">377</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-10-23 01:41:56</td>
+            <td class="headerValue">2026-11-05 18:04:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -562,349 +562,362 @@
 <span id="L492"><span class="lineNum">     492</span>              : // thickness d above the gap, compared to the exact TM0 mode index from the dispersion</span>
 <span id="L493"><span class="lineNum">     493</span>              : // relation p tanh(p h) = -(q/eps) coth(q d) with a free back face (tanh(q d) for a PEC back</span>
 <span id="L494"><span class="lineNum">     494</span>              : // face), where p^2 = k0^2 (n^2 - 1), q^2 = 1/lambda^2 + p^2, and eps = 1 - 1/(k0 lambda)^2.</span>
-<span id="L495"><span class="lineNum">     495</span>              : // The gap keeps n_eff below the spectral shift of the port mode solve.</span>
-<span id="L496"><span class="lineNum">     496</span> <span class="tlaGNC">           3 : TEST_CASE(&quot;WavePortOperator London slab&quot;, &quot;[waveportoperator][Serial][Parallel]&quot;)</span></span>
-<span id="L497"><span class="lineNum">     497</span>              : {</span>
-<span id="L498"><span class="lineNum">     498</span> <span class="tlaGNC">           3 :   MPI_Comm comm = Mpi::World();</span></span>
-<span id="L499"><span class="lineNum">     499</span>              :   constexpr double lambda = 0.1, w = 1.0, h = 5.0, d = 0.1, l = 2.0, freq_ghz = 500.0;</span>
-<span id="L500"><span class="lineNum">     500</span> <span class="tlaGNC">           9 :   for (bool pec_back : {false, true})</span></span>
-<span id="L501"><span class="lineNum">     501</span>              :   {</span>
-<span id="L502"><span class="lineNum">     502</span>              :     json setup = {</span>
-<span id="L503"><span class="lineNum">     503</span>              :         {&quot;Problem&quot;, {{&quot;Type&quot;, &quot;Driven&quot;}, {&quot;Output&quot;, &quot;&quot;}}},</span>
-<span id="L504"><span class="lineNum">     504</span>              :         {&quot;Model&quot;, {{&quot;Mesh&quot;, &quot;london_slab.mesh&quot;}, {&quot;L0&quot;, 1.0e-6}}},</span>
-<span id="L505"><span class="lineNum">     505</span>              :         {&quot;Domains&quot;,</span>
-<span id="L506"><span class="lineNum">     506</span> <span class="tlaGNC">         126 :          {{&quot;Materials&quot;, json::array({{{&quot;Attributes&quot;, {1}}},</span></span>
-<span id="L507"><span class="lineNum">     507</span>              :                                      {{&quot;Attributes&quot;, {2}}, {&quot;LondonDepth&quot;, lambda}}})}}},</span>
-<span id="L508"><span class="lineNum">     508</span>              :         {&quot;Boundaries&quot;,</span>
-<span id="L509"><span class="lineNum">     509</span> <span class="tlaGNC">          30 :          {{&quot;PEC&quot;, {{&quot;Attributes&quot;, pec_back ? json({1, 2}) : json({1})}}},</span></span>
-<span id="L510"><span class="lineNum">     510</span>              :           {&quot;WavePort&quot;,</span>
-<span id="L511"><span class="lineNum">     511</span> <span class="tlaGNC">         162 :            json::array({{{&quot;Index&quot;, 1}, {&quot;Attributes&quot;, {4}}, {&quot;Excitation&quot;, true}},</span></span>
-<span id="L512"><span class="lineNum">     512</span>              :                         {{&quot;Index&quot;, 2}, {&quot;Attributes&quot;, {5}}}})}}},</span>
-<span id="L513"><span class="lineNum">     513</span>              :         {&quot;Solver&quot;,</span>
-<span id="L514"><span class="lineNum">     514</span>              :          {{&quot;Order&quot;, 2},</span>
-<span id="L515"><span class="lineNum">     515</span>              :           {&quot;Driven&quot;,</span>
-<span id="L516"><span class="lineNum">     516</span> <span class="tlaGNC">         354 :            {{&quot;Samples&quot;, json::array({{{&quot;Type&quot;, &quot;Point&quot;}, {&quot;Freq&quot;, {freq_ghz}}}})}}}}}};</span></span>
-<span id="L517"><span class="lineNum">     517</span> <span class="tlaGNC">           6 :     IoData iodata(setup, /*print=*/false);</span></span>
-<span id="L518"><span class="lineNum">     518</span>              : </span>
-<span id="L519"><span class="lineNum">     519</span>              :     // Hexahedra: attribute 1 for the gap and 2 for the slab; boundary attributes 1 (y = 0),</span>
-<span id="L520"><span class="lineNum">     520</span>              :     // 2 (y = h + d), 3 (x = 0, w), 4 (z = 0), and 5 (z = l).</span>
-<span id="L521"><span class="lineNum">     521</span>              :     constexpr int nx = 2, ny_gap = 8, ny_slab = 8, nz = 2, ny = ny_gap + ny_slab;</span>
-<span id="L522"><span class="lineNum">     522</span>              :     auto smesh = std::make_unique&lt;mfem::Mesh&gt;(</span>
-<span id="L523"><span class="lineNum">     523</span> <span class="tlaGNC">           6 :         3, (nx + 1) * (ny + 1) * (nz + 1), nx * ny * nz, 2 * (nx * nz + ny * nz + nx * ny));</span></span>
-<span id="L524"><span class="lineNum">     524</span> <span class="tlaGNC">          24 :     for (int k = 0; k &lt;= nz; k++)</span></span>
-<span id="L525"><span class="lineNum">     525</span>              :     {</span>
-<span id="L526"><span class="lineNum">     526</span> <span class="tlaGNC">         324 :       for (int j = 0; j &lt;= ny; j++)</span></span>
-<span id="L527"><span class="lineNum">     527</span>              :       {</span>
-<span id="L528"><span class="lineNum">     528</span> <span class="tlaGNC">         306 :         const double y = (j &lt;= ny_gap) ? h * j / ny_gap : h + d * (j - ny_gap) / ny_slab;</span></span>
-<span id="L529"><span class="lineNum">     529</span> <span class="tlaGNC">        1224 :         for (int i = 0; i &lt;= nx; i++)</span></span>
-<span id="L530"><span class="lineNum">     530</span>              :         {</span>
-<span id="L531"><span class="lineNum">     531</span> <span class="tlaGNC">         918 :           smesh-&gt;AddVertex(w * i / nx, y, l * k / nz);</span></span>
-<span id="L532"><span class="lineNum">     532</span>              :         }</span>
-<span id="L533"><span class="lineNum">     533</span>              :       }</span>
-<span id="L534"><span class="lineNum">     534</span>              :     }</span>
-<span id="L535"><span class="lineNum">     535</span> <span class="tlaGNC">        1200 :     auto v = [&amp;](int i, int j, int k) { return i + (nx + 1) * (j + (ny + 1) * k); };</span></span>
-<span id="L536"><span class="lineNum">     536</span> <span class="tlaGNC">          18 :     for (int k = 0; k &lt; nz; k++)</span></span>
-<span id="L537"><span class="lineNum">     537</span>              :     {</span>
-<span id="L538"><span class="lineNum">     538</span> <span class="tlaGNC">         204 :       for (int j = 0; j &lt; ny; j++)</span></span>
-<span id="L539"><span class="lineNum">     539</span>              :       {</span>
-<span id="L540"><span class="lineNum">     540</span> <span class="tlaGNC">         576 :         for (int i = 0; i &lt; nx; i++)</span></span>
-<span id="L541"><span class="lineNum">     541</span>              :         {</span>
-<span id="L542"><span class="lineNum">     542</span> <span class="tlaGNC">         576 :           smesh-&gt;AddHex(v(i, j, k), v(i + 1, j, k), v(i + 1, j + 1, k), v(i, j + 1, k),</span></span>
-<span id="L543"><span class="lineNum">     543</span>              :                         v(i, j, k + 1), v(i + 1, j, k + 1), v(i + 1, j + 1, k + 1),</span>
-<span id="L544"><span class="lineNum">     544</span>              :                         v(i, j + 1, k + 1), (j &lt; ny_gap) ? 1 : 2);</span>
+<span id="L495"><span class="lineNum">     495</span>              : // The wide gap keeps n_eff below the default spectral shift of the port mode solve. The</span>
+<span id="L496"><span class="lineNum">     496</span>              : // thin gap makes the mode slower than bulk waves (n_eff = 1.29 and 1.18), above the default</span>
+<span id="L497"><span class="lineNum">     497</span>              : // shift, so it must be found with and without a Target.</span>
+<span id="L498"><span class="lineNum">     498</span> <span class="tlaGNC">           3 : TEST_CASE(&quot;WavePortOperator London slab&quot;, &quot;[waveportoperator][Serial][Parallel]&quot;)</span></span>
+<span id="L499"><span class="lineNum">     499</span>              : {</span>
+<span id="L500"><span class="lineNum">     500</span> <span class="tlaGNC">           3 :   MPI_Comm comm = Mpi::World();</span></span>
+<span id="L501"><span class="lineNum">     501</span>              :   constexpr double lambda = 0.1, w = 1.0, d = 0.1, l = 2.0, freq_ghz = 500.0;</span>
+<span id="L502"><span class="lineNum">     502</span> <span class="tlaGNC">          21 :   for (int c = 0; c &lt; 6; c++)</span></span>
+<span id="L503"><span class="lineNum">     503</span>              :   {</span>
+<span id="L504"><span class="lineNum">     504</span>              :     // Wide gap and thin gap without a Target, and thin gap with one, with a free or PEC</span>
+<span id="L505"><span class="lineNum">     505</span>              :     // back face.</span>
+<span id="L506"><span class="lineNum">     506</span> <span class="tlaGNC">          18 :     const double h = (c &lt; 2) ? 5.0 : 0.2, target = (c &lt; 4) ? 0.0 : 1.25;</span></span>
+<span id="L507"><span class="lineNum">     507</span> <span class="tlaGNC">          18 :     const bool pec_back = (c % 2 == 1);</span></span>
+<span id="L508"><span class="lineNum">     508</span> <span class="tlaGNC">         450 :     json ports = json::array({{{&quot;Index&quot;, 1}, {&quot;Attributes&quot;, {4}}, {&quot;Excitation&quot;, true}},</span></span>
+<span id="L509"><span class="lineNum">     509</span> <span class="tlaGNC">          54 :                               {{&quot;Index&quot;, 2}, {&quot;Attributes&quot;, {5}}}});</span></span>
+<span id="L510"><span class="lineNum">     510</span> <span class="tlaGNC">          18 :     if (target &gt; 0.0)</span></span>
+<span id="L511"><span class="lineNum">     511</span>              :     {</span>
+<span id="L512"><span class="lineNum">     512</span> <span class="tlaGNC">          24 :       for (auto &amp;port : ports)</span></span>
+<span id="L513"><span class="lineNum">     513</span>              :       {</span>
+<span id="L514"><span class="lineNum">     514</span> <span class="tlaGNC">          24 :         port[&quot;Target&quot;] = target;</span></span>
+<span id="L515"><span class="lineNum">     515</span>              :       }</span>
+<span id="L516"><span class="lineNum">     516</span>              :     }</span>
+<span id="L517"><span class="lineNum">     517</span>              :     json setup = {</span>
+<span id="L518"><span class="lineNum">     518</span>              :         {&quot;Problem&quot;, {{&quot;Type&quot;, &quot;Driven&quot;}, {&quot;Output&quot;, &quot;&quot;}}},</span>
+<span id="L519"><span class="lineNum">     519</span>              :         {&quot;Model&quot;, {{&quot;Mesh&quot;, &quot;london_slab.mesh&quot;}, {&quot;L0&quot;, 1.0e-6}}},</span>
+<span id="L520"><span class="lineNum">     520</span>              :         {&quot;Domains&quot;,</span>
+<span id="L521"><span class="lineNum">     521</span> <span class="tlaGNC">         378 :          {{&quot;Materials&quot;, json::array({{{&quot;Attributes&quot;, {1}}},</span></span>
+<span id="L522"><span class="lineNum">     522</span>              :                                      {{&quot;Attributes&quot;, {2}}, {&quot;LondonDepth&quot;, lambda}}})}}},</span>
+<span id="L523"><span class="lineNum">     523</span>              :         {&quot;Boundaries&quot;,</span>
+<span id="L524"><span class="lineNum">     524</span> <span class="tlaGNC">          90 :          {{&quot;PEC&quot;, {{&quot;Attributes&quot;, pec_back ? json({1, 2}) : json({1})}}},</span></span>
+<span id="L525"><span class="lineNum">     525</span>              :           {&quot;WavePort&quot;, ports}}},</span>
+<span id="L526"><span class="lineNum">     526</span>              :         {&quot;Solver&quot;,</span>
+<span id="L527"><span class="lineNum">     527</span>              :          {{&quot;Order&quot;, 2},</span>
+<span id="L528"><span class="lineNum">     528</span>              :           {&quot;Driven&quot;,</span>
+<span id="L529"><span class="lineNum">     529</span> <span class="tlaGNC">        1062 :            {{&quot;Samples&quot;, json::array({{{&quot;Type&quot;, &quot;Point&quot;}, {&quot;Freq&quot;, {freq_ghz}}}})}}}}}};</span></span>
+<span id="L530"><span class="lineNum">     530</span> <span class="tlaGNC">          18 :     IoData iodata(setup, /*print=*/false);</span></span>
+<span id="L531"><span class="lineNum">     531</span>              : </span>
+<span id="L532"><span class="lineNum">     532</span>              :     // Hexahedra: attribute 1 for the gap and 2 for the slab; boundary attributes 1 (y = 0),</span>
+<span id="L533"><span class="lineNum">     533</span>              :     // 2 (y = h + d), 3 (x = 0, w), 4 (z = 0), and 5 (z = l).</span>
+<span id="L534"><span class="lineNum">     534</span>              :     constexpr int nx = 2, ny_gap = 8, ny_slab = 8, nz = 2, ny = ny_gap + ny_slab;</span>
+<span id="L535"><span class="lineNum">     535</span>              :     auto smesh = std::make_unique&lt;mfem::Mesh&gt;(</span>
+<span id="L536"><span class="lineNum">     536</span> <span class="tlaGNC">          18 :         3, (nx + 1) * (ny + 1) * (nz + 1), nx * ny * nz, 2 * (nx * nz + ny * nz + nx * ny));</span></span>
+<span id="L537"><span class="lineNum">     537</span> <span class="tlaGNC">          72 :     for (int k = 0; k &lt;= nz; k++)</span></span>
+<span id="L538"><span class="lineNum">     538</span>              :     {</span>
+<span id="L539"><span class="lineNum">     539</span> <span class="tlaGNC">         972 :       for (int j = 0; j &lt;= ny; j++)</span></span>
+<span id="L540"><span class="lineNum">     540</span>              :       {</span>
+<span id="L541"><span class="lineNum">     541</span> <span class="tlaGNC">         918 :         const double y = (j &lt;= ny_gap) ? h * j / ny_gap : h + d * (j - ny_gap) / ny_slab;</span></span>
+<span id="L542"><span class="lineNum">     542</span> <span class="tlaGNC">        3672 :         for (int i = 0; i &lt;= nx; i++)</span></span>
+<span id="L543"><span class="lineNum">     543</span>              :         {</span>
+<span id="L544"><span class="lineNum">     544</span> <span class="tlaGNC">        2754 :           smesh-&gt;AddVertex(w * i / nx, y, l * k / nz);</span></span>
 <span id="L545"><span class="lineNum">     545</span>              :         }</span>
 <span id="L546"><span class="lineNum">     546</span>              :       }</span>
 <span id="L547"><span class="lineNum">     547</span>              :     }</span>
-<span id="L548"><span class="lineNum">     548</span> <span class="tlaGNC">          18 :     for (int k = 0; k &lt; nz; k++)</span></span>
-<span id="L549"><span class="lineNum">     549</span>              :     {</span>
-<span id="L550"><span class="lineNum">     550</span> <span class="tlaGNC">          36 :       for (int i = 0; i &lt; nx; i++)</span></span>
-<span id="L551"><span class="lineNum">     551</span>              :       {</span>
-<span id="L552"><span class="lineNum">     552</span> <span class="tlaGNC">          24 :         smesh-&gt;AddBdrQuad(v(i, 0, k), v(i, 0, k + 1), v(i + 1, 0, k + 1), v(i + 1, 0, k),</span></span>
-<span id="L553"><span class="lineNum">     553</span>              :                           1);</span>
-<span id="L554"><span class="lineNum">     554</span> <span class="tlaGNC">          24 :         smesh-&gt;AddBdrQuad(v(i, ny, k), v(i + 1, ny, k), v(i + 1, ny, k + 1),</span></span>
-<span id="L555"><span class="lineNum">     555</span>              :                           v(i, ny, k + 1), 2);</span>
-<span id="L556"><span class="lineNum">     556</span>              :       }</span>
-<span id="L557"><span class="lineNum">     557</span> <span class="tlaGNC">         204 :       for (int j = 0; j &lt; ny; j++)</span></span>
-<span id="L558"><span class="lineNum">     558</span>              :       {</span>
-<span id="L559"><span class="lineNum">     559</span> <span class="tlaGNC">         192 :         smesh-&gt;AddBdrQuad(v(0, j, k), v(0, j + 1, k), v(0, j + 1, k + 1), v(0, j, k + 1),</span></span>
-<span id="L560"><span class="lineNum">     560</span>              :                           3);</span>
-<span id="L561"><span class="lineNum">     561</span> <span class="tlaGNC">         192 :         smesh-&gt;AddBdrQuad(v(nx, j, k), v(nx, j, k + 1), v(nx, j + 1, k + 1),</span></span>
-<span id="L562"><span class="lineNum">     562</span>              :                           v(nx, j + 1, k), 3);</span>
-<span id="L563"><span class="lineNum">     563</span>              :       }</span>
-<span id="L564"><span class="lineNum">     564</span>              :     }</span>
-<span id="L565"><span class="lineNum">     565</span> <span class="tlaGNC">         102 :     for (int j = 0; j &lt; ny; j++)</span></span>
-<span id="L566"><span class="lineNum">     566</span>              :     {</span>
-<span id="L567"><span class="lineNum">     567</span> <span class="tlaGNC">         288 :       for (int i = 0; i &lt; nx; i++)</span></span>
-<span id="L568"><span class="lineNum">     568</span>              :       {</span>
-<span id="L569"><span class="lineNum">     569</span> <span class="tlaGNC">         192 :         smesh-&gt;AddBdrQuad(v(i, j, 0), v(i, j + 1, 0), v(i + 1, j + 1, 0), v(i + 1, j, 0),</span></span>
-<span id="L570"><span class="lineNum">     570</span>              :                           4);</span>
-<span id="L571"><span class="lineNum">     571</span> <span class="tlaGNC">         192 :         smesh-&gt;AddBdrQuad(v(i, j, nz), v(i + 1, j, nz), v(i + 1, j + 1, nz),</span></span>
-<span id="L572"><span class="lineNum">     572</span>              :                           v(i, j + 1, nz), 5);</span>
-<span id="L573"><span class="lineNum">     573</span>              :       }</span>
-<span id="L574"><span class="lineNum">     574</span>              :     }</span>
-<span id="L575"><span class="lineNum">     575</span> <span class="tlaGNC">           6 :     smesh-&gt;FinalizeHexMesh(1, 1, true);</span></span>
-<span id="L576"><span class="lineNum">     576</span> <span class="tlaGNC">           6 :     iodata.model.Lc = mesh::ComputeReferenceLength(smesh, comm);</span></span>
-<span id="L577"><span class="lineNum">     577</span> <span class="tlaGNC">           6 :     iodata.NondimensionalizeInputs(smesh);</span></span>
-<span id="L578"><span class="lineNum">     578</span> <span class="tlaGNC">           6 :     std::vector&lt;std::unique_ptr&lt;Mesh&gt;&gt; mesh_vec;</span></span>
-<span id="L579"><span class="lineNum">     579</span>              :     mesh_vec.push_back(</span>
-<span id="L580"><span class="lineNum">     580</span> <span class="tlaGNC">          12 :         std::make_unique&lt;Mesh&gt;(std::make_unique&lt;mfem::ParMesh&gt;(comm, *smesh)));</span></span>
-<span id="L581"><span class="lineNum">     581</span> <span class="tlaGNC">           6 :     SpaceOperator space_op(iodata, mesh_vec);</span></span>
-<span id="L582"><span class="lineNum">     582</span>              : </span>
-<span id="L583"><span class="lineNum">     583</span>              :     auto &amp;wp_op = space_op.GetWavePortOp();</span>
-<span id="L584"><span class="lineNum">     584</span> <span class="tlaGNC">           6 :     REQUIRE(wp_op.Size() == 2);</span></span>
-<span id="L585"><span class="lineNum">     585</span>              :     const double omega =</span>
-<span id="L586"><span class="lineNum">     586</span>              :         2.0 * std::numbers::pi *</span>
-<span id="L587"><span class="lineNum">     587</span> <span class="tlaGNC">           6 :         iodata.units.Nondimensionalize&lt;Units::ValueType::FREQUENCY&gt;(freq_ghz);</span></span>
-<span id="L588"><span class="lineNum">     588</span>              :     wp_op.InitializeModalReference(omega);</span>
-<span id="L589"><span class="lineNum">     589</span> <span class="tlaGNC">           6 :     const double k0 =</span></span>
-<span id="L590"><span class="lineNum">     590</span>              :         2.0 * std::numbers::pi * freq_ghz * 1.0e9 / electromagnetics::c0_ * 1.0e-6;</span>
-<span id="L591"><span class="lineNum">     591</span> <span class="tlaGNC">           6 :     const double eps = 1.0 - 1.0 / (k0 * k0 * lambda * lambda);</span></span>
-<span id="L592"><span class="lineNum">     592</span> <span class="tlaGNC">        1200 :     auto F = [&amp;](double n)</span></span>
-<span id="L593"><span class="lineNum">     593</span>              :     {</span>
-<span id="L594"><span class="lineNum">     594</span> <span class="tlaGNC">        1200 :       const double p = k0 * std::sqrt(n * n - 1.0);</span></span>
-<span id="L595"><span class="lineNum">     595</span> <span class="tlaGNC">        1200 :       const double q = std::sqrt(1.0 / (lambda * lambda) + p * p);</span></span>
-<span id="L596"><span class="lineNum">     596</span> <span class="tlaGNC">        1200 :       const double g = pec_back ? std::tanh(q * d) : 1.0 / std::tanh(q * d);</span></span>
-<span id="L597"><span class="lineNum">     597</span> <span class="tlaGNC">        1200 :       return p * std::tanh(p * h) + q * g / eps;</span></span>
-<span id="L598"><span class="lineNum">     598</span> <span class="tlaGNC">           6 :     };</span></span>
-<span id="L599"><span class="lineNum">     599</span>              :     double lo = 1.0 + 1.0e-12, hi = 10.0;</span>
-<span id="L600"><span class="lineNum">     600</span> <span class="tlaGNC">        1206 :     for (int it = 0; it &lt; 200; it++)</span></span>
-<span id="L601"><span class="lineNum">     601</span>              :     {</span>
-<span id="L602"><span class="lineNum">     602</span> <span class="tlaGNC">        1200 :       const double mid = 0.5 * (lo + hi);</span></span>
-<span id="L603"><span class="lineNum">     603</span> <span class="tlaGNC">        1200 :       ((F(mid) &lt; 0.0) ? lo : hi) = mid;</span></span>
-<span id="L604"><span class="lineNum">     604</span>              :     }</span>
-<span id="L605"><span class="lineNum">     605</span> <span class="tlaGNC">           6 :     const double n_exact = 0.5 * (lo + hi);</span></span>
-<span id="L606"><span class="lineNum">     606</span> <span class="tlaGNC">          18 :     for (const auto &amp;[idx, data] : wp_op)</span></span>
-<span id="L607"><span class="lineNum">     607</span>              :     {</span>
-<span id="L608"><span class="lineNum">     608</span> <span class="tlaGNC">          12 :       const double n_eff = data.kn0.real() / omega;</span></span>
-<span id="L609"><span class="lineNum">     609</span> <span class="tlaGNC">          12 :       CAPTURE(pec_back, idx, n_exact, n_eff, data.kn0.imag() / omega);</span></span>
-<span id="L610"><span class="lineNum">     610</span> <span class="tlaGNC">          12 :       CHECK(std::abs(data.kn0.imag()) &lt; 1.0e-6 * std::abs(data.kn0.real()));</span></span>
-<span id="L611"><span class="lineNum">     611</span> <span class="tlaGNC">          36 :       CHECK_THAT(n_eff, WithinRel(n_exact, 1.0e-7));</span></span>
-<span id="L612"><span class="lineNum">     612</span> <span class="tlaGNC">          12 :     }</span></span>
-<span id="L613"><span class="lineNum">     613</span> <span class="tlaGNC">          12 :   }</span></span>
-<span id="L614"><span class="lineNum">     614</span> <span class="tlaGNC">         615 : }</span></span>
-<span id="L615"><span class="lineNum">     615</span>              : </span>
-<span id="L616"><span class="lineNum">     616</span>              : // The traces of cpw_wave_uniform are interior PEC sheets crossing the wave ports when the</span>
-<span id="L617"><span class="lineNum">     617</span>              : // mesh is not cracked. Refining the elements next to the ports on one side of the trace</span>
-<span id="L618"><span class="lineNum">     618</span>              : // plane makes the port submeshes nonconforming, with master edges on the unrefined side of</span>
-<span id="L619"><span class="lineNum">     619</span>              : // the trace lines which have no boundary elements: the port DoFs on the PEC segments must</span>
-<span id="L620"><span class="lineNum">     620</span>              : // be essential (masters included), and no others.</span>
-<span id="L621"><span class="lineNum">     621</span> <span class="tlaGNC">           3 : TEST_CASE(&quot;WavePortOperator-InteriorPECOnNonconformingPorts&quot;,</span></span>
-<span id="L622"><span class="lineNum">     622</span>              :           &quot;[waveportoperator][Serial][Parallel]&quot;)</span>
-<span id="L623"><span class="lineNum">     623</span>              : {</span>
-<span id="L624"><span class="lineNum">     624</span>              :   MPI_Comm comm = Mpi::World();</span>
-<span id="L625"><span class="lineNum">     625</span> <span class="tlaGNC">           3 :   json setup = LoadCpwWaveConfig();</span></span>
-<span id="L626"><span class="lineNum">     626</span> <span class="tlaGNC">           3 :   setup[&quot;Model&quot;][&quot;CrackInternalBoundaryElements&quot;] = false;</span></span>
-<span id="L627"><span class="lineNum">     627</span> <span class="tlaGNC">           3 :   IoData iodata(setup, /*print=*/false);</span></span>
+<span id="L548"><span class="lineNum">     548</span> <span class="tlaGNC">        3600 :     auto v = [&amp;](int i, int j, int k) { return i + (nx + 1) * (j + (ny + 1) * k); };</span></span>
+<span id="L549"><span class="lineNum">     549</span> <span class="tlaGNC">          54 :     for (int k = 0; k &lt; nz; k++)</span></span>
+<span id="L550"><span class="lineNum">     550</span>              :     {</span>
+<span id="L551"><span class="lineNum">     551</span> <span class="tlaGNC">         612 :       for (int j = 0; j &lt; ny; j++)</span></span>
+<span id="L552"><span class="lineNum">     552</span>              :       {</span>
+<span id="L553"><span class="lineNum">     553</span> <span class="tlaGNC">        1728 :         for (int i = 0; i &lt; nx; i++)</span></span>
+<span id="L554"><span class="lineNum">     554</span>              :         {</span>
+<span id="L555"><span class="lineNum">     555</span> <span class="tlaGNC">        1728 :           smesh-&gt;AddHex(v(i, j, k), v(i + 1, j, k), v(i + 1, j + 1, k), v(i, j + 1, k),</span></span>
+<span id="L556"><span class="lineNum">     556</span>              :                         v(i, j, k + 1), v(i + 1, j, k + 1), v(i + 1, j + 1, k + 1),</span>
+<span id="L557"><span class="lineNum">     557</span>              :                         v(i, j + 1, k + 1), (j &lt; ny_gap) ? 1 : 2);</span>
+<span id="L558"><span class="lineNum">     558</span>              :         }</span>
+<span id="L559"><span class="lineNum">     559</span>              :       }</span>
+<span id="L560"><span class="lineNum">     560</span>              :     }</span>
+<span id="L561"><span class="lineNum">     561</span> <span class="tlaGNC">          54 :     for (int k = 0; k &lt; nz; k++)</span></span>
+<span id="L562"><span class="lineNum">     562</span>              :     {</span>
+<span id="L563"><span class="lineNum">     563</span> <span class="tlaGNC">         108 :       for (int i = 0; i &lt; nx; i++)</span></span>
+<span id="L564"><span class="lineNum">     564</span>              :       {</span>
+<span id="L565"><span class="lineNum">     565</span> <span class="tlaGNC">          72 :         smesh-&gt;AddBdrQuad(v(i, 0, k), v(i, 0, k + 1), v(i + 1, 0, k + 1), v(i + 1, 0, k),</span></span>
+<span id="L566"><span class="lineNum">     566</span>              :                           1);</span>
+<span id="L567"><span class="lineNum">     567</span> <span class="tlaGNC">          72 :         smesh-&gt;AddBdrQuad(v(i, ny, k), v(i + 1, ny, k), v(i + 1, ny, k + 1),</span></span>
+<span id="L568"><span class="lineNum">     568</span>              :                           v(i, ny, k + 1), 2);</span>
+<span id="L569"><span class="lineNum">     569</span>              :       }</span>
+<span id="L570"><span class="lineNum">     570</span> <span class="tlaGNC">         612 :       for (int j = 0; j &lt; ny; j++)</span></span>
+<span id="L571"><span class="lineNum">     571</span>              :       {</span>
+<span id="L572"><span class="lineNum">     572</span> <span class="tlaGNC">         576 :         smesh-&gt;AddBdrQuad(v(0, j, k), v(0, j + 1, k), v(0, j + 1, k + 1), v(0, j, k + 1),</span></span>
+<span id="L573"><span class="lineNum">     573</span>              :                           3);</span>
+<span id="L574"><span class="lineNum">     574</span> <span class="tlaGNC">         576 :         smesh-&gt;AddBdrQuad(v(nx, j, k), v(nx, j, k + 1), v(nx, j + 1, k + 1),</span></span>
+<span id="L575"><span class="lineNum">     575</span>              :                           v(nx, j + 1, k), 3);</span>
+<span id="L576"><span class="lineNum">     576</span>              :       }</span>
+<span id="L577"><span class="lineNum">     577</span>              :     }</span>
+<span id="L578"><span class="lineNum">     578</span> <span class="tlaGNC">         306 :     for (int j = 0; j &lt; ny; j++)</span></span>
+<span id="L579"><span class="lineNum">     579</span>              :     {</span>
+<span id="L580"><span class="lineNum">     580</span> <span class="tlaGNC">         864 :       for (int i = 0; i &lt; nx; i++)</span></span>
+<span id="L581"><span class="lineNum">     581</span>              :       {</span>
+<span id="L582"><span class="lineNum">     582</span> <span class="tlaGNC">         576 :         smesh-&gt;AddBdrQuad(v(i, j, 0), v(i, j + 1, 0), v(i + 1, j + 1, 0), v(i + 1, j, 0),</span></span>
+<span id="L583"><span class="lineNum">     583</span>              :                           4);</span>
+<span id="L584"><span class="lineNum">     584</span> <span class="tlaGNC">         576 :         smesh-&gt;AddBdrQuad(v(i, j, nz), v(i + 1, j, nz), v(i + 1, j + 1, nz),</span></span>
+<span id="L585"><span class="lineNum">     585</span>              :                           v(i, j + 1, nz), 5);</span>
+<span id="L586"><span class="lineNum">     586</span>              :       }</span>
+<span id="L587"><span class="lineNum">     587</span>              :     }</span>
+<span id="L588"><span class="lineNum">     588</span> <span class="tlaGNC">          18 :     smesh-&gt;FinalizeHexMesh(1, 1, true);</span></span>
+<span id="L589"><span class="lineNum">     589</span> <span class="tlaGNC">          18 :     iodata.model.Lc = mesh::ComputeReferenceLength(smesh, comm);</span></span>
+<span id="L590"><span class="lineNum">     590</span> <span class="tlaGNC">          18 :     iodata.NondimensionalizeInputs(smesh);</span></span>
+<span id="L591"><span class="lineNum">     591</span> <span class="tlaGNC">          18 :     std::vector&lt;std::unique_ptr&lt;Mesh&gt;&gt; mesh_vec;</span></span>
+<span id="L592"><span class="lineNum">     592</span>              :     mesh_vec.push_back(</span>
+<span id="L593"><span class="lineNum">     593</span> <span class="tlaGNC">          36 :         std::make_unique&lt;Mesh&gt;(std::make_unique&lt;mfem::ParMesh&gt;(comm, *smesh)));</span></span>
+<span id="L594"><span class="lineNum">     594</span> <span class="tlaGNC">          18 :     SpaceOperator space_op(iodata, mesh_vec);</span></span>
+<span id="L595"><span class="lineNum">     595</span>              : </span>
+<span id="L596"><span class="lineNum">     596</span>              :     auto &amp;wp_op = space_op.GetWavePortOp();</span>
+<span id="L597"><span class="lineNum">     597</span> <span class="tlaGNC">          18 :     REQUIRE(wp_op.Size() == 2);</span></span>
+<span id="L598"><span class="lineNum">     598</span>              :     const double omega =</span>
+<span id="L599"><span class="lineNum">     599</span>              :         2.0 * std::numbers::pi *</span>
+<span id="L600"><span class="lineNum">     600</span> <span class="tlaGNC">          18 :         iodata.units.Nondimensionalize&lt;Units::ValueType::FREQUENCY&gt;(freq_ghz);</span></span>
+<span id="L601"><span class="lineNum">     601</span>              :     wp_op.InitializeModalReference(omega);</span>
+<span id="L602"><span class="lineNum">     602</span> <span class="tlaGNC">          18 :     const double k0 =</span></span>
+<span id="L603"><span class="lineNum">     603</span>              :         2.0 * std::numbers::pi * freq_ghz * 1.0e9 / electromagnetics::c0_ * 1.0e-6;</span>
+<span id="L604"><span class="lineNum">     604</span> <span class="tlaGNC">          18 :     const double eps = 1.0 - 1.0 / (k0 * k0 * lambda * lambda);</span></span>
+<span id="L605"><span class="lineNum">     605</span> <span class="tlaGNC">        3600 :     auto F = [&amp;](double n)</span></span>
+<span id="L606"><span class="lineNum">     606</span>              :     {</span>
+<span id="L607"><span class="lineNum">     607</span> <span class="tlaGNC">        3600 :       const double p = k0 * std::sqrt(n * n - 1.0);</span></span>
+<span id="L608"><span class="lineNum">     608</span> <span class="tlaGNC">        3600 :       const double q = std::sqrt(1.0 / (lambda * lambda) + p * p);</span></span>
+<span id="L609"><span class="lineNum">     609</span> <span class="tlaGNC">        3600 :       const double g = pec_back ? std::tanh(q * d) : 1.0 / std::tanh(q * d);</span></span>
+<span id="L610"><span class="lineNum">     610</span> <span class="tlaGNC">        3600 :       return p * std::tanh(p * h) + q * g / eps;</span></span>
+<span id="L611"><span class="lineNum">     611</span> <span class="tlaGNC">          18 :     };</span></span>
+<span id="L612"><span class="lineNum">     612</span>              :     double lo = 1.0 + 1.0e-12, hi = 10.0;</span>
+<span id="L613"><span class="lineNum">     613</span> <span class="tlaGNC">        3618 :     for (int it = 0; it &lt; 200; it++)</span></span>
+<span id="L614"><span class="lineNum">     614</span>              :     {</span>
+<span id="L615"><span class="lineNum">     615</span> <span class="tlaGNC">        3600 :       const double mid = 0.5 * (lo + hi);</span></span>
+<span id="L616"><span class="lineNum">     616</span> <span class="tlaGNC">        3600 :       ((F(mid) &lt; 0.0) ? lo : hi) = mid;</span></span>
+<span id="L617"><span class="lineNum">     617</span>              :     }</span>
+<span id="L618"><span class="lineNum">     618</span> <span class="tlaGNC">          18 :     const double n_exact = 0.5 * (lo + hi);</span></span>
+<span id="L619"><span class="lineNum">     619</span> <span class="tlaGNC">          54 :     for (const auto &amp;[idx, data] : wp_op)</span></span>
+<span id="L620"><span class="lineNum">     620</span>              :     {</span>
+<span id="L621"><span class="lineNum">     621</span> <span class="tlaGNC">          36 :       const double n_eff = data.kn0.real() / omega;</span></span>
+<span id="L622"><span class="lineNum">     622</span> <span class="tlaGNC">          36 :       CAPTURE(h, target, pec_back, idx, n_exact, n_eff, data.kn0.imag() / omega);</span></span>
+<span id="L623"><span class="lineNum">     623</span> <span class="tlaGNC">          36 :       CHECK(std::abs(data.kn0.imag()) &lt; 1.0e-6 * std::abs(data.kn0.real()));</span></span>
+<span id="L624"><span class="lineNum">     624</span> <span class="tlaGNC">         108 :       CHECK_THAT(n_eff, WithinRel(n_exact, 1.0e-7));</span></span>
+<span id="L625"><span class="lineNum">     625</span> <span class="tlaGNC">          36 :     }</span></span>
+<span id="L626"><span class="lineNum">     626</span> <span class="tlaGNC">          36 :   }</span></span>
+<span id="L627"><span class="lineNum">     627</span> <span class="tlaGNC">        1839 : }</span></span>
 <span id="L628"><span class="lineNum">     628</span>              : </span>
-<span id="L629"><span class="lineNum">     629</span> <span class="tlaGNC">           3 :   std::vector&lt;std::unique_ptr&lt;Mesh&gt;&gt; mesh_io;</span></span>
-<span id="L630"><span class="lineNum">     630</span>              :   {</span>
-<span id="L631"><span class="lineNum">     631</span> <span class="tlaGNC">           3 :     auto smesh = mesh::Load(iodata, comm);</span></span>
-<span id="L632"><span class="lineNum">     632</span> <span class="tlaGNC">           3 :     if (smesh)</span></span>
-<span id="L633"><span class="lineNum">     633</span>              :     {</span>
-<span id="L634"><span class="lineNum">     634</span>              :       // Plane of the interior PEC boundary elements (coordinate axis and value).</span>
-<span id="L635"><span class="lineNum">     635</span>              :       const auto &amp;pec = iodata.boundaries.pec.attributes;</span>
-<span id="L636"><span class="lineNum">     636</span>              :       mfem::Vector lo(3), hi(3);</span>
-<span id="L637"><span class="lineNum">     637</span> <span class="tlaGNC">           2 :       lo = mfem::infinity();</span></span>
-<span id="L638"><span class="lineNum">     638</span> <span class="tlaGNC">           2 :       hi = -mfem::infinity();</span></span>
-<span id="L639"><span class="lineNum">     639</span> <span class="tlaGNC">        8002 :       for (int be = 0; be &lt; smesh-&gt;GetNBE(); be++)</span></span>
-<span id="L640"><span class="lineNum">     640</span>              :       {</span>
-<span id="L641"><span class="lineNum">     641</span>              :         int e1, e2;</span>
-<span id="L642"><span class="lineNum">     642</span> <span class="tlaGNC">        8000 :         smesh-&gt;GetFaceElements(smesh-&gt;GetBdrElementFaceIndex(be), &amp;e1, &amp;e2);</span></span>
-<span id="L643"><span class="lineNum">     643</span> <span class="tlaGNC">        8000 :         if (e2 &lt; 0 ||</span></span>
-<span id="L644"><span class="lineNum">     644</span> <span class="tlaGNC">        5720 :             std::find(pec.begin(), pec.end(), smesh-&gt;GetBdrAttribute(be)) == pec.end())</span></span>
-<span id="L645"><span class="lineNum">     645</span>              :         {</span>
-<span id="L646"><span class="lineNum">     646</span> <span class="tlaGNC">        4108 :           continue;</span></span>
-<span id="L647"><span class="lineNum">     647</span>              :         }</span>
-<span id="L648"><span class="lineNum">     648</span>              :         mfem::Array&lt;int&gt; v;</span>
-<span id="L649"><span class="lineNum">     649</span>              :         smesh-&gt;GetBdrElementVertices(be, v);</span>
-<span id="L650"><span class="lineNum">     650</span> <span class="tlaGNC">       15568 :         for (int i : v)</span></span>
-<span id="L651"><span class="lineNum">     651</span>              :         {</span>
-<span id="L652"><span class="lineNum">     652</span> <span class="tlaGNC">       46704 :           for (int d = 0; d &lt; 3; d++)</span></span>
-<span id="L653"><span class="lineNum">     653</span>              :           {</span>
-<span id="L654"><span class="lineNum">     654</span> <span class="tlaGNC">       35060 :             lo(d) = std::min(lo(d), smesh-&gt;GetVertex(i)[d]);</span></span>
-<span id="L655"><span class="lineNum">     655</span> <span class="tlaGNC">       35028 :             hi(d) = std::max(hi(d), smesh-&gt;GetVertex(i)[d]);</span></span>
-<span id="L656"><span class="lineNum">     656</span>              :           }</span>
-<span id="L657"><span class="lineNum">     657</span>              :         }</span>
-<span id="L658"><span class="lineNum">     658</span>              :       }</span>
-<span id="L659"><span class="lineNum">     659</span>              :       int axis = -1;</span>
-<span id="L660"><span class="lineNum">     660</span> <span class="tlaGNC">           8 :       for (int d = 0; d &lt; 3; d++)</span></span>
-<span id="L661"><span class="lineNum">     661</span>              :       {</span>
-<span id="L662"><span class="lineNum">     662</span> <span class="tlaGNC">           6 :         if (hi(d) - lo(d) &lt; 1.0e-9 * (1.0 + std::abs(lo(d))))</span></span>
-<span id="L663"><span class="lineNum">     663</span>              :         {</span>
-<span id="L664"><span class="lineNum">     664</span>              :           axis = d;</span>
-<span id="L665"><span class="lineNum">     665</span>              :         }</span>
-<span id="L666"><span class="lineNum">     666</span>              :       }</span>
-<span id="L667"><span class="lineNum">     667</span> <span class="tlaGNC">           2 :       REQUIRE(axis &gt;= 0);</span></span>
-<span id="L668"><span class="lineNum">     668</span>              : </span>
-<span id="L669"><span class="lineNum">     669</span>              :       // Refine the elements next to the wave ports on one side of the trace plane.</span>
-<span id="L670"><span class="lineNum">     670</span> <span class="tlaGNC">           2 :       std::vector&lt;int&gt; port_attrs;</span></span>
-<span id="L671"><span class="lineNum">     671</span> <span class="tlaGNC">          10 :       for (const auto &amp;[idx, data] : iodata.boundaries.waveport)</span></span>
-<span id="L672"><span class="lineNum">     672</span>              :       {</span>
-<span id="L673"><span class="lineNum">     673</span> <span class="tlaGNC">           8 :         port_attrs.insert(port_attrs.end(), data.attributes.begin(), data.attributes.end());</span></span>
-<span id="L674"><span class="lineNum">     674</span>              :       }</span>
-<span id="L675"><span class="lineNum">     675</span> <span class="tlaGNC">           2 :       smesh-&gt;EnsureNCMesh(true);</span></span>
-<span id="L676"><span class="lineNum">     676</span>              :       mfem::Array&lt;int&gt; marked;</span>
-<span id="L677"><span class="lineNum">     677</span>              :       mfem::Vector c(3);</span>
-<span id="L678"><span class="lineNum">     678</span> <span class="tlaGNC">        8002 :       for (int be = 0; be &lt; smesh-&gt;GetNBE(); be++)</span></span>
-<span id="L679"><span class="lineNum">     679</span>              :       {</span>
-<span id="L680"><span class="lineNum">     680</span> <span class="tlaGNC">        8000 :         if (std::find(port_attrs.begin(), port_attrs.end(), smesh-&gt;GetBdrAttribute(be)) ==</span></span>
-<span id="L681"><span class="lineNum">     681</span>              :             port_attrs.end())</span>
-<span id="L682"><span class="lineNum">     682</span>              :         {</span>
-<span id="L683"><span class="lineNum">     683</span> <span class="tlaGNC">        7248 :           continue;</span></span>
-<span id="L684"><span class="lineNum">     684</span>              :         }</span>
-<span id="L685"><span class="lineNum">     685</span>              :         int e1, e2;</span>
-<span id="L686"><span class="lineNum">     686</span> <span class="tlaGNC">         752 :         smesh-&gt;GetFaceElements(smesh-&gt;GetBdrElementFaceIndex(be), &amp;e1, &amp;e2);</span></span>
-<span id="L687"><span class="lineNum">     687</span> <span class="tlaGNC">         752 :         smesh-&gt;GetElementCenter(e1, c);</span></span>
-<span id="L688"><span class="lineNum">     688</span> <span class="tlaGNC">         752 :         if (c(axis) &gt; lo(axis))</span></span>
-<span id="L689"><span class="lineNum">     689</span>              :         {</span>
-<span id="L690"><span class="lineNum">     690</span> <span class="tlaGNC">         364 :           marked.Append(e1);</span></span>
-<span id="L691"><span class="lineNum">     691</span>              :         }</span>
-<span id="L692"><span class="lineNum">     692</span>              :       }</span>
-<span id="L693"><span class="lineNum">     693</span>              :       marked.Sort();</span>
-<span id="L694"><span class="lineNum">     694</span> <span class="tlaGNC">           2 :       marked.Unique();</span></span>
-<span id="L695"><span class="lineNum">     695</span> <span class="tlaGNC">           2 :       smesh-&gt;GeneralRefinement(marked, 1, 0);</span></span>
-<span id="L696"><span class="lineNum">     696</span>              :     }</span>
-<span id="L697"><span class="lineNum">     697</span> <span class="tlaGNC">           3 :     if (iodata.model.Lc &lt;= 0.0)</span></span>
-<span id="L698"><span class="lineNum">     698</span>              :     {</span>
-<span id="L699"><span class="lineNum">     699</span> <span class="tlaGNC">           3 :       iodata.model.Lc = mesh::ComputeReferenceLength(smesh, comm);</span></span>
-<span id="L700"><span class="lineNum">     700</span>              :     }</span>
-<span id="L701"><span class="lineNum">     701</span> <span class="tlaGNC">           3 :     iodata.NondimensionalizeInputs(smesh);</span></span>
-<span id="L702"><span class="lineNum">     702</span>              :     mesh_io.push_back(</span>
-<span id="L703"><span class="lineNum">     703</span> <span class="tlaGNC">           9 :         std::make_unique&lt;Mesh&gt;(mesh::Partition(iodata, std::move(smesh), comm)));</span></span>
-<span id="L704"><span class="lineNum">     704</span>              :   }</span>
-<span id="L705"><span class="lineNum">     705</span> <span class="tlaGNC">           3 :   SpaceOperator space_op(iodata, mesh_io);</span></span>
-<span id="L706"><span class="lineNum">     706</span>              :   const auto &amp;wp_op = space_op.GetWavePortOp();</span>
-<span id="L707"><span class="lineNum">     707</span> <span class="tlaGNC">           3 :   REQUIRE(wp_op.Size() &gt; 0);</span></span>
-<span id="L708"><span class="lineNum">     708</span>              : </span>
-<span id="L709"><span class="lineNum">     709</span>              :   // Numbers of checked true DoFs on the Dirichlet segments and off them, and on master</span>
-<span id="L710"><span class="lineNum">     710</span>              :   // edges.</span>
-<span id="L711"><span class="lineNum">     711</span> <span class="tlaGNC">           3 :   int counts[3] = {0, 0, 0};</span></span>
-<span id="L712"><span class="lineNum">     712</span> <span class="tlaGNC">          15 :   for (const auto &amp;[idx, data] : wp_op)</span></span>
-<span id="L713"><span class="lineNum">     713</span>              :   {</span>
-<span id="L714"><span class="lineNum">     714</span>              :     const auto &amp;nd_fes = data.GetNDSpace().Get();</span>
-<span id="L715"><span class="lineNum">     715</span>              :     const auto &amp;h1_fes = data.GetH1Space().Get();</span>
-<span id="L716"><span class="lineNum">     716</span>              :     const auto &amp;port_mesh = *nd_fes.GetParMesh();</span>
-<span id="L717"><span class="lineNum">     717</span> <span class="tlaGNC">          24 :     REQUIRE(port_mesh.Nonconforming());</span></span>
-<span id="L718"><span class="lineNum">     718</span> <span class="tlaGNC">          12 :     const int nd_size = nd_fes.GetTrueVSize();</span></span>
-<span id="L719"><span class="lineNum">     719</span> <span class="tlaGNC">          12 :     std::vector&lt;bool&gt; nd_dbc(nd_size, false), h1_dbc(h1_fes.GetTrueVSize(), false);</span></span>
-<span id="L720"><span class="lineNum">     720</span> <span class="tlaGNC">        1108 :     for (auto t : data.GetDbcTDofList())</span></span>
-<span id="L721"><span class="lineNum">     721</span>              :     {</span>
-<span id="L722"><span class="lineNum">     722</span> <span class="tlaGNC">        1096 :       if (t &lt; nd_size)</span></span>
-<span id="L723"><span class="lineNum">     723</span>              :       {</span>
-<span id="L724"><span class="lineNum">     724</span>              :         nd_dbc[t] = true;</span>
-<span id="L725"><span class="lineNum">     725</span>              :       }</span>
-<span id="L726"><span class="lineNum">     726</span>              :       else</span>
-<span id="L727"><span class="lineNum">     727</span>              :       {</span>
-<span id="L728"><span class="lineNum">     728</span> <span class="tlaGNC">         552 :         h1_dbc[t - nd_size] = true;</span></span>
-<span id="L729"><span class="lineNum">     729</span>              :       }</span>
-<span id="L730"><span class="lineNum">     730</span>              :     }</span>
-<span id="L731"><span class="lineNum">     731</span>              : </span>
-<span id="L732"><span class="lineNum">     732</span>              :     // Segments of the Dirichlet boundary elements of the port submesh (PEC, AuxPEC and the</span>
-<span id="L733"><span class="lineNum">     733</span>              :     // other wave ports, as in the WavePortOperator constructor), gathered from all ranks.</span>
-<span id="L734"><span class="lineNum">     734</span>              :     // Coordinates are taken from the mesh nodes: the vertex coordinates of nonconforming</span>
-<span id="L735"><span class="lineNum">     735</span>              :     // submeshes do not follow their vertex numbering.</span>
-<span id="L736"><span class="lineNum">     736</span>              :     std::vector&lt;int&gt; dbc(iodata.boundaries.pec.attributes.begin(),</span>
-<span id="L737"><span class="lineNum">     737</span> <span class="tlaGNC">          12 :                          iodata.boundaries.pec.attributes.end());</span></span>
-<span id="L738"><span class="lineNum">     738</span> <span class="tlaGNC">          12 :     dbc.insert(dbc.end(), iodata.boundaries.auxpec.attributes.begin(),</span></span>
-<span id="L739"><span class="lineNum">     739</span>              :                iodata.boundaries.auxpec.attributes.end());</span>
-<span id="L740"><span class="lineNum">     740</span> <span class="tlaGNC">          60 :     for (const auto &amp;[other_idx, other_data] : iodata.boundaries.waveport)</span></span>
-<span id="L741"><span class="lineNum">     741</span>              :     {</span>
-<span id="L742"><span class="lineNum">     742</span> <span class="tlaGNC">          48 :       if (other_idx != idx &amp;&amp; other_data.active)</span></span>
-<span id="L743"><span class="lineNum">     743</span>              :       {</span>
-<span id="L744"><span class="lineNum">     744</span> <span class="tlaGNC">          36 :         dbc.insert(dbc.end(), other_data.attributes.begin(), other_data.attributes.end());</span></span>
-<span id="L745"><span class="lineNum">     745</span>              :       }</span>
-<span id="L746"><span class="lineNum">     746</span>              :     }</span>
-<span id="L747"><span class="lineNum">     747</span> <span class="tlaGNC">          12 :     const int sdim = port_mesh.SpaceDimension();</span></span>
-<span id="L748"><span class="lineNum">     748</span> <span class="tlaGNC">          12 :     std::vector&lt;double&gt; segs;</span></span>
-<span id="L749"><span class="lineNum">     749</span> <span class="tlaGNC">         324 :     for (int be = 0; be &lt; port_mesh.GetNBE(); be++)</span></span>
-<span id="L750"><span class="lineNum">     750</span>              :     {</span>
-<span id="L751"><span class="lineNum">     751</span> <span class="tlaGNC">         312 :       if (std::find(dbc.begin(), dbc.end(), port_mesh.GetBdrAttribute(be)) == dbc.end())</span></span>
-<span id="L752"><span class="lineNum">     752</span>              :       {</span>
-<span id="L753"><span class="lineNum">     753</span> <span class="tlaUNC tlaBgUNC">           0 :         continue;</span></span>
-<span id="L754"><span class="lineNum">     754</span>              :       }</span>
-<span id="L755"><span class="lineNum">     755</span>              :       mfem::Array&lt;int&gt; v;</span>
-<span id="L756"><span class="lineNum">     756</span>              :       port_mesh.GetBdrElementVertices(be, v);</span>
-<span id="L757"><span class="lineNum">     757</span> <span class="tlaGNC tlaBgGNC">         936 :       for (int i : v)</span></span>
-<span id="L758"><span class="lineNum">     758</span>              :       {</span>
-<span id="L759"><span class="lineNum">     759</span>              :         double x[3];</span>
-<span id="L760"><span class="lineNum">     760</span> <span class="tlaGNC">         624 :         port_mesh.GetNode(i, x);</span></span>
-<span id="L761"><span class="lineNum">     761</span> <span class="tlaGNC">         624 :         segs.insert(segs.end(), x, x + sdim);</span></span>
-<span id="L762"><span class="lineNum">     762</span>              :       }</span>
-<span id="L763"><span class="lineNum">     763</span>              :     }</span>
-<span id="L764"><span class="lineNum">     764</span> <span class="tlaGNC">          12 :     int nloc = static_cast&lt;int&gt;(segs.size()), nproc = Mpi::Size(comm);</span></span>
-<span id="L765"><span class="lineNum">     765</span> <span class="tlaGNC">          12 :     std::vector&lt;int&gt; sizes(nproc), displs(nproc, 0);</span></span>
-<span id="L766"><span class="lineNum">     766</span> <span class="tlaGNC">          12 :     MPI_Allgather(&amp;nloc, 1, MPI_INT, sizes.data(), 1, MPI_INT, comm);</span></span>
-<span id="L767"><span class="lineNum">     767</span> <span class="tlaGNC">          20 :     for (int r = 1; r &lt; nproc; r++)</span></span>
-<span id="L768"><span class="lineNum">     768</span>              :     {</span>
-<span id="L769"><span class="lineNum">     769</span> <span class="tlaGNC">           8 :       displs[r] = displs[r - 1] + sizes[r - 1];</span></span>
-<span id="L770"><span class="lineNum">     770</span>              :     }</span>
-<span id="L771"><span class="lineNum">     771</span> <span class="tlaGNC">          12 :     std::vector&lt;double&gt; all_segs(displs.back() + sizes.back());</span></span>
-<span id="L772"><span class="lineNum">     772</span> <span class="tlaGNC">          12 :     MPI_Allgatherv(segs.data(), nloc, MPI_DOUBLE, all_segs.data(), sizes.data(),</span></span>
-<span id="L773"><span class="lineNum">     773</span>              :                    displs.data(), MPI_DOUBLE, comm);</span>
-<span id="L774"><span class="lineNum">     774</span> <span class="tlaGNC">        4040 :     auto OnDbc = [&amp;](const double *x)</span></span>
-<span id="L775"><span class="lineNum">     775</span>              :     {</span>
-<span id="L776"><span class="lineNum">     776</span> <span class="tlaGNC">      148071 :       for (std::size_t k = 0; k &lt; all_segs.size(); k += 2 * sdim)</span></span>
-<span id="L777"><span class="lineNum">     777</span>              :       {</span>
-<span id="L778"><span class="lineNum">     778</span> <span class="tlaGNC">      144703 :         const double *a = &amp;all_segs[k], *b = &amp;all_segs[k + sdim];</span></span>
-<span id="L779"><span class="lineNum">     779</span>              :         double ab2 = 0.0, ax_ab = 0.0, ax2 = 0.0;</span>
-<span id="L780"><span class="lineNum">     780</span> <span class="tlaGNC">      578812 :         for (int d = 0; d &lt; sdim; d++)</span></span>
-<span id="L781"><span class="lineNum">     781</span>              :         {</span>
-<span id="L782"><span class="lineNum">     782</span> <span class="tlaGNC">      434109 :           ab2 += (b[d] - a[d]) * (b[d] - a[d]);</span></span>
-<span id="L783"><span class="lineNum">     783</span> <span class="tlaGNC">      434109 :           ax_ab += (x[d] - a[d]) * (b[d] - a[d]);</span></span>
-<span id="L784"><span class="lineNum">     784</span> <span class="tlaGNC">      434109 :           ax2 += (x[d] - a[d]) * (x[d] - a[d]);</span></span>
-<span id="L785"><span class="lineNum">     785</span>              :         }</span>
-<span id="L786"><span class="lineNum">     786</span> <span class="tlaGNC">      144703 :         const double t = ax_ab / ab2;</span></span>
-<span id="L787"><span class="lineNum">     787</span> <span class="tlaGNC">      144703 :         if (t &gt; -1.0e-9 &amp;&amp; t &lt; 1.0 + 1.0e-9 &amp;&amp; ax2 - t * t * ab2 &lt; 1.0e-12 * ab2)</span></span>
-<span id="L788"><span class="lineNum">     788</span>              :         {</span>
-<span id="L789"><span class="lineNum">     789</span>              :           return true;</span>
-<span id="L790"><span class="lineNum">     790</span>              :         }</span>
-<span id="L791"><span class="lineNum">     791</span>              :       }</span>
-<span id="L792"><span class="lineNum">     792</span>              :       return false;</span>
-<span id="L793"><span class="lineNum">     793</span> <span class="tlaGNC">          12 :     };</span></span>
-<span id="L794"><span class="lineNum">     794</span> <span class="tlaGNC">        7006 :     auto Check = [&amp;](const mfem::ParFiniteElementSpace &amp;fes, const std::vector&lt;bool&gt; &amp;ess,</span></span>
-<span id="L795"><span class="lineNum">     795</span>              :                      const mfem::Array&lt;int&gt; &amp;dofs, bool on_dbc, bool master)</span>
-<span id="L796"><span class="lineNum">     796</span>              :     {</span>
-<span id="L797"><span class="lineNum">     797</span> <span class="tlaGNC">       16978 :       for (auto d : dofs)</span></span>
-<span id="L798"><span class="lineNum">     798</span>              :       {</span>
-<span id="L799"><span class="lineNum">     799</span> <span class="tlaGNC">        9972 :         const int t = fes.GetLocalTDofNumber((d &gt;= 0) ? d : -1 - d);</span></span>
-<span id="L800"><span class="lineNum">     800</span> <span class="tlaGNC">        9972 :         if (t &lt; 0)</span></span>
+<span id="L629"><span class="lineNum">     629</span>              : // The traces of cpw_wave_uniform are interior PEC sheets crossing the wave ports when the</span>
+<span id="L630"><span class="lineNum">     630</span>              : // mesh is not cracked. Refining the elements next to the ports on one side of the trace</span>
+<span id="L631"><span class="lineNum">     631</span>              : // plane makes the port submeshes nonconforming, with master edges on the unrefined side of</span>
+<span id="L632"><span class="lineNum">     632</span>              : // the trace lines which have no boundary elements: the port DoFs on the PEC segments must</span>
+<span id="L633"><span class="lineNum">     633</span>              : // be essential (masters included), and no others.</span>
+<span id="L634"><span class="lineNum">     634</span> <span class="tlaGNC">           3 : TEST_CASE(&quot;WavePortOperator-InteriorPECOnNonconformingPorts&quot;,</span></span>
+<span id="L635"><span class="lineNum">     635</span>              :           &quot;[waveportoperator][Serial][Parallel]&quot;)</span>
+<span id="L636"><span class="lineNum">     636</span>              : {</span>
+<span id="L637"><span class="lineNum">     637</span>              :   MPI_Comm comm = Mpi::World();</span>
+<span id="L638"><span class="lineNum">     638</span> <span class="tlaGNC">           3 :   json setup = LoadCpwWaveConfig();</span></span>
+<span id="L639"><span class="lineNum">     639</span> <span class="tlaGNC">           3 :   setup[&quot;Model&quot;][&quot;CrackInternalBoundaryElements&quot;] = false;</span></span>
+<span id="L640"><span class="lineNum">     640</span> <span class="tlaGNC">           3 :   IoData iodata(setup, /*print=*/false);</span></span>
+<span id="L641"><span class="lineNum">     641</span>              : </span>
+<span id="L642"><span class="lineNum">     642</span> <span class="tlaGNC">           3 :   std::vector&lt;std::unique_ptr&lt;Mesh&gt;&gt; mesh_io;</span></span>
+<span id="L643"><span class="lineNum">     643</span>              :   {</span>
+<span id="L644"><span class="lineNum">     644</span> <span class="tlaGNC">           3 :     auto smesh = mesh::Load(iodata, comm);</span></span>
+<span id="L645"><span class="lineNum">     645</span> <span class="tlaGNC">           3 :     if (smesh)</span></span>
+<span id="L646"><span class="lineNum">     646</span>              :     {</span>
+<span id="L647"><span class="lineNum">     647</span>              :       // Plane of the interior PEC boundary elements (coordinate axis and value).</span>
+<span id="L648"><span class="lineNum">     648</span>              :       const auto &amp;pec = iodata.boundaries.pec.attributes;</span>
+<span id="L649"><span class="lineNum">     649</span>              :       mfem::Vector lo(3), hi(3);</span>
+<span id="L650"><span class="lineNum">     650</span> <span class="tlaGNC">           2 :       lo = mfem::infinity();</span></span>
+<span id="L651"><span class="lineNum">     651</span> <span class="tlaGNC">           2 :       hi = -mfem::infinity();</span></span>
+<span id="L652"><span class="lineNum">     652</span> <span class="tlaGNC">        8002 :       for (int be = 0; be &lt; smesh-&gt;GetNBE(); be++)</span></span>
+<span id="L653"><span class="lineNum">     653</span>              :       {</span>
+<span id="L654"><span class="lineNum">     654</span>              :         int e1, e2;</span>
+<span id="L655"><span class="lineNum">     655</span> <span class="tlaGNC">        8000 :         smesh-&gt;GetFaceElements(smesh-&gt;GetBdrElementFaceIndex(be), &amp;e1, &amp;e2);</span></span>
+<span id="L656"><span class="lineNum">     656</span> <span class="tlaGNC">        8000 :         if (e2 &lt; 0 ||</span></span>
+<span id="L657"><span class="lineNum">     657</span> <span class="tlaGNC">        5720 :             std::find(pec.begin(), pec.end(), smesh-&gt;GetBdrAttribute(be)) == pec.end())</span></span>
+<span id="L658"><span class="lineNum">     658</span>              :         {</span>
+<span id="L659"><span class="lineNum">     659</span> <span class="tlaGNC">        4108 :           continue;</span></span>
+<span id="L660"><span class="lineNum">     660</span>              :         }</span>
+<span id="L661"><span class="lineNum">     661</span>              :         mfem::Array&lt;int&gt; v;</span>
+<span id="L662"><span class="lineNum">     662</span>              :         smesh-&gt;GetBdrElementVertices(be, v);</span>
+<span id="L663"><span class="lineNum">     663</span> <span class="tlaGNC">       15568 :         for (int i : v)</span></span>
+<span id="L664"><span class="lineNum">     664</span>              :         {</span>
+<span id="L665"><span class="lineNum">     665</span> <span class="tlaGNC">       46704 :           for (int d = 0; d &lt; 3; d++)</span></span>
+<span id="L666"><span class="lineNum">     666</span>              :           {</span>
+<span id="L667"><span class="lineNum">     667</span> <span class="tlaGNC">       35060 :             lo(d) = std::min(lo(d), smesh-&gt;GetVertex(i)[d]);</span></span>
+<span id="L668"><span class="lineNum">     668</span> <span class="tlaGNC">       35028 :             hi(d) = std::max(hi(d), smesh-&gt;GetVertex(i)[d]);</span></span>
+<span id="L669"><span class="lineNum">     669</span>              :           }</span>
+<span id="L670"><span class="lineNum">     670</span>              :         }</span>
+<span id="L671"><span class="lineNum">     671</span>              :       }</span>
+<span id="L672"><span class="lineNum">     672</span>              :       int axis = -1;</span>
+<span id="L673"><span class="lineNum">     673</span> <span class="tlaGNC">           8 :       for (int d = 0; d &lt; 3; d++)</span></span>
+<span id="L674"><span class="lineNum">     674</span>              :       {</span>
+<span id="L675"><span class="lineNum">     675</span> <span class="tlaGNC">           6 :         if (hi(d) - lo(d) &lt; 1.0e-9 * (1.0 + std::abs(lo(d))))</span></span>
+<span id="L676"><span class="lineNum">     676</span>              :         {</span>
+<span id="L677"><span class="lineNum">     677</span>              :           axis = d;</span>
+<span id="L678"><span class="lineNum">     678</span>              :         }</span>
+<span id="L679"><span class="lineNum">     679</span>              :       }</span>
+<span id="L680"><span class="lineNum">     680</span> <span class="tlaGNC">           2 :       REQUIRE(axis &gt;= 0);</span></span>
+<span id="L681"><span class="lineNum">     681</span>              : </span>
+<span id="L682"><span class="lineNum">     682</span>              :       // Refine the elements next to the wave ports on one side of the trace plane.</span>
+<span id="L683"><span class="lineNum">     683</span> <span class="tlaGNC">           2 :       std::vector&lt;int&gt; port_attrs;</span></span>
+<span id="L684"><span class="lineNum">     684</span> <span class="tlaGNC">          10 :       for (const auto &amp;[idx, data] : iodata.boundaries.waveport)</span></span>
+<span id="L685"><span class="lineNum">     685</span>              :       {</span>
+<span id="L686"><span class="lineNum">     686</span> <span class="tlaGNC">           8 :         port_attrs.insert(port_attrs.end(), data.attributes.begin(), data.attributes.end());</span></span>
+<span id="L687"><span class="lineNum">     687</span>              :       }</span>
+<span id="L688"><span class="lineNum">     688</span> <span class="tlaGNC">           2 :       smesh-&gt;EnsureNCMesh(true);</span></span>
+<span id="L689"><span class="lineNum">     689</span>              :       mfem::Array&lt;int&gt; marked;</span>
+<span id="L690"><span class="lineNum">     690</span>              :       mfem::Vector c(3);</span>
+<span id="L691"><span class="lineNum">     691</span> <span class="tlaGNC">        8002 :       for (int be = 0; be &lt; smesh-&gt;GetNBE(); be++)</span></span>
+<span id="L692"><span class="lineNum">     692</span>              :       {</span>
+<span id="L693"><span class="lineNum">     693</span> <span class="tlaGNC">        8000 :         if (std::find(port_attrs.begin(), port_attrs.end(), smesh-&gt;GetBdrAttribute(be)) ==</span></span>
+<span id="L694"><span class="lineNum">     694</span>              :             port_attrs.end())</span>
+<span id="L695"><span class="lineNum">     695</span>              :         {</span>
+<span id="L696"><span class="lineNum">     696</span> <span class="tlaGNC">        7248 :           continue;</span></span>
+<span id="L697"><span class="lineNum">     697</span>              :         }</span>
+<span id="L698"><span class="lineNum">     698</span>              :         int e1, e2;</span>
+<span id="L699"><span class="lineNum">     699</span> <span class="tlaGNC">         752 :         smesh-&gt;GetFaceElements(smesh-&gt;GetBdrElementFaceIndex(be), &amp;e1, &amp;e2);</span></span>
+<span id="L700"><span class="lineNum">     700</span> <span class="tlaGNC">         752 :         smesh-&gt;GetElementCenter(e1, c);</span></span>
+<span id="L701"><span class="lineNum">     701</span> <span class="tlaGNC">         752 :         if (c(axis) &gt; lo(axis))</span></span>
+<span id="L702"><span class="lineNum">     702</span>              :         {</span>
+<span id="L703"><span class="lineNum">     703</span> <span class="tlaGNC">         364 :           marked.Append(e1);</span></span>
+<span id="L704"><span class="lineNum">     704</span>              :         }</span>
+<span id="L705"><span class="lineNum">     705</span>              :       }</span>
+<span id="L706"><span class="lineNum">     706</span>              :       marked.Sort();</span>
+<span id="L707"><span class="lineNum">     707</span> <span class="tlaGNC">           2 :       marked.Unique();</span></span>
+<span id="L708"><span class="lineNum">     708</span> <span class="tlaGNC">           2 :       smesh-&gt;GeneralRefinement(marked, 1, 0);</span></span>
+<span id="L709"><span class="lineNum">     709</span>              :     }</span>
+<span id="L710"><span class="lineNum">     710</span> <span class="tlaGNC">           3 :     if (iodata.model.Lc &lt;= 0.0)</span></span>
+<span id="L711"><span class="lineNum">     711</span>              :     {</span>
+<span id="L712"><span class="lineNum">     712</span> <span class="tlaGNC">           3 :       iodata.model.Lc = mesh::ComputeReferenceLength(smesh, comm);</span></span>
+<span id="L713"><span class="lineNum">     713</span>              :     }</span>
+<span id="L714"><span class="lineNum">     714</span> <span class="tlaGNC">           3 :     iodata.NondimensionalizeInputs(smesh);</span></span>
+<span id="L715"><span class="lineNum">     715</span>              :     mesh_io.push_back(</span>
+<span id="L716"><span class="lineNum">     716</span> <span class="tlaGNC">           9 :         std::make_unique&lt;Mesh&gt;(mesh::Partition(iodata, std::move(smesh), comm)));</span></span>
+<span id="L717"><span class="lineNum">     717</span>              :   }</span>
+<span id="L718"><span class="lineNum">     718</span> <span class="tlaGNC">           3 :   SpaceOperator space_op(iodata, mesh_io);</span></span>
+<span id="L719"><span class="lineNum">     719</span>              :   const auto &amp;wp_op = space_op.GetWavePortOp();</span>
+<span id="L720"><span class="lineNum">     720</span> <span class="tlaGNC">           3 :   REQUIRE(wp_op.Size() &gt; 0);</span></span>
+<span id="L721"><span class="lineNum">     721</span>              : </span>
+<span id="L722"><span class="lineNum">     722</span>              :   // Numbers of checked true DoFs on the Dirichlet segments and off them, and on master</span>
+<span id="L723"><span class="lineNum">     723</span>              :   // edges.</span>
+<span id="L724"><span class="lineNum">     724</span> <span class="tlaGNC">           3 :   int counts[3] = {0, 0, 0};</span></span>
+<span id="L725"><span class="lineNum">     725</span> <span class="tlaGNC">          15 :   for (const auto &amp;[idx, data] : wp_op)</span></span>
+<span id="L726"><span class="lineNum">     726</span>              :   {</span>
+<span id="L727"><span class="lineNum">     727</span>              :     const auto &amp;nd_fes = data.GetNDSpace().Get();</span>
+<span id="L728"><span class="lineNum">     728</span>              :     const auto &amp;h1_fes = data.GetH1Space().Get();</span>
+<span id="L729"><span class="lineNum">     729</span>              :     const auto &amp;port_mesh = *nd_fes.GetParMesh();</span>
+<span id="L730"><span class="lineNum">     730</span> <span class="tlaGNC">          24 :     REQUIRE(port_mesh.Nonconforming());</span></span>
+<span id="L731"><span class="lineNum">     731</span> <span class="tlaGNC">          12 :     const int nd_size = nd_fes.GetTrueVSize();</span></span>
+<span id="L732"><span class="lineNum">     732</span> <span class="tlaGNC">          12 :     std::vector&lt;bool&gt; nd_dbc(nd_size, false), h1_dbc(h1_fes.GetTrueVSize(), false);</span></span>
+<span id="L733"><span class="lineNum">     733</span> <span class="tlaGNC">        1108 :     for (auto t : data.GetDbcTDofList())</span></span>
+<span id="L734"><span class="lineNum">     734</span>              :     {</span>
+<span id="L735"><span class="lineNum">     735</span> <span class="tlaGNC">        1096 :       if (t &lt; nd_size)</span></span>
+<span id="L736"><span class="lineNum">     736</span>              :       {</span>
+<span id="L737"><span class="lineNum">     737</span>              :         nd_dbc[t] = true;</span>
+<span id="L738"><span class="lineNum">     738</span>              :       }</span>
+<span id="L739"><span class="lineNum">     739</span>              :       else</span>
+<span id="L740"><span class="lineNum">     740</span>              :       {</span>
+<span id="L741"><span class="lineNum">     741</span> <span class="tlaGNC">         552 :         h1_dbc[t - nd_size] = true;</span></span>
+<span id="L742"><span class="lineNum">     742</span>              :       }</span>
+<span id="L743"><span class="lineNum">     743</span>              :     }</span>
+<span id="L744"><span class="lineNum">     744</span>              : </span>
+<span id="L745"><span class="lineNum">     745</span>              :     // Segments of the Dirichlet boundary elements of the port submesh (PEC, AuxPEC and the</span>
+<span id="L746"><span class="lineNum">     746</span>              :     // other wave ports, as in the WavePortOperator constructor), gathered from all ranks.</span>
+<span id="L747"><span class="lineNum">     747</span>              :     // Coordinates are taken from the mesh nodes: the vertex coordinates of nonconforming</span>
+<span id="L748"><span class="lineNum">     748</span>              :     // submeshes do not follow their vertex numbering.</span>
+<span id="L749"><span class="lineNum">     749</span>              :     std::vector&lt;int&gt; dbc(iodata.boundaries.pec.attributes.begin(),</span>
+<span id="L750"><span class="lineNum">     750</span> <span class="tlaGNC">          12 :                          iodata.boundaries.pec.attributes.end());</span></span>
+<span id="L751"><span class="lineNum">     751</span> <span class="tlaGNC">          12 :     dbc.insert(dbc.end(), iodata.boundaries.auxpec.attributes.begin(),</span></span>
+<span id="L752"><span class="lineNum">     752</span>              :                iodata.boundaries.auxpec.attributes.end());</span>
+<span id="L753"><span class="lineNum">     753</span> <span class="tlaGNC">          60 :     for (const auto &amp;[other_idx, other_data] : iodata.boundaries.waveport)</span></span>
+<span id="L754"><span class="lineNum">     754</span>              :     {</span>
+<span id="L755"><span class="lineNum">     755</span> <span class="tlaGNC">          48 :       if (other_idx != idx &amp;&amp; other_data.active)</span></span>
+<span id="L756"><span class="lineNum">     756</span>              :       {</span>
+<span id="L757"><span class="lineNum">     757</span> <span class="tlaGNC">          36 :         dbc.insert(dbc.end(), other_data.attributes.begin(), other_data.attributes.end());</span></span>
+<span id="L758"><span class="lineNum">     758</span>              :       }</span>
+<span id="L759"><span class="lineNum">     759</span>              :     }</span>
+<span id="L760"><span class="lineNum">     760</span> <span class="tlaGNC">          12 :     const int sdim = port_mesh.SpaceDimension();</span></span>
+<span id="L761"><span class="lineNum">     761</span> <span class="tlaGNC">          12 :     std::vector&lt;double&gt; segs;</span></span>
+<span id="L762"><span class="lineNum">     762</span> <span class="tlaGNC">         324 :     for (int be = 0; be &lt; port_mesh.GetNBE(); be++)</span></span>
+<span id="L763"><span class="lineNum">     763</span>              :     {</span>
+<span id="L764"><span class="lineNum">     764</span> <span class="tlaGNC">         312 :       if (std::find(dbc.begin(), dbc.end(), port_mesh.GetBdrAttribute(be)) == dbc.end())</span></span>
+<span id="L765"><span class="lineNum">     765</span>              :       {</span>
+<span id="L766"><span class="lineNum">     766</span> <span class="tlaUNC tlaBgUNC">           0 :         continue;</span></span>
+<span id="L767"><span class="lineNum">     767</span>              :       }</span>
+<span id="L768"><span class="lineNum">     768</span>              :       mfem::Array&lt;int&gt; v;</span>
+<span id="L769"><span class="lineNum">     769</span>              :       port_mesh.GetBdrElementVertices(be, v);</span>
+<span id="L770"><span class="lineNum">     770</span> <span class="tlaGNC tlaBgGNC">         936 :       for (int i : v)</span></span>
+<span id="L771"><span class="lineNum">     771</span>              :       {</span>
+<span id="L772"><span class="lineNum">     772</span>              :         double x[3];</span>
+<span id="L773"><span class="lineNum">     773</span> <span class="tlaGNC">         624 :         port_mesh.GetNode(i, x);</span></span>
+<span id="L774"><span class="lineNum">     774</span> <span class="tlaGNC">         624 :         segs.insert(segs.end(), x, x + sdim);</span></span>
+<span id="L775"><span class="lineNum">     775</span>              :       }</span>
+<span id="L776"><span class="lineNum">     776</span>              :     }</span>
+<span id="L777"><span class="lineNum">     777</span> <span class="tlaGNC">          12 :     int nloc = static_cast&lt;int&gt;(segs.size()), nproc = Mpi::Size(comm);</span></span>
+<span id="L778"><span class="lineNum">     778</span> <span class="tlaGNC">          12 :     std::vector&lt;int&gt; sizes(nproc), displs(nproc, 0);</span></span>
+<span id="L779"><span class="lineNum">     779</span> <span class="tlaGNC">          12 :     MPI_Allgather(&amp;nloc, 1, MPI_INT, sizes.data(), 1, MPI_INT, comm);</span></span>
+<span id="L780"><span class="lineNum">     780</span> <span class="tlaGNC">          20 :     for (int r = 1; r &lt; nproc; r++)</span></span>
+<span id="L781"><span class="lineNum">     781</span>              :     {</span>
+<span id="L782"><span class="lineNum">     782</span> <span class="tlaGNC">           8 :       displs[r] = displs[r - 1] + sizes[r - 1];</span></span>
+<span id="L783"><span class="lineNum">     783</span>              :     }</span>
+<span id="L784"><span class="lineNum">     784</span> <span class="tlaGNC">          12 :     std::vector&lt;double&gt; all_segs(displs.back() + sizes.back());</span></span>
+<span id="L785"><span class="lineNum">     785</span> <span class="tlaGNC">          12 :     MPI_Allgatherv(segs.data(), nloc, MPI_DOUBLE, all_segs.data(), sizes.data(),</span></span>
+<span id="L786"><span class="lineNum">     786</span>              :                    displs.data(), MPI_DOUBLE, comm);</span>
+<span id="L787"><span class="lineNum">     787</span> <span class="tlaGNC">        4040 :     auto OnDbc = [&amp;](const double *x)</span></span>
+<span id="L788"><span class="lineNum">     788</span>              :     {</span>
+<span id="L789"><span class="lineNum">     789</span> <span class="tlaGNC">      148150 :       for (std::size_t k = 0; k &lt; all_segs.size(); k += 2 * sdim)</span></span>
+<span id="L790"><span class="lineNum">     790</span>              :       {</span>
+<span id="L791"><span class="lineNum">     791</span> <span class="tlaGNC">      144782 :         const double *a = &amp;all_segs[k], *b = &amp;all_segs[k + sdim];</span></span>
+<span id="L792"><span class="lineNum">     792</span>              :         double ab2 = 0.0, ax_ab = 0.0, ax2 = 0.0;</span>
+<span id="L793"><span class="lineNum">     793</span> <span class="tlaGNC">      579128 :         for (int d = 0; d &lt; sdim; d++)</span></span>
+<span id="L794"><span class="lineNum">     794</span>              :         {</span>
+<span id="L795"><span class="lineNum">     795</span> <span class="tlaGNC">      434346 :           ab2 += (b[d] - a[d]) * (b[d] - a[d]);</span></span>
+<span id="L796"><span class="lineNum">     796</span> <span class="tlaGNC">      434346 :           ax_ab += (x[d] - a[d]) * (b[d] - a[d]);</span></span>
+<span id="L797"><span class="lineNum">     797</span> <span class="tlaGNC">      434346 :           ax2 += (x[d] - a[d]) * (x[d] - a[d]);</span></span>
+<span id="L798"><span class="lineNum">     798</span>              :         }</span>
+<span id="L799"><span class="lineNum">     799</span> <span class="tlaGNC">      144782 :         const double t = ax_ab / ab2;</span></span>
+<span id="L800"><span class="lineNum">     800</span> <span class="tlaGNC">      144782 :         if (t &gt; -1.0e-9 &amp;&amp; t &lt; 1.0 + 1.0e-9 &amp;&amp; ax2 - t * t * ab2 &lt; 1.0e-12 * ab2)</span></span>
 <span id="L801"><span class="lineNum">     801</span>              :         {</span>
-<span id="L802"><span class="lineNum">     802</span> <span class="tlaGNC">         392 :           continue;</span></span>
+<span id="L802"><span class="lineNum">     802</span>              :           return true;</span>
 <span id="L803"><span class="lineNum">     803</span>              :         }</span>
-<span id="L804"><span class="lineNum">     804</span> <span class="tlaGNC">        9580 :         CHECK(ess[t] == on_dbc);</span></span>
-<span id="L805"><span class="lineNum">     805</span> <span class="tlaGNC">        9580 :         counts[on_dbc ? 0 : 1]++;</span></span>
-<span id="L806"><span class="lineNum">     806</span> <span class="tlaGNC">        9580 :         counts[2] += (on_dbc &amp;&amp; master);</span></span>
-<span id="L807"><span class="lineNum">     807</span>              :       }</span>
-<span id="L808"><span class="lineNum">     808</span> <span class="tlaGNC">        7006 :     };</span></span>
-<span id="L809"><span class="lineNum">     809</span> <span class="tlaGNC">          12 :     const auto &amp;edge_list = port_mesh.ncmesh-&gt;GetEdgeList();</span></span>
-<span id="L810"><span class="lineNum">     810</span>              :     mfem::Array&lt;int&gt; v, dofs;</span>
-<span id="L811"><span class="lineNum">     811</span>              :     mfem::Vector mid(sdim), x0(sdim), x1(sdim);</span>
-<span id="L812"><span class="lineNum">     812</span> <span class="tlaGNC">        2978 :     for (int e = 0; e &lt; port_mesh.GetNEdges(); e++)</span></span>
-<span id="L813"><span class="lineNum">     813</span>              :     {</span>
-<span id="L814"><span class="lineNum">     814</span> <span class="tlaGNC">        2966 :       port_mesh.GetEdgeVertices(e, v);</span></span>
-<span id="L815"><span class="lineNum">     815</span> <span class="tlaGNC">        2966 :       port_mesh.GetNode(v[0], x0.GetData());</span></span>
-<span id="L816"><span class="lineNum">     816</span> <span class="tlaGNC">        2966 :       port_mesh.GetNode(v[1], x1.GetData());</span></span>
-<span id="L817"><span class="lineNum">     817</span> <span class="tlaGNC">        2966 :       add(0.5, x0, 0.5, x1, mid);</span></span>
-<span id="L818"><span class="lineNum">     818</span> <span class="tlaGNC">        2966 :       const bool on_dbc = OnDbc(mid.GetData());</span></span>
-<span id="L819"><span class="lineNum">     819</span>              :       const bool master =</span>
-<span id="L820"><span class="lineNum">     820</span> <span class="tlaGNC">        2966 :           edge_list.GetMeshIdAndType(e).type == mfem::NCMesh::NCList::MeshIdType::MASTER;</span></span>
-<span id="L821"><span class="lineNum">     821</span> <span class="tlaGNC">        2966 :       nd_fes.GetEdgeInteriorDofs(e, dofs);</span></span>
-<span id="L822"><span class="lineNum">     822</span> <span class="tlaGNC">        2966 :       Check(nd_fes, nd_dbc, dofs, on_dbc, master);</span></span>
-<span id="L823"><span class="lineNum">     823</span> <span class="tlaGNC">        2966 :       h1_fes.GetEdgeInteriorDofs(e, dofs);</span></span>
-<span id="L824"><span class="lineNum">     824</span> <span class="tlaGNC">        2966 :       Check(h1_fes, h1_dbc, dofs, on_dbc, master);</span></span>
-<span id="L825"><span class="lineNum">     825</span>              :     }</span>
-<span id="L826"><span class="lineNum">     826</span> <span class="tlaGNC">        1086 :     for (int i = 0; i &lt; port_mesh.GetNV(); i++)</span></span>
-<span id="L827"><span class="lineNum">     827</span>              :     {</span>
-<span id="L828"><span class="lineNum">     828</span> <span class="tlaGNC">        1074 :       h1_fes.GetVertexDofs(i, dofs);</span></span>
-<span id="L829"><span class="lineNum">     829</span> <span class="tlaGNC">        1074 :       port_mesh.GetNode(i, x0.GetData());</span></span>
-<span id="L830"><span class="lineNum">     830</span> <span class="tlaGNC">        1074 :       Check(h1_fes, h1_dbc, dofs, OnDbc(x0.GetData()), false);</span></span>
-<span id="L831"><span class="lineNum">     831</span>              :     }</span>
-<span id="L832"><span class="lineNum">     832</span>              :   }</span>
-<span id="L833"><span class="lineNum">     833</span>              :   Mpi::GlobalSum(3, counts, comm);</span>
-<span id="L834"><span class="lineNum">     834</span> <span class="tlaGNC">           3 :   CHECK(counts[0] &gt; 0);</span></span>
-<span id="L835"><span class="lineNum">     835</span> <span class="tlaGNC">           3 :   CHECK(counts[1] &gt; 0);</span></span>
-<span id="L836"><span class="lineNum">     836</span> <span class="tlaGNC">           3 :   CHECK(counts[2] &gt; 0);</span></span>
-<span id="L837"><span class="lineNum">     837</span> <span class="tlaGNC">           6 : }</span></span>
+<span id="L804"><span class="lineNum">     804</span>              :       }</span>
+<span id="L805"><span class="lineNum">     805</span>              :       return false;</span>
+<span id="L806"><span class="lineNum">     806</span> <span class="tlaGNC">          12 :     };</span></span>
+<span id="L807"><span class="lineNum">     807</span> <span class="tlaGNC">        7006 :     auto Check = [&amp;](const mfem::ParFiniteElementSpace &amp;fes, const std::vector&lt;bool&gt; &amp;ess,</span></span>
+<span id="L808"><span class="lineNum">     808</span>              :                      const mfem::Array&lt;int&gt; &amp;dofs, bool on_dbc, bool master)</span>
+<span id="L809"><span class="lineNum">     809</span>              :     {</span>
+<span id="L810"><span class="lineNum">     810</span> <span class="tlaGNC">       16978 :       for (auto d : dofs)</span></span>
+<span id="L811"><span class="lineNum">     811</span>              :       {</span>
+<span id="L812"><span class="lineNum">     812</span> <span class="tlaGNC">        9972 :         const int t = fes.GetLocalTDofNumber((d &gt;= 0) ? d : -1 - d);</span></span>
+<span id="L813"><span class="lineNum">     813</span> <span class="tlaGNC">        9972 :         if (t &lt; 0)</span></span>
+<span id="L814"><span class="lineNum">     814</span>              :         {</span>
+<span id="L815"><span class="lineNum">     815</span> <span class="tlaGNC">         392 :           continue;</span></span>
+<span id="L816"><span class="lineNum">     816</span>              :         }</span>
+<span id="L817"><span class="lineNum">     817</span> <span class="tlaGNC">        9580 :         CHECK(ess[t] == on_dbc);</span></span>
+<span id="L818"><span class="lineNum">     818</span> <span class="tlaGNC">        9580 :         counts[on_dbc ? 0 : 1]++;</span></span>
+<span id="L819"><span class="lineNum">     819</span> <span class="tlaGNC">        9580 :         counts[2] += (on_dbc &amp;&amp; master);</span></span>
+<span id="L820"><span class="lineNum">     820</span>              :       }</span>
+<span id="L821"><span class="lineNum">     821</span> <span class="tlaGNC">        7006 :     };</span></span>
+<span id="L822"><span class="lineNum">     822</span> <span class="tlaGNC">          12 :     const auto &amp;edge_list = port_mesh.ncmesh-&gt;GetEdgeList();</span></span>
+<span id="L823"><span class="lineNum">     823</span>              :     mfem::Array&lt;int&gt; v, dofs;</span>
+<span id="L824"><span class="lineNum">     824</span>              :     mfem::Vector mid(sdim), x0(sdim), x1(sdim);</span>
+<span id="L825"><span class="lineNum">     825</span> <span class="tlaGNC">        2978 :     for (int e = 0; e &lt; port_mesh.GetNEdges(); e++)</span></span>
+<span id="L826"><span class="lineNum">     826</span>              :     {</span>
+<span id="L827"><span class="lineNum">     827</span> <span class="tlaGNC">        2966 :       port_mesh.GetEdgeVertices(e, v);</span></span>
+<span id="L828"><span class="lineNum">     828</span> <span class="tlaGNC">        2966 :       port_mesh.GetNode(v[0], x0.GetData());</span></span>
+<span id="L829"><span class="lineNum">     829</span> <span class="tlaGNC">        2966 :       port_mesh.GetNode(v[1], x1.GetData());</span></span>
+<span id="L830"><span class="lineNum">     830</span> <span class="tlaGNC">        2966 :       add(0.5, x0, 0.5, x1, mid);</span></span>
+<span id="L831"><span class="lineNum">     831</span> <span class="tlaGNC">        2966 :       const bool on_dbc = OnDbc(mid.GetData());</span></span>
+<span id="L832"><span class="lineNum">     832</span>              :       const bool master =</span>
+<span id="L833"><span class="lineNum">     833</span> <span class="tlaGNC">        2966 :           edge_list.GetMeshIdAndType(e).type == mfem::NCMesh::NCList::MeshIdType::MASTER;</span></span>
+<span id="L834"><span class="lineNum">     834</span> <span class="tlaGNC">        2966 :       nd_fes.GetEdgeInteriorDofs(e, dofs);</span></span>
+<span id="L835"><span class="lineNum">     835</span> <span class="tlaGNC">        2966 :       Check(nd_fes, nd_dbc, dofs, on_dbc, master);</span></span>
+<span id="L836"><span class="lineNum">     836</span> <span class="tlaGNC">        2966 :       h1_fes.GetEdgeInteriorDofs(e, dofs);</span></span>
+<span id="L837"><span class="lineNum">     837</span> <span class="tlaGNC">        2966 :       Check(h1_fes, h1_dbc, dofs, on_dbc, master);</span></span>
+<span id="L838"><span class="lineNum">     838</span>              :     }</span>
+<span id="L839"><span class="lineNum">     839</span> <span class="tlaGNC">        1086 :     for (int i = 0; i &lt; port_mesh.GetNV(); i++)</span></span>
+<span id="L840"><span class="lineNum">     840</span>              :     {</span>
+<span id="L841"><span class="lineNum">     841</span> <span class="tlaGNC">        1074 :       h1_fes.GetVertexDofs(i, dofs);</span></span>
+<span id="L842"><span class="lineNum">     842</span> <span class="tlaGNC">        1074 :       port_mesh.GetNode(i, x0.GetData());</span></span>
+<span id="L843"><span class="lineNum">     843</span> <span class="tlaGNC">        1074 :       Check(h1_fes, h1_dbc, dofs, OnDbc(x0.GetData()), false);</span></span>
+<span id="L844"><span class="lineNum">     844</span>              :     }</span>
+<span id="L845"><span class="lineNum">     845</span>              :   }</span>
+<span id="L846"><span class="lineNum">     846</span>              :   Mpi::GlobalSum(3, counts, comm);</span>
+<span id="L847"><span class="lineNum">     847</span> <span class="tlaGNC">           3 :   CHECK(counts[0] &gt; 0);</span></span>
+<span id="L848"><span class="lineNum">     848</span> <span class="tlaGNC">           3 :   CHECK(counts[1] &gt; 0);</span></span>
+<span id="L849"><span class="lineNum">     849</span> <span class="tlaGNC">           3 :   CHECK(counts[2] &gt; 0);</span></span>
+<span id="L850"><span class="lineNum">     850</span> <span class="tlaGNC">           6 : }</span></span>
         </pre>
               </td>
             </tr>

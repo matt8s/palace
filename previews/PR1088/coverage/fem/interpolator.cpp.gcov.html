@@ -31,18 +31,18 @@
             <td class="headerValue">Palace Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryLo">16.6&nbsp;%</td>
-            <td class="headerCovTableEntry">145</td>
-            <td class="headerCovTableEntry">24</td>
+            <td class="headerCovTableEntryLo">13.6&nbsp;%</td>
+            <td class="headerCovTableEntry">110</td>
+            <td class="headerCovTableEntry">15</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-10-23 01:41:56</td>
+            <td class="headerValue">2026-11-05 18:04:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">33.3&nbsp;%</td>
-            <td class="headerCovTableEntry">12</td>
-            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntry">2</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -353,155 +353,31 @@
 <span id="L283"><span class="lineNum">     283</span>              :                          mfem::Vector &amp;vals, mfem::Ordering::Type ordering)</span>
 <span id="L284"><span class="lineNum">     284</span>              : {</span>
 <span id="L285"><span class="lineNum">     285</span>              : #if defined(MFEM_USE_GSLIB)</span>
-<span id="L286"><span class="lineNum">     286</span>              :   // Set up a single-use interpolator, then delegate to the reusable-op overload. Callers</span>
-<span id="L287"><span class="lineNum">     287</span>              :   // that interpolate repeatedly on a fixed mesh (e.g. wave-port voltage-path line</span>
-<span id="L288"><span class="lineNum">     288</span>              :   // integrals during a frequency sweep) should instead build the FindPointsGSLIB once via</span>
-<span id="L289"><span class="lineNum">     289</span>              :   // SetupInterpolator and call the overload below — the geometric Setup is the expensive</span>
-<span id="L290"><span class="lineNum">     290</span>              :   // step and depends only on the mesh, not the field values.</span>
-<span id="L291"><span class="lineNum">     291</span>              :   auto &amp;src_mesh = *U.FESpace()-&gt;GetMesh();</span>
-<span id="L292"><span class="lineNum">     292</span> <span class="tlaGNC">           4 :   MFEM_VERIFY(src_mesh.GetNodes(), &quot;Source mesh has no nodal FE space!&quot;);</span></span>
-<span id="L293"><span class="lineNum">     293</span>              :   const int dim = src_mesh.SpaceDimension();</span>
-<span id="L294"><span class="lineNum">     294</span> <span class="tlaGNC">           4 :   const int npts = xyz.Size() / dim;</span></span>
-<span id="L295"><span class="lineNum">     295</span> <span class="tlaGNC">           4 :   auto *src_pmesh = dynamic_cast&lt;mfem::ParMesh *&gt;(&amp;src_mesh);</span></span>
-<span id="L296"><span class="lineNum">     296</span> <span class="tlaGNC">           4 :   MPI_Comm comm = (src_pmesh) ? src_pmesh-&gt;GetComm() : MPI_COMM_SELF;</span></span>
-<span id="L297"><span class="lineNum">     297</span> <span class="tlaGNC">           4 :   mfem::FindPointsGSLIB op(comm);</span></span>
-<span id="L298"><span class="lineNum">     298</span> <span class="tlaGNC">           4 :   op.Setup(src_mesh, GSLIB_BB_TOL, GSLIB_NEWTON_TOL, npts);</span></span>
-<span id="L299"><span class="lineNum">     299</span> <span class="tlaGNC">           4 :   InterpolateFunction(op, xyz, U, vals, ordering);</span></span>
-<span id="L300"><span class="lineNum">     300</span>              : #else</span>
-<span id="L301"><span class="lineNum">     301</span>              :   MFEM_ABORT(&quot;InterpolateFunction requires MFEM_USE_GSLIB!&quot;);</span>
-<span id="L302"><span class="lineNum">     302</span>              : #endif</span>
-<span id="L303"><span class="lineNum">     303</span> <span class="tlaGNC">           4 : }</span></span>
-<span id="L304"><span class="lineNum">     304</span>              : </span>
-<span id="L305"><span class="lineNum">     305</span> <span class="tlaGNC">           3 : void SetupInterpolator(mfem::FindPointsGSLIB &amp;op, mfem::Mesh &amp;mesh)</span></span>
-<span id="L306"><span class="lineNum">     306</span>              : {</span>
-<span id="L307"><span class="lineNum">     307</span>              : #if defined(MFEM_USE_GSLIB)</span>
-<span id="L308"><span class="lineNum">     308</span> <span class="tlaGNC">           3 :   op.Setup(mesh, GSLIB_BB_TOL, GSLIB_NEWTON_TOL);</span></span>
-<span id="L309"><span class="lineNum">     309</span>              : #else</span>
-<span id="L310"><span class="lineNum">     310</span>              :   MFEM_ABORT(&quot;SetupInterpolator requires MFEM_USE_GSLIB!&quot;);</span>
-<span id="L311"><span class="lineNum">     311</span>              : #endif</span>
-<span id="L312"><span class="lineNum">     312</span> <span class="tlaGNC">           3 : }</span></span>
-<span id="L313"><span class="lineNum">     313</span>              : </span>
-<span id="L314"><span class="lineNum">     314</span> <span class="tlaGNC">           4 : void InterpolateFunction(mfem::FindPointsGSLIB &amp;op, const mfem::Vector &amp;xyz,</span></span>
-<span id="L315"><span class="lineNum">     315</span>              :                          const mfem::GridFunction &amp;U, mfem::Vector &amp;vals,</span>
-<span id="L316"><span class="lineNum">     316</span>              :                          mfem::Ordering::Type ordering)</span>
-<span id="L317"><span class="lineNum">     317</span>              : {</span>
-<span id="L318"><span class="lineNum">     318</span>              : #if defined(MFEM_USE_GSLIB)</span>
-<span id="L319"><span class="lineNum">     319</span>              :   // Perform the interpolation using a pre-Setup point locator (op.Setup already called on</span>
-<span id="L320"><span class="lineNum">     320</span>              :   // the source mesh). Setup is geometric — it depends only on the mesh — so a fixed-mesh</span>
-<span id="L321"><span class="lineNum">     321</span>              :   // caller reuses op across field values without paying the O(num_elements) hash build</span>
-<span id="L322"><span class="lineNum">     322</span>              :   // each call. The ordering of the returned values matches the source grid function.</span>
-<span id="L323"><span class="lineNum">     323</span>              :   const int dim = U.FESpace()-&gt;GetMesh()-&gt;SpaceDimension();</span>
-<span id="L324"><span class="lineNum">     324</span> <span class="tlaGNC">           4 :   const int npts = xyz.Size() / dim;</span></span>
-<span id="L325"><span class="lineNum">     325</span>              :   const int vdim = U.VectorDim();</span>
-<span id="L326"><span class="lineNum">     326</span> <span class="tlaGNC">           4 :   MFEM_VERIFY(vals.Size() == npts * vdim, &quot;Incorrect size for interpolated values vector!&quot;);</span></span>
-<span id="L327"><span class="lineNum">     327</span> <span class="tlaGNC">           4 :   op.SetDefaultInterpolationValue(0.0);</span></span>
-<span id="L328"><span class="lineNum">     328</span> <span class="tlaGNC">           4 :   op.SetL2AvgType(mfem::FindPointsGSLIB::NONE);</span></span>
-<span id="L329"><span class="lineNum">     329</span> <span class="tlaGNC">           4 :   op.Interpolate(xyz, U, vals, ordering);</span></span>
-<span id="L330"><span class="lineNum">     330</span>              : #else</span>
-<span id="L331"><span class="lineNum">     331</span>              :   MFEM_ABORT(&quot;InterpolateFunction requires MFEM_USE_GSLIB!&quot;);</span>
-<span id="L332"><span class="lineNum">     332</span>              : #endif</span>
-<span id="L333"><span class="lineNum">     333</span> <span class="tlaGNC">           4 : }</span></span>
-<span id="L334"><span class="lineNum">     334</span>              : </span>
-<span id="L335"><span class="lineNum">     335</span>              : #if defined(MFEM_USE_GSLIB)</span>
-<span id="L336"><span class="lineNum">     336</span>              : namespace</span>
-<span id="L337"><span class="lineNum">     337</span>              : {</span>
-<span id="L338"><span class="lineNum">     338</span>              : </span>
-<span id="L339"><span class="lineNum">     339</span>              : // Shared quadrature + dot-product core for the line integral. `interp` fills `vals`</span>
-<span id="L340"><span class="lineNum">     340</span>              : // (byNODES ordering, length npts*vdim) with the field sampled at the quadrature points;</span>
-<span id="L341"><span class="lineNum">     341</span>              : // it is the only part that touches GSLIB, so callers can supply either a fresh single-use</span>
-<span id="L342"><span class="lineNum">     342</span>              : // locator or a cached pre-Setup one.</span>
-<span id="L343"><span class="lineNum">     343</span>              : template &lt;typename InterpFn&gt;</span>
-<span id="L344"><span class="lineNum">     344</span> <span class="tlaUNC tlaBgUNC">           0 : double LineIntegralCore(const mfem::Vector &amp;p1, const mfem::Vector &amp;p2,</span></span>
-<span id="L345"><span class="lineNum">     345</span>              :                         const mfem::ParGridFunction &amp;field, int quad_order, InterpFn interp)</span>
-<span id="L346"><span class="lineNum">     346</span>              : {</span>
-<span id="L347"><span class="lineNum">     347</span> <span class="tlaUNC">           0 :   const int dim = p1.Size();</span></span>
-<span id="L348"><span class="lineNum">     348</span> <span class="tlaUNC">           0 :   MFEM_VERIFY(p2.Size() == dim, &quot;ComputeLineIntegral: p1 and p2 must have same dimension!&quot;);</span></span>
-<span id="L349"><span class="lineNum">     349</span>              : </span>
-<span id="L350"><span class="lineNum">     350</span>              :   // Direction vector dl = p2 - p1. The full integral is V = ∫₀¹ F(r(t)) · dl dt.</span>
-<span id="L351"><span class="lineNum">     351</span>              :   mfem::Vector dl(dim);</span>
-<span id="L352"><span class="lineNum">     352</span> <span class="tlaUNC">           0 :   for (int d = 0; d &lt; dim; d++)</span></span>
-<span id="L353"><span class="lineNum">     353</span>              :   {</span>
-<span id="L354"><span class="lineNum">     354</span> <span class="tlaUNC">           0 :     dl(d) = p2(d) - p1(d);</span></span>
-<span id="L355"><span class="lineNum">     355</span>              :   }</span>
-<span id="L356"><span class="lineNum">     356</span> <span class="tlaUNC">           0 :   MFEM_VERIFY(dl.Norml2() &gt; 0.0, &quot;ComputeLineIntegral: p1 and p2 must be distinct points!&quot;);</span></span>
-<span id="L357"><span class="lineNum">     357</span>              : </span>
-<span id="L358"><span class="lineNum">     358</span>              :   // Gauss-Legendre quadrature on the segment [0, 1]. The caller is responsible for</span>
-<span id="L359"><span class="lineNum">     359</span>              :   // choosing a high enough order to resolve the field variation along the line.</span>
-<span id="L360"><span class="lineNum">     360</span> <span class="tlaUNC">           0 :   const mfem::IntegrationRule &amp;ir = mfem::IntRules.Get(mfem::Geometry::SEGMENT, quad_order);</span></span>
-<span id="L361"><span class="lineNum">     361</span>              :   const int npts = ir.GetNPoints();</span>
-<span id="L362"><span class="lineNum">     362</span>              : </span>
-<span id="L363"><span class="lineNum">     363</span>              :   // Generate physical coordinates along the line: r(t_i) = p1 + t_i * dl.</span>
-<span id="L364"><span class="lineNum">     364</span>              :   // Stored in byNODES ordering: [x0,x1,...,xN, y0,y1,...,yN, (z0,...,zN)].</span>
-<span id="L365"><span class="lineNum">     365</span> <span class="tlaUNC">           0 :   mfem::Vector xyz(npts * dim);</span></span>
-<span id="L366"><span class="lineNum">     366</span> <span class="tlaUNC">           0 :   for (int i = 0; i &lt; npts; i++)</span></span>
-<span id="L367"><span class="lineNum">     367</span>              :   {</span>
-<span id="L368"><span class="lineNum">     368</span> <span class="tlaUNC">           0 :     double t = ir.IntPoint(i).x;</span></span>
-<span id="L369"><span class="lineNum">     369</span> <span class="tlaUNC">           0 :     for (int d = 0; d &lt; dim; d++)</span></span>
-<span id="L370"><span class="lineNum">     370</span>              :     {</span>
-<span id="L371"><span class="lineNum">     371</span> <span class="tlaUNC">           0 :       xyz(d * npts + i) = p1(d) + t * dl(d);</span></span>
-<span id="L372"><span class="lineNum">     372</span>              :     }</span>
-<span id="L373"><span class="lineNum">     373</span>              :   }</span>
-<span id="L374"><span class="lineNum">     374</span>              : </span>
-<span id="L375"><span class="lineNum">     375</span>              :   // Interpolate the vector field at the quadrature points.</span>
-<span id="L376"><span class="lineNum">     376</span> <span class="tlaUNC">           0 :   const int vdim = field.VectorDim();</span></span>
-<span id="L377"><span class="lineNum">     377</span> <span class="tlaUNC">           0 :   mfem::Vector vals(npts * vdim);</span></span>
-<span id="L378"><span class="lineNum">     378</span>              :   interp(xyz, vals);</span>
-<span id="L379"><span class="lineNum">     379</span>              : </span>
-<span id="L380"><span class="lineNum">     380</span>              :   // Compute the dot product F · dl at each quadrature point and sum. Only the first</span>
-<span id="L381"><span class="lineNum">     381</span>              :   // min(vdim, dim) components contribute; higher components (if vdim &gt; dim) are ignored</span>
-<span id="L382"><span class="lineNum">     382</span>              :   // since dl has length dim.</span>
-<span id="L383"><span class="lineNum">     383</span>              :   const int ndot = std::min(vdim, dim);</span>
-<span id="L384"><span class="lineNum">     384</span>              :   double result = 0.0;</span>
-<span id="L385"><span class="lineNum">     385</span> <span class="tlaUNC">           0 :   for (int i = 0; i &lt; npts; i++)</span></span>
-<span id="L386"><span class="lineNum">     386</span>              :   {</span>
-<span id="L387"><span class="lineNum">     387</span>              :     double dot = 0.0;</span>
-<span id="L388"><span class="lineNum">     388</span> <span class="tlaUNC">           0 :     for (int d = 0; d &lt; ndot; d++)</span></span>
-<span id="L389"><span class="lineNum">     389</span>              :     {</span>
-<span id="L390"><span class="lineNum">     390</span>              :       // vals is always in byNODES ordering from InterpolateFunction.</span>
-<span id="L391"><span class="lineNum">     391</span> <span class="tlaUNC">           0 :       double val = vals(d * npts + i);</span></span>
-<span id="L392"><span class="lineNum">     392</span> <span class="tlaUNC">           0 :       dot += val * dl(d);</span></span>
-<span id="L393"><span class="lineNum">     393</span>              :     }</span>
-<span id="L394"><span class="lineNum">     394</span> <span class="tlaUNC">           0 :     result += ir.IntPoint(i).weight * dot;</span></span>
-<span id="L395"><span class="lineNum">     395</span>              :   }</span>
-<span id="L396"><span class="lineNum">     396</span> <span class="tlaUNC">           0 :   return result;</span></span>
-<span id="L397"><span class="lineNum">     397</span>              : }</span>
-<span id="L398"><span class="lineNum">     398</span>              : </span>
-<span id="L399"><span class="lineNum">     399</span>              : }  // namespace</span>
-<span id="L400"><span class="lineNum">     400</span>              : #endif</span>
-<span id="L401"><span class="lineNum">     401</span>              : </span>
-<span id="L402"><span class="lineNum">     402</span> <span class="tlaUNC">           0 : double ComputeLineIntegral(const mfem::Vector &amp;p1, const mfem::Vector &amp;p2,</span></span>
-<span id="L403"><span class="lineNum">     403</span>              :                            const mfem::ParGridFunction &amp;field, int quad_order)</span>
-<span id="L404"><span class="lineNum">     404</span>              : {</span>
-<span id="L405"><span class="lineNum">     405</span>              : #if defined(MFEM_USE_GSLIB)</span>
-<span id="L406"><span class="lineNum">     406</span> <span class="tlaUNC">           0 :   return LineIntegralCore(</span></span>
-<span id="L407"><span class="lineNum">     407</span>              :       p1, p2, field, quad_order, [&amp;field](const mfem::Vector &amp;xyz, mfem::Vector &amp;vals)</span>
-<span id="L408"><span class="lineNum">     408</span> <span class="tlaUNC">           0 :       { InterpolateFunction(xyz, field, vals, mfem::Ordering::byNODES); });</span></span>
-<span id="L409"><span class="lineNum">     409</span>              : #else</span>
-<span id="L410"><span class="lineNum">     410</span>              :   MFEM_ABORT(&quot;ComputeLineIntegral requires MFEM_USE_GSLIB!&quot;);</span>
-<span id="L411"><span class="lineNum">     411</span>              :   return 0.0;</span>
-<span id="L412"><span class="lineNum">     412</span>              : #endif</span>
-<span id="L413"><span class="lineNum">     413</span>              : }</span>
-<span id="L414"><span class="lineNum">     414</span>              : </span>
-<span id="L415"><span class="lineNum">     415</span> <span class="tlaUNC">           0 : double ComputeLineIntegral(mfem::FindPointsGSLIB &amp;op, const mfem::Vector &amp;p1,</span></span>
-<span id="L416"><span class="lineNum">     416</span>              :                            const mfem::Vector &amp;p2, const mfem::ParGridFunction &amp;field,</span>
-<span id="L417"><span class="lineNum">     417</span>              :                            int quad_order)</span>
-<span id="L418"><span class="lineNum">     418</span>              : {</span>
-<span id="L419"><span class="lineNum">     419</span>              : #if defined(MFEM_USE_GSLIB)</span>
-<span id="L420"><span class="lineNum">     420</span>              :   // As ComputeLineIntegral, but reuses a pre-Setup point locator (op.Setup already called</span>
-<span id="L421"><span class="lineNum">     421</span>              :   // on the field's mesh). Avoids rebuilding the GSLIB spatial hash on every call — the</span>
-<span id="L422"><span class="lineNum">     422</span>              :   // dominant cost when integrating repeatedly on a fixed mesh.</span>
-<span id="L423"><span class="lineNum">     423</span> <span class="tlaUNC">           0 :   return LineIntegralCore(</span></span>
-<span id="L424"><span class="lineNum">     424</span>              :       p1, p2, field, quad_order, [&amp;op, &amp;field](const mfem::Vector &amp;xyz, mfem::Vector &amp;vals)</span>
-<span id="L425"><span class="lineNum">     425</span> <span class="tlaUNC">           0 :       { InterpolateFunction(op, xyz, field, vals, mfem::Ordering::byNODES); });</span></span>
-<span id="L426"><span class="lineNum">     426</span>              : #else</span>
-<span id="L427"><span class="lineNum">     427</span>              :   MFEM_ABORT(&quot;ComputeLineIntegral requires MFEM_USE_GSLIB!&quot;);</span>
-<span id="L428"><span class="lineNum">     428</span>              :   return 0.0;</span>
-<span id="L429"><span class="lineNum">     429</span>              : #endif</span>
-<span id="L430"><span class="lineNum">     430</span>              : }</span>
-<span id="L431"><span class="lineNum">     431</span>              : </span>
-<span id="L432"><span class="lineNum">     432</span>              : }  // namespace fem</span>
-<span id="L433"><span class="lineNum">     433</span>              : </span>
-<span id="L434"><span class="lineNum">     434</span>              : }  // namespace palace</span>
+<span id="L286"><span class="lineNum">     286</span>              :   // Set up the interpolator.</span>
+<span id="L287"><span class="lineNum">     287</span>              :   auto &amp;src_mesh = *U.FESpace()-&gt;GetMesh();</span>
+<span id="L288"><span class="lineNum">     288</span> <span class="tlaGNC">           4 :   MFEM_VERIFY(src_mesh.GetNodes(), &quot;Source mesh has no nodal FE space!&quot;);</span></span>
+<span id="L289"><span class="lineNum">     289</span>              :   const int dim = src_mesh.SpaceDimension();</span>
+<span id="L290"><span class="lineNum">     290</span> <span class="tlaGNC">           4 :   const int npts = xyz.Size() / dim;</span></span>
+<span id="L291"><span class="lineNum">     291</span> <span class="tlaGNC">           4 :   auto *src_pmesh = dynamic_cast&lt;mfem::ParMesh *&gt;(&amp;src_mesh);</span></span>
+<span id="L292"><span class="lineNum">     292</span> <span class="tlaGNC">           4 :   MPI_Comm comm = (src_pmesh) ? src_pmesh-&gt;GetComm() : MPI_COMM_SELF;</span></span>
+<span id="L293"><span class="lineNum">     293</span> <span class="tlaGNC">           4 :   mfem::FindPointsGSLIB op(comm);</span></span>
+<span id="L294"><span class="lineNum">     294</span> <span class="tlaGNC">           4 :   op.Setup(src_mesh, GSLIB_BB_TOL, GSLIB_NEWTON_TOL, npts);</span></span>
+<span id="L295"><span class="lineNum">     295</span>              : </span>
+<span id="L296"><span class="lineNum">     296</span>              :   // Perform the interpolation, with the ordering of the returned values matching the</span>
+<span id="L297"><span class="lineNum">     297</span>              :   // ordering of the source grid function.</span>
+<span id="L298"><span class="lineNum">     298</span>              :   const int vdim = U.VectorDim();</span>
+<span id="L299"><span class="lineNum">     299</span> <span class="tlaGNC">           4 :   MFEM_VERIFY(vals.Size() == npts * vdim, &quot;Incorrect size for interpolated values vector!&quot;);</span></span>
+<span id="L300"><span class="lineNum">     300</span>              :   op.SetDefaultInterpolationValue(0.0);</span>
+<span id="L301"><span class="lineNum">     301</span>              :   op.SetL2AvgType(mfem::FindPointsGSLIB::NONE);</span>
+<span id="L302"><span class="lineNum">     302</span> <span class="tlaGNC">           4 :   op.Interpolate(xyz, U, vals, ordering);</span></span>
+<span id="L303"><span class="lineNum">     303</span>              : #else</span>
+<span id="L304"><span class="lineNum">     304</span>              :   MFEM_ABORT(&quot;InterpolateFunction requires MFEM_USE_GSLIB!&quot;);</span>
+<span id="L305"><span class="lineNum">     305</span>              : #endif</span>
+<span id="L306"><span class="lineNum">     306</span> <span class="tlaGNC">           4 : }</span></span>
+<span id="L307"><span class="lineNum">     307</span>              : </span>
+<span id="L308"><span class="lineNum">     308</span>              : }  // namespace fem</span>
+<span id="L309"><span class="lineNum">     309</span>              : </span>
+<span id="L310"><span class="lineNum">     310</span>              : }  // namespace palace</span>
         </pre>
               </td>
             </tr>

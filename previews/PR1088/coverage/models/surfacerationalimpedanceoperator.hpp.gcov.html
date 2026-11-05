@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-10-23 01:41:56</td>
+            <td class="headerValue">2026-11-05 18:04:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">-</td>
@@ -107,7 +107,7 @@
 <span id="L37"><span class="lineNum">      37</span>              : // Robin BC (SurfaceConductivityOperator). It is consequently available only for</span>
 <span id="L38"><span class="lineNum">      38</span>              : // frequency-domain driven and boundary mode problems.</span>
 <span id="L39"><span class="lineNum">      39</span>              : //</span>
-<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC tlaBgGNC">         213 : class SurfaceRationalImpedanceOperator</span></span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC tlaBgGNC">         240 : class SurfaceRationalImpedanceOperator</span></span>
 <span id="L41"><span class="lineNum">      41</span>              : {</span>
 <span id="L42"><span class="lineNum">      42</span>              : private:</span>
 <span id="L43"><span class="lineNum">      43</span>              :   // Reference to material property data (not owned).</span>
@@ -133,14 +133,14 @@
 <span id="L63"><span class="lineNum">      63</span>              :   std::vector&lt;RationalImpedanceData&gt; boundaries;</span>
 <span id="L64"><span class="lineNum">      64</span>              : </span>
 <span id="L65"><span class="lineNum">      65</span>              :   void SetUpBoundaryProperties(const std::vector&lt;config::RationalImpedanceData&gt; &amp;impedance,</span>
-<span id="L66"><span class="lineNum">      66</span>              :                                const std::unordered_set&lt;int&gt; &amp;cracked_attributes,</span>
+<span id="L66"><span class="lineNum">      66</span>              :                                const std::unordered_set&lt;int&gt; &amp;split_attributes,</span>
 <span id="L67"><span class="lineNum">      67</span>              :                                ProblemType problem_type, const mfem::ParMesh &amp;mesh);</span>
 <span id="L68"><span class="lineNum">      68</span>              :   void PrintBoundaryInfo(const Units &amp;units, const mfem::ParMesh &amp;mesh);</span>
 <span id="L69"><span class="lineNum">      69</span>              : </span>
 <span id="L70"><span class="lineNum">      70</span>              : public:</span>
 <span id="L71"><span class="lineNum">      71</span>              :   SurfaceRationalImpedanceOperator(</span>
 <span id="L72"><span class="lineNum">      72</span>              :       const std::vector&lt;config::RationalImpedanceData&gt; &amp;impedance,</span>
-<span id="L73"><span class="lineNum">      73</span>              :       const std::unordered_set&lt;int&gt; &amp;cracked_attributes, ProblemType problem_type,</span>
+<span id="L73"><span class="lineNum">      73</span>              :       const std::unordered_set&lt;int&gt; &amp;split_attributes, ProblemType problem_type,</span>
 <span id="L74"><span class="lineNum">      74</span>              :       const Units &amp;units, const MaterialOperator &amp;mat_op, const mfem::ParMesh &amp;mesh);</span>
 <span id="L75"><span class="lineNum">      75</span>              :   SurfaceRationalImpedanceOperator(const IoData &amp;iodata, const MaterialOperator &amp;mat_op,</span>
 <span id="L76"><span class="lineNum">      76</span>              :                                    const mfem::ParMesh &amp;mesh);</span>
@@ -149,7 +149,7 @@
 <span id="L79"><span class="lineNum">      79</span>              :   mfem::Array&lt;int&gt; GetAttrList() const;</span>
 <span id="L80"><span class="lineNum">      80</span>              : </span>
 <span id="L81"><span class="lineNum">      81</span>              :   // Number of configured rational impedance boundaries.</span>
-<span id="L82"><span class="lineNum">      82</span> <span class="tlaGNC">         230 :   int GetNumBoundaries() const { return static_cast&lt;int&gt;(boundaries.size()); }</span></span>
+<span id="L82"><span class="lineNum">      82</span> <span class="tlaGNC">         254 :   int GetNumBoundaries() const { return static_cast&lt;int&gt;(boundaries.size()); }</span></span>
 <span id="L83"><span class="lineNum">      83</span>              : </span>
 <span id="L84"><span class="lineNum">      84</span>              :   // Mesh boundary attributes of boundary index idx (as given in the configuration file).</span>
 <span id="L85"><span class="lineNum">      85</span> <span class="tlaUNC tlaBgUNC">           0 :   const mfem::Array&lt;int&gt; &amp;GetAttrList(int idx) const { return boundaries[idx].attr_list; }</span></span>

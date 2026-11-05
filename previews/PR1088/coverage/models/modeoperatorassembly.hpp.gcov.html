@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-10-23 01:41:56</td>
+            <td class="headerValue">2026-11-05 18:04:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">-</td>
@@ -120,7 +120,7 @@
 <span id="L50"><span class="lineNum">      50</span>              :   OperatorComponent(CoefficientType type, int index,</span>
 <span id="L51"><span class="lineNum">      51</span>              :                     std::unique_ptr&lt;mfem::HypreParMatrix&gt; &amp;&amp;Ar,</span>
 <span id="L52"><span class="lineNum">      52</span>              :                     std::unique_ptr&lt;mfem::HypreParMatrix&gt; &amp;&amp;Ai);</span>
-<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC tlaBgGNC">         540 :   OperatorComponent(OperatorComponent &amp;&amp;) = default;</span></span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC tlaBgGNC">         612 :   OperatorComponent(OperatorComponent &amp;&amp;) = default;</span></span>
 <span id="L54"><span class="lineNum">      54</span>              :   OperatorComponent &amp;operator=(OperatorComponent &amp;&amp;) = default;</span>
 <span id="L55"><span class="lineNum">      55</span>              :   OperatorComponent(const OperatorComponent &amp;) = delete;</span>
 <span id="L56"><span class="lineNum">      56</span>              :   OperatorComponent &amp;operator=(const OperatorComponent &amp;) = delete;</span>
@@ -128,7 +128,7 @@
 <span id="L58"><span class="lineNum">      58</span>              : </span>
 <span id="L59"><span class="lineNum">      59</span>              : // Frequency-parametric mode eigenproblem matrix. The complete fixed components are the</span>
 <span id="L60"><span class="lineNum">      60</span>              : // single source of truth for both exact sparse assembly and wave-port projection.</span>
-<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">         176 : class ModeOperatorModel</span></span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">         200 : class ModeOperatorModel</span></span>
 <span id="L62"><span class="lineNum">      62</span>              : {</span>
 <span id="L63"><span class="lineNum">      63</span>              : private:</span>
 <span id="L64"><span class="lineNum">      64</span>              :   SurfaceConductivityOperator &amp;surf_sigma_op;</span>

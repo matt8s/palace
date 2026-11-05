@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-10-23 01:41:56</td>
+            <td class="headerValue">2026-11-05 18:04:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -370,26 +370,26 @@
 <span id="L300"><span class="lineNum">     300</span>              :   std::unordered_set&lt;std::string&gt; reported_enum_paths;</span>
 <span id="L301"><span class="lineNum">     301</span>              : </span>
 <span id="L302"><span class="lineNum">     302</span>              :   // Convert JSON pointer &quot;/Boundaries/LumpedPort/0&quot; to [&quot;Boundaries&quot;][&quot;LumpedPort&quot;][0]</span>
-<span id="L303"><span class="lineNum">     303</span> <span class="tlaGNC">         257 :   static std::string FormatPath(const std::string &amp;ptr)</span></span>
+<span id="L303"><span class="lineNum">     303</span> <span class="tlaGNC">         259 :   static std::string FormatPath(const std::string &amp;ptr)</span></span>
 <span id="L304"><span class="lineNum">     304</span>              :   {</span>
-<span id="L305"><span class="lineNum">     305</span> <span class="tlaGNC">         257 :     if (ptr.empty() || ptr == &quot;/&quot;)</span></span>
+<span id="L305"><span class="lineNum">     305</span> <span class="tlaGNC">         259 :     if (ptr.empty() || ptr == &quot;/&quot;)</span></span>
 <span id="L306"><span class="lineNum">     306</span>              :     {</span>
 <span id="L307"><span class="lineNum">     307</span> <span class="tlaGNC">          92 :       return &quot;config&quot;;</span></span>
 <span id="L308"><span class="lineNum">     308</span>              :     }</span>
 <span id="L309"><span class="lineNum">     309</span>              :     fmt::memory_buffer result;</span>
 <span id="L310"><span class="lineNum">     310</span>              :     auto out = fmt::appender{result};</span>
 <span id="L311"><span class="lineNum">     311</span>              :     std::size_t pos = 0;</span>
-<span id="L312"><span class="lineNum">     312</span> <span class="tlaGNC">         759 :     while (pos &lt; ptr.size())</span></span>
+<span id="L312"><span class="lineNum">     312</span> <span class="tlaGNC">         771 :     while (pos &lt; ptr.size())</span></span>
 <span id="L313"><span class="lineNum">     313</span>              :     {</span>
-<span id="L314"><span class="lineNum">     314</span> <span class="tlaGNC">         594 :       if (ptr[pos] == '/')</span></span>
+<span id="L314"><span class="lineNum">     314</span> <span class="tlaGNC">         604 :       if (ptr[pos] == '/')</span></span>
 <span id="L315"><span class="lineNum">     315</span>              :       {</span>
-<span id="L316"><span class="lineNum">     316</span> <span class="tlaGNC">         297 :         pos++;</span></span>
-<span id="L317"><span class="lineNum">     317</span> <span class="tlaGNC">         297 :         continue;</span></span>
+<span id="L316"><span class="lineNum">     316</span> <span class="tlaGNC">         302 :         pos++;</span></span>
+<span id="L317"><span class="lineNum">     317</span> <span class="tlaGNC">         302 :         continue;</span></span>
 <span id="L318"><span class="lineNum">     318</span>              :       }</span>
-<span id="L319"><span class="lineNum">     319</span> <span class="tlaGNC">         297 :       std::size_t next = ptr.find('/', pos);</span></span>
-<span id="L320"><span class="lineNum">     320</span> <span class="tlaGNC">         297 :       std::string token = ptr.substr(pos, next - pos);</span></span>
+<span id="L319"><span class="lineNum">     319</span> <span class="tlaGNC">         302 :       std::size_t next = ptr.find('/', pos);</span></span>
+<span id="L320"><span class="lineNum">     320</span> <span class="tlaGNC">         302 :       std::string token = ptr.substr(pos, next - pos);</span></span>
 <span id="L321"><span class="lineNum">     321</span>              :       // Check if token is a number (array index).</span>
-<span id="L322"><span class="lineNum">     322</span> <span class="tlaGNC">         594 :       bool is_index = !token.empty() &amp;&amp; std::ranges::all_of(token, ::isdigit);</span></span>
+<span id="L322"><span class="lineNum">     322</span> <span class="tlaGNC">         604 :       bool is_index = !token.empty() &amp;&amp; std::ranges::all_of(token, ::isdigit);</span></span>
 <span id="L323"><span class="lineNum">     323</span>              :       if (is_index)</span>
 <span id="L324"><span class="lineNum">     324</span>              :       {</span>
 <span id="L325"><span class="lineNum">     325</span>              :         fmt::format_to(out, &quot;[{}]&quot;, token);</span>
@@ -400,25 +400,25 @@
 <span id="L330"><span class="lineNum">     330</span>              :       }</span>
 <span id="L331"><span class="lineNum">     331</span>              :       pos = next;</span>
 <span id="L332"><span class="lineNum">     332</span>              :     }</span>
-<span id="L333"><span class="lineNum">     333</span> <span class="tlaGNC">         165 :     return fmt::to_string(result);</span></span>
+<span id="L333"><span class="lineNum">     333</span> <span class="tlaGNC">         167 :     return fmt::to_string(result);</span></span>
 <span id="L334"><span class="lineNum">     334</span>              :   }</span>
 <span id="L335"><span class="lineNum">     335</span>              : </span>
 <span id="L336"><span class="lineNum">     336</span>              : public:</span>
-<span id="L337"><span class="lineNum">     337</span> <span class="tlaGNC">         188 :   explicit SchemaErrorHandler(const json *s = nullptr) : schema(s) {}</span></span>
+<span id="L337"><span class="lineNum">     337</span> <span class="tlaGNC">         195 :   explicit SchemaErrorHandler(const json *s = nullptr) : schema(s) {}</span></span>
 <span id="L338"><span class="lineNum">     338</span>              : </span>
-<span id="L339"><span class="lineNum">     339</span> <span class="tlaGNC">         334 :   void error(const json::json_pointer &amp;ptr, const json &amp;instance,</span></span>
+<span id="L339"><span class="lineNum">     339</span> <span class="tlaGNC">         336 :   void error(const json::json_pointer &amp;ptr, const json &amp;instance,</span></span>
 <span id="L340"><span class="lineNum">     340</span>              :              const std::string &amp;message) override</span>
 <span id="L341"><span class="lineNum">     341</span>              :   {</span>
-<span id="L342"><span class="lineNum">     342</span> <span class="tlaGNC">         334 :     const std::string path = ptr.to_string();</span></span>
-<span id="L343"><span class="lineNum">     343</span>              :     // These message strings are implementation details of json-schema-validator 2.4.0;</span>
-<span id="L344"><span class="lineNum">     344</span>              :     // update them when upgrading the dependency.</span>
+<span id="L342"><span class="lineNum">     342</span> <span class="tlaGNC">         336 :     const std::string path = ptr.to_string();</span></span>
+<span id="L343"><span class="lineNum">     343</span>              :     // These message strings are implementation details of json-schema-validator (checked</span>
+<span id="L344"><span class="lineNum">     344</span>              :     // against 2.4.0 and 2.4.1); update them when upgrading the dependency.</span>
 <span id="L345"><span class="lineNum">     345</span>              :     const bool is_enum_failure =</span>
-<span id="L346"><span class="lineNum">     346</span> <span class="tlaGNC">         306 :         message.find(&quot;instance not found in required enum&quot;) != std::string::npos ||</span></span>
-<span id="L347"><span class="lineNum">     347</span> <span class="tlaGNC">         600 :         message.find(&quot;instance not const&quot;) != std::string::npos ||</span></span>
+<span id="L346"><span class="lineNum">     346</span> <span class="tlaGNC">         308 :         message.find(&quot;instance not found in required enum&quot;) != std::string::npos ||</span></span>
+<span id="L347"><span class="lineNum">     347</span> <span class="tlaGNC">         604 :         message.find(&quot;instance not const&quot;) != std::string::npos ||</span></span>
 <span id="L348"><span class="lineNum">     348</span>              :         message.find(&quot;no subschema has succeeded&quot;) != std::string::npos;</span>
 <span id="L349"><span class="lineNum">     349</span>              :     json enum_values;</span>
 <span id="L350"><span class="lineNum">     350</span>              :     bool has_enum_values = false;</span>
-<span id="L351"><span class="lineNum">     351</span> <span class="tlaGNC">         334 :     if ((schema != nullptr) &amp;&amp; is_enum_failure)</span></span>
+<span id="L351"><span class="lineNum">     351</span> <span class="tlaGNC">         336 :     if ((schema != nullptr) &amp;&amp; is_enum_failure)</span></span>
 <span id="L352"><span class="lineNum">     352</span>              :     {</span>
 <span id="L353"><span class="lineNum">     353</span> <span class="tlaGNC">         278 :       enum_values = FindEnumInSchema(*schema, path);</span></span>
 <span id="L354"><span class="lineNum">     354</span>              :       has_enum_values =</span>
@@ -432,9 +432,9 @@
 <span id="L362"><span class="lineNum">     362</span>              :       }</span>
 <span id="L363"><span class="lineNum">     363</span>              :     }</span>
 <span id="L364"><span class="lineNum">     364</span>              : </span>
-<span id="L365"><span class="lineNum">     365</span> <span class="tlaGNC">         257 :     auto out = fmt::appender{errors};</span></span>
-<span id="L366"><span class="lineNum">     366</span> <span class="tlaGNC">         257 :     fmt::format_to(out, &quot;At {}: &quot;, FormatPath(path));</span></span>
-<span id="L367"><span class="lineNum">     367</span> <span class="tlaGNC">         257 :     if (has_enum_values)</span></span>
+<span id="L365"><span class="lineNum">     365</span> <span class="tlaGNC">         259 :     auto out = fmt::appender{errors};</span></span>
+<span id="L366"><span class="lineNum">     366</span> <span class="tlaGNC">         259 :     fmt::format_to(out, &quot;At {}: &quot;, FormatPath(path));</span></span>
+<span id="L367"><span class="lineNum">     367</span> <span class="tlaGNC">         259 :     if (has_enum_values)</span></span>
 <span id="L368"><span class="lineNum">     368</span>              :     {</span>
 <span id="L369"><span class="lineNum">     369</span> <span class="tlaGNC">          54 :       fmt::format_to(out, &quot;invalid value {}&quot;, instance.dump());</span></span>
 <span id="L370"><span class="lineNum">     370</span>              :     }</span>
@@ -445,11 +445,11 @@
 <span id="L375"><span class="lineNum">     375</span>              :     // Enhance type mismatch errors with actual type. Use find() so the enhancement also</span>
 <span id="L376"><span class="lineNum">     376</span>              :     // fires for oneOf/anyOf-wrapped messages</span>
 <span id="L377"><span class="lineNum">     377</span>              :     // like &quot;[combination: oneOf / case#0] unexpected instance type&quot;.</span>
-<span id="L378"><span class="lineNum">     378</span> <span class="tlaGNC">         257 :     if (message.find(&quot;unexpected instance type&quot;) != std::string::npos)</span></span>
+<span id="L378"><span class="lineNum">     378</span> <span class="tlaGNC">         259 :     if (message.find(&quot;unexpected instance type&quot;) != std::string::npos)</span></span>
 <span id="L379"><span class="lineNum">     379</span>              :     {</span>
 <span id="L380"><span class="lineNum">     380</span>              :       fmt::format_to(out, &quot; (got {})&quot;, instance.type_name());</span>
 <span id="L381"><span class="lineNum">     381</span>              :     }</span>
-<span id="L382"><span class="lineNum">     382</span> <span class="tlaGNC">         212 :     else if (has_enum_values)</span></span>
+<span id="L382"><span class="lineNum">     382</span> <span class="tlaGNC">         214 :     else if (has_enum_values)</span></span>
 <span id="L383"><span class="lineNum">     383</span>              :     {</span>
 <span id="L384"><span class="lineNum">     384</span>              :       fmt::format_to(out, &quot;; valid values: &quot;);</span>
 <span id="L385"><span class="lineNum">     385</span> <span class="tlaGNC">         477 :       for (std::size_t i = 0; i &lt; enum_values.size(); i++)</span></span>
@@ -470,11 +470,11 @@
 <span id="L400"><span class="lineNum">     400</span>              :       }</span>
 <span id="L401"><span class="lineNum">     401</span>              :     }</span>
 <span id="L402"><span class="lineNum">     402</span>              :     fmt::format_to(out, &quot;\n&quot;);</span>
-<span id="L403"><span class="lineNum">     403</span> <span class="tlaGNC">         257 :     has_error = true;</span></span>
+<span id="L403"><span class="lineNum">     403</span> <span class="tlaGNC">         259 :     has_error = true;</span></span>
 <span id="L404"><span class="lineNum">     404</span>              :   }</span>
 <span id="L405"><span class="lineNum">     405</span>              : </span>
-<span id="L406"><span class="lineNum">     406</span> <span class="tlaGNC">         188 :   explicit operator bool() const { return has_error; }</span></span>
-<span id="L407"><span class="lineNum">     407</span> <span class="tlaGNC">          75 :   std::string get_errors() const { return fmt::to_string(errors); }</span></span>
+<span id="L406"><span class="lineNum">     406</span> <span class="tlaGNC">         195 :   explicit operator bool() const { return has_error; }</span></span>
+<span id="L407"><span class="lineNum">     407</span> <span class="tlaGNC">          77 :   std::string get_errors() const { return fmt::to_string(errors); }</span></span>
 <span id="L408"><span class="lineNum">     408</span>              : };</span>
 <span id="L409"><span class="lineNum">     409</span>              : </span>
 <span id="L410"><span class="lineNum">     410</span> <span class="tlaGNC">           1 : std::string GetSchemaVersion()</span></span>
@@ -497,11 +497,11 @@
 <span id="L427"><span class="lineNum">     427</span> <span class="tlaUNC tlaBgUNC">           0 :   return &quot;unknown&quot;;</span></span>
 <span id="L428"><span class="lineNum">     428</span>              : }</span>
 <span id="L429"><span class="lineNum">     429</span>              : </span>
-<span id="L430"><span class="lineNum">     430</span> <span class="tlaGNC tlaBgGNC">         102 : std::string ValidateConfig(const nlohmann::json &amp;config)</span></span>
+<span id="L430"><span class="lineNum">     430</span> <span class="tlaGNC tlaBgGNC">         109 : std::string ValidateConfig(const nlohmann::json &amp;config)</span></span>
 <span id="L431"><span class="lineNum">     431</span>              : {</span>
-<span id="L432"><span class="lineNum">     432</span> <span class="tlaGNC">         102 :   const auto &amp;schema_map = schema::GetSchemaMap();</span></span>
-<span id="L433"><span class="lineNum">     433</span> <span class="tlaGNC">         102 :   auto it = schema_map.find(root_schema_file);</span></span>
-<span id="L434"><span class="lineNum">     434</span> <span class="tlaGNC">         102 :   if (it == schema_map.end())</span></span>
+<span id="L432"><span class="lineNum">     432</span> <span class="tlaGNC">         109 :   const auto &amp;schema_map = schema::GetSchemaMap();</span></span>
+<span id="L433"><span class="lineNum">     433</span> <span class="tlaGNC">         109 :   auto it = schema_map.find(root_schema_file);</span></span>
+<span id="L434"><span class="lineNum">     434</span> <span class="tlaGNC">         109 :   if (it == schema_map.end())</span></span>
 <span id="L435"><span class="lineNum">     435</span>              :   {</span>
 <span id="L436"><span class="lineNum">     436</span> <span class="tlaUNC tlaBgUNC">           0 :     return &quot;Root schema not found in embedded schemas&quot;;</span></span>
 <span id="L437"><span class="lineNum">     437</span>              :   }</span>
@@ -509,7 +509,7 @@
 <span id="L439"><span class="lineNum">     439</span>              :   json schema;</span>
 <span id="L440"><span class="lineNum">     440</span>              :   try</span>
 <span id="L441"><span class="lineNum">     441</span>              :   {</span>
-<span id="L442"><span class="lineNum">     442</span> <span class="tlaGNC tlaBgGNC">         204 :     schema = json::parse(it-&gt;second);</span></span>
+<span id="L442"><span class="lineNum">     442</span> <span class="tlaGNC tlaBgGNC">         218 :     schema = json::parse(it-&gt;second);</span></span>
 <span id="L443"><span class="lineNum">     443</span>              :   }</span>
 <span id="L444"><span class="lineNum">     444</span> <span class="tlaUNC tlaBgUNC">           0 :   catch (json::parse_error &amp;e)</span></span>
 <span id="L445"><span class="lineNum">     445</span>              :   {</span>
@@ -519,23 +519,23 @@
 <span id="L449"><span class="lineNum">     449</span>              :   // No schema loader is supplied: the single-file schema uses only internal</span>
 <span id="L450"><span class="lineNum">     450</span>              :   // (&quot;#/$defs/...&quot;) references. An external $ref would make the validator throw a</span>
 <span id="L451"><span class="lineNum">     451</span>              :   // descriptive error, caught and returned below.</span>
-<span id="L452"><span class="lineNum">     452</span> <span class="tlaGNC tlaBgGNC">         204 :   json_validator validator;</span></span>
+<span id="L452"><span class="lineNum">     452</span> <span class="tlaGNC tlaBgGNC">         218 :   json_validator validator;</span></span>
 <span id="L453"><span class="lineNum">     453</span>              :   try</span>
 <span id="L454"><span class="lineNum">     454</span>              :   {</span>
-<span id="L455"><span class="lineNum">     455</span> <span class="tlaGNC">         102 :     validator.set_root_schema(schema);</span></span>
+<span id="L455"><span class="lineNum">     455</span> <span class="tlaGNC">         109 :     validator.set_root_schema(schema);</span></span>
 <span id="L456"><span class="lineNum">     456</span>              :     SchemaErrorHandler handler(&amp;schema);</span>
-<span id="L457"><span class="lineNum">     457</span> <span class="tlaGNC">         204 :     validator.validate(config, handler);</span></span>
-<span id="L458"><span class="lineNum">     458</span> <span class="tlaGNC">         102 :     if (handler)</span></span>
+<span id="L457"><span class="lineNum">     457</span> <span class="tlaGNC">         218 :     validator.validate(config, handler);</span></span>
+<span id="L458"><span class="lineNum">     458</span> <span class="tlaGNC">         109 :     if (handler)</span></span>
 <span id="L459"><span class="lineNum">     459</span>              :     {</span>
 <span id="L460"><span class="lineNum">     460</span>              :       return handler.get_errors();</span>
 <span id="L461"><span class="lineNum">     461</span>              :     }</span>
-<span id="L462"><span class="lineNum">     462</span> <span class="tlaGNC">          83 :     return &quot;&quot;;</span></span>
-<span id="L463"><span class="lineNum">     463</span> <span class="tlaGNC">         102 :   }</span></span>
+<span id="L462"><span class="lineNum">     462</span> <span class="tlaGNC">          88 :     return &quot;&quot;;</span></span>
+<span id="L463"><span class="lineNum">     463</span> <span class="tlaGNC">         109 :   }</span></span>
 <span id="L464"><span class="lineNum">     464</span> <span class="tlaUNC tlaBgUNC">           0 :   catch (std::exception &amp;e)</span></span>
 <span id="L465"><span class="lineNum">     465</span>              :   {</span>
 <span id="L466"><span class="lineNum">     466</span> <span class="tlaUNC">           0 :     return e.what();</span></span>
 <span id="L467"><span class="lineNum">     467</span> <span class="tlaUNC">           0 :   }</span></span>
-<span id="L468"><span class="lineNum">     468</span> <span class="tlaGNC tlaBgGNC">         102 : }</span></span>
+<span id="L468"><span class="lineNum">     468</span> <span class="tlaGNC tlaBgGNC">         109 : }</span></span>
 <span id="L469"><span class="lineNum">     469</span>              : </span>
 <span id="L470"><span class="lineNum">     470</span> <span class="tlaGNC">          88 : std::string ValidateConfig(const nlohmann::json &amp;config, const std::string &amp;schema_key)</span></span>
 <span id="L471"><span class="lineNum">     471</span>              : {</span>

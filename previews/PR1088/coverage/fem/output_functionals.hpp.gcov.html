@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-10-23 01:41:56</td>
+            <td class="headerValue">2026-11-05 18:04:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">-</td>
@@ -188,7 +188,7 @@
 <span id="L118"><span class="lineNum">     118</span>              :     return kind == KernelKind::BDR_FIELD_E || kind == KernelKind::BDR_FIELD_B ||</span>
 <span id="L119"><span class="lineNum">     119</span>              :            kind == KernelKind::BDR_FIELD_H1 || kind == KernelKind::BDR_FLUX_Q ||</span>
 <span id="L120"><span class="lineNum">     120</span>              :            kind == KernelKind::BDR_CURRENT_J || kind == KernelKind::BDR_ENERGY_E ||</span>
-<span id="L121"><span class="lineNum">     121</span> <span class="tlaGNC">      116776 :            kind == KernelKind::BDR_ENERGY_M || kind == KernelKind::BDR_POYNTING;</span></span>
+<span id="L121"><span class="lineNum">     121</span> <span class="tlaGNC">      123848 :            kind == KernelKind::BDR_ENERGY_M || kind == KernelKind::BDR_POYNTING;</span></span>
 <span id="L122"><span class="lineNum">     122</span>              :   }</span>
 <span id="L123"><span class="lineNum">     123</span>              : </span>
 <span id="L124"><span class="lineNum">     124</span>              :   // Number of components per visualization point for buffer kinds.</span>
@@ -211,236 +211,242 @@
 <span id="L141"><span class="lineNum">     141</span>              :   KernelKind kind;</span>
 <span id="L142"><span class="lineNum">     142</span>              :   InterfaceDielectric epr_type = InterfaceDielectric::DEFAULT;</span>
 <span id="L143"><span class="lineNum">     143</span>              :   double epr_t = 0.0, epr_epsilon = 0.0;</span>
-<span id="L144"><span class="lineNum">     144</span>              :   SurfaceFlux flux_type = SurfaceFlux::ELECTRIC;</span>
-<span id="L145"><span class="lineNum">     145</span>              :   bool flux_two_sided = false;</span>
-<span id="L146"><span class="lineNum">     146</span>              :   // Electric flux and surface charge kernels evaluate D = ε E with the real permittivity by</span>
-<span id="L147"><span class="lineNum">     147</span>              :   // default; when set, the imaginary permittivity Im{ε} is used instead, so that owners can</span>
-<span id="L148"><span class="lineNum">     148</span>              :   // assemble the complex D = (Re{ε} + i Im{ε}) E of a lossy dielectric from two</span>
-<span id="L149"><span class="lineNum">     149</span>              :   // functionals.</span>
-<span id="L150"><span class="lineNum">     150</span>              :   bool flux_imag_permittivity = false;</span>
-<span id="L151"><span class="lineNum">     151</span>              :   mfem::Vector flux_x0;</span>
-<span id="L152"><span class="lineNum">     152</span>              :   std::vector&lt;std::array&lt;double, 3&gt;&gt; farfield_dirs;</span>
-<span id="L153"><span class="lineNum">     153</span>              :   std::complex&lt;double&gt; farfield_omega = 0.0;</span>
-<span id="L154"><span class="lineNum">     154</span>              :   int farfield_batch_size = 0;</span>
-<span id="L155"><span class="lineNum">     155</span>              :   std::map&lt;int, SurfaceModeCoefficient&gt; mode_coeff_by_attr;</span>
-<span id="L156"><span class="lineNum">     156</span>              : </span>
-<span id="L157"><span class="lineNum">     157</span>              :   // Boundary visualization field kinds: lattice refinement level, output scaling,</span>
-<span id="L158"><span class="lineNum">     158</span>              :   // total output buffer size, and per-boundary-element point-base offsets into the</span>
-<span id="L159"><span class="lineNum">     159</span>              :   // component-major buffer.</span>
-<span id="L160"><span class="lineNum">     160</span>              :   int viz_lod = 0;</span>
-<span id="L161"><span class="lineNum">     161</span>              :   double viz_scaling = 1.0;</span>
-<span id="L162"><span class="lineNum">     162</span>              :   int buffer_size = 0;</span>
-<span id="L163"><span class="lineNum">     163</span>              :   int buffer_num_comp = 0;</span>
-<span id="L164"><span class="lineNum">     164</span>              :   std::vector&lt;int&gt; buffer_bases;</span>
-<span id="L165"><span class="lineNum">     165</span>              : </span>
-<span id="L166"><span class="lineNum">     166</span>              :   // Field finite element spaces (not owned): nd_fespace for H(curl)/H1 fields (source</span>
-<span id="L167"><span class="lineNum">     167</span>              :   // index 0), rt_fespace for H(div) fields (source index 1). Either may be nullptr</span>
-<span id="L168"><span class="lineNum">     168</span>              :   // depending on the functional kind. Material operator (not owned) for material property</span>
-<span id="L169"><span class="lineNum">     169</span>              :   // lookups and side selection.</span>
-<span id="L170"><span class="lineNum">     170</span>              :   const mfem::ParFiniteElementSpace *nd_fespace;</span>
-<span id="L171"><span class="lineNum">     171</span>              :   const mfem::ParFiniteElementSpace *rt_fespace;</span>
-<span id="L172"><span class="lineNum">     172</span>              :   const MaterialOperator *mat_op;</span>
-<span id="L173"><span class="lineNum">     173</span>              : </span>
-<span id="L174"><span class="lineNum">     174</span>              :   // Whether the functional could be assembled. False means the configuration is outside</span>
-<span id="L175"><span class="lineNum">     175</span>              :   // the current support matrix; supported model-level paths treat invalid assembly as an</span>
-<span id="L176"><span class="lineNum">     176</span>              :   // error rather than silently selecting a different implementation.</span>
-<span id="L177"><span class="lineNum">     177</span>              :   bool valid = true;</span>
-<span id="L178"><span class="lineNum">     178</span>              : </span>
-<span id="L179"><span class="lineNum">     179</span>              :   // MPI communicator from the mesh.</span>
-<span id="L180"><span class="lineNum">     180</span>              :   MPI_Comm comm;</span>
-<span id="L181"><span class="lineNum">     181</span>              : </span>
-<span id="L182"><span class="lineNum">     182</span>              :   // Per-group assembled libCEED operators, accumulating per-element integrals into the</span>
-<span id="L183"><span class="lineNum">     183</span>              :   // local output vector. The element attribute vectors are operator inputs and must</span>
-<span id="L184"><span class="lineNum">     184</span>              :   // outlive the operators.</span>
-<span id="L185"><span class="lineNum">     185</span>              :   std::vector&lt;fem::CeedGroupOperator&gt; groups;</span>
-<span id="L186"><span class="lineNum">     186</span>              :   std::deque&lt;Vector&gt; elem_attrs;</span>
-<span id="L187"><span class="lineNum">     187</span>              : </span>
-<span id="L188"><span class="lineNum">     188</span>              :   // Face neighbor field exchange for two-sided interior boundaries crossing parallel</span>
-<span id="L189"><span class="lineNum">     189</span>              :   // interfaces: the owning process pulls the neighbor (ghost) volume field values at the</span>
-<span id="L190"><span class="lineNum">     190</span>              :   // face quadrature points, fed to the ghost side of the two-sided operators (nullptr</span>
-<span id="L191"><span class="lineNum">     191</span>              :   // when no marked boundary element has a ghost neighbor). Refilled before each apply.</span>
-<span id="L192"><span class="lineNum">     192</span>              :   std::unique_ptr&lt;FaceNbrFieldExchange&gt; face_nbr_exchange;</span>
-<span id="L193"><span class="lineNum">     193</span>              : </span>
-<span id="L194"><span class="lineNum">     194</span>              :   // Shared immutable boundary sampling setup for private point-field evaluators only.</span>
-<span id="L195"><span class="lineNum">     195</span>              :   // Public reduction functional constructors intentionally do not accept this plan.</span>
-<span id="L196"><span class="lineNum">     196</span>              :   std::shared_ptr&lt;const FaceSamplingPlan&gt; sampling_plan;</span>
+<span id="L144"><span class="lineNum">     144</span>              :   // Boundary attributes (marker) of interior boundaries which separate the fields on their</span>
+<span id="L145"><span class="lineNum">     145</span>              :   // two sides, for which the interface energy is the sum of the energies on both sides</span>
+<span id="L146"><span class="lineNum">     146</span>              :   // instead of the energy of the average field.</span>
+<span id="L147"><span class="lineNum">     147</span>              :   mfem::Array&lt;int&gt; epr_sum_sides_marker;</span>
+<span id="L148"><span class="lineNum">     148</span>              :   SurfaceFlux flux_type = SurfaceFlux::ELECTRIC;</span>
+<span id="L149"><span class="lineNum">     149</span>              :   bool flux_two_sided = false;</span>
+<span id="L150"><span class="lineNum">     150</span>              :   // Electric flux and surface charge kernels evaluate D = ε E with the real permittivity by</span>
+<span id="L151"><span class="lineNum">     151</span>              :   // default; when set, the imaginary permittivity Im{ε} is used instead, so that owners can</span>
+<span id="L152"><span class="lineNum">     152</span>              :   // assemble the complex D = (Re{ε} + i Im{ε}) E of a lossy dielectric from two</span>
+<span id="L153"><span class="lineNum">     153</span>              :   // functionals.</span>
+<span id="L154"><span class="lineNum">     154</span>              :   bool flux_imag_permittivity = false;</span>
+<span id="L155"><span class="lineNum">     155</span>              :   mfem::Vector flux_x0;</span>
+<span id="L156"><span class="lineNum">     156</span>              :   std::vector&lt;std::array&lt;double, 3&gt;&gt; farfield_dirs;</span>
+<span id="L157"><span class="lineNum">     157</span>              :   std::complex&lt;double&gt; farfield_omega = 0.0;</span>
+<span id="L158"><span class="lineNum">     158</span>              :   int farfield_batch_size = 0;</span>
+<span id="L159"><span class="lineNum">     159</span>              :   std::map&lt;int, SurfaceModeCoefficient&gt; mode_coeff_by_attr;</span>
+<span id="L160"><span class="lineNum">     160</span>              : </span>
+<span id="L161"><span class="lineNum">     161</span>              :   // Boundary visualization field kinds: lattice refinement level, output scaling,</span>
+<span id="L162"><span class="lineNum">     162</span>              :   // total output buffer size, and per-boundary-element point-base offsets into the</span>
+<span id="L163"><span class="lineNum">     163</span>              :   // component-major buffer.</span>
+<span id="L164"><span class="lineNum">     164</span>              :   int viz_lod = 0;</span>
+<span id="L165"><span class="lineNum">     165</span>              :   double viz_scaling = 1.0;</span>
+<span id="L166"><span class="lineNum">     166</span>              :   int buffer_size = 0;</span>
+<span id="L167"><span class="lineNum">     167</span>              :   int buffer_num_comp = 0;</span>
+<span id="L168"><span class="lineNum">     168</span>              :   std::vector&lt;int&gt; buffer_bases;</span>
+<span id="L169"><span class="lineNum">     169</span>              : </span>
+<span id="L170"><span class="lineNum">     170</span>              :   // Field finite element spaces (not owned): nd_fespace for H(curl)/H1 fields (source</span>
+<span id="L171"><span class="lineNum">     171</span>              :   // index 0), rt_fespace for H(div) fields (source index 1). Either may be nullptr</span>
+<span id="L172"><span class="lineNum">     172</span>              :   // depending on the functional kind. Material operator (not owned) for material property</span>
+<span id="L173"><span class="lineNum">     173</span>              :   // lookups and side selection.</span>
+<span id="L174"><span class="lineNum">     174</span>              :   const mfem::ParFiniteElementSpace *nd_fespace;</span>
+<span id="L175"><span class="lineNum">     175</span>              :   const mfem::ParFiniteElementSpace *rt_fespace;</span>
+<span id="L176"><span class="lineNum">     176</span>              :   const MaterialOperator *mat_op;</span>
+<span id="L177"><span class="lineNum">     177</span>              : </span>
+<span id="L178"><span class="lineNum">     178</span>              :   // Whether the functional could be assembled. False means the configuration is outside</span>
+<span id="L179"><span class="lineNum">     179</span>              :   // the current support matrix; supported model-level paths treat invalid assembly as an</span>
+<span id="L180"><span class="lineNum">     180</span>              :   // error rather than silently selecting a different implementation.</span>
+<span id="L181"><span class="lineNum">     181</span>              :   bool valid = true;</span>
+<span id="L182"><span class="lineNum">     182</span>              : </span>
+<span id="L183"><span class="lineNum">     183</span>              :   // MPI communicator from the mesh.</span>
+<span id="L184"><span class="lineNum">     184</span>              :   MPI_Comm comm;</span>
+<span id="L185"><span class="lineNum">     185</span>              : </span>
+<span id="L186"><span class="lineNum">     186</span>              :   // Per-group assembled libCEED operators, accumulating per-element integrals into the</span>
+<span id="L187"><span class="lineNum">     187</span>              :   // local output vector. The element attribute vectors are operator inputs and must</span>
+<span id="L188"><span class="lineNum">     188</span>              :   // outlive the operators.</span>
+<span id="L189"><span class="lineNum">     189</span>              :   std::vector&lt;fem::CeedGroupOperator&gt; groups;</span>
+<span id="L190"><span class="lineNum">     190</span>              :   std::deque&lt;Vector&gt; elem_attrs;</span>
+<span id="L191"><span class="lineNum">     191</span>              : </span>
+<span id="L192"><span class="lineNum">     192</span>              :   // Face neighbor field exchange for two-sided interior boundaries crossing parallel</span>
+<span id="L193"><span class="lineNum">     193</span>              :   // interfaces: the owning process pulls the neighbor (ghost) volume field values at the</span>
+<span id="L194"><span class="lineNum">     194</span>              :   // face quadrature points, fed to the ghost side of the two-sided operators (nullptr</span>
+<span id="L195"><span class="lineNum">     195</span>              :   // when no marked boundary element has a ghost neighbor). Refilled before each apply.</span>
+<span id="L196"><span class="lineNum">     196</span>              :   std::unique_ptr&lt;FaceNbrFieldExchange&gt; face_nbr_exchange;</span>
 <span id="L197"><span class="lineNum">     197</span>              : </span>
-<span id="L198"><span class="lineNum">     198</span>              :   // Boundary point evaluators supplied by BoundaryPhysicalTraceCache consume the</span>
-<span id="L199"><span class="lineNum">     199</span>              :   // already Piola-mapped side traces through EVAL_NONE restrictions. Trace producers</span>
-<span id="L200"><span class="lineNum">     200</span>              :   // set trace_side (0/1) and keep their private buffers in canonical point order.</span>
-<span id="L201"><span class="lineNum">     201</span>              :   std::shared_ptr&lt;BoundaryPhysicalTraceCache&gt; trace_cache;</span>
-<span id="L202"><span class="lineNum">     202</span>              :   int trace_side = -1;</span>
-<span id="L203"><span class="lineNum">     203</span>              : </span>
-<span id="L204"><span class="lineNum">     204</span>              :   // Exact-size staging vectors used to initialize the passive field CeedVectors at</span>
-<span id="L205"><span class="lineNum">     205</span>              :   // construction, indexed by caller source slot. The CeedVectors are re-pointed at the</span>
-<span id="L206"><span class="lineNum">     206</span>              :   // caller's data on each Eval() call and must retain that source vector's exact length.</span>
-<span id="L207"><span class="lineNum">     207</span>              :   mutable std::array&lt;Vector, 4&gt; field_staging;</span>
-<span id="L208"><span class="lineNum">     208</span>              : </span>
-<span id="L209"><span class="lineNum">     209</span>              :   // Local output vector with one slot per marked boundary element on this process.</span>
-<span id="L210"><span class="lineNum">     210</span>              :   // Integral functionals also keep the originating boundary attribute for each slot so</span>
-<span id="L211"><span class="lineNum">     211</span>              :   // batched model-level callers can recover several independent reductions from one</span>
-<span id="L212"><span class="lineNum">     212</span>              :   // assembled operator without changing the per-element libCEED kernels.</span>
-<span id="L213"><span class="lineNum">     213</span>              :   mutable Vector local_out;</span>
-<span id="L214"><span class="lineNum">     214</span>              :   std::vector&lt;int&gt; local_out_attrs;</span>
-<span id="L215"><span class="lineNum">     215</span>              : </span>
-<span id="L216"><span class="lineNum">     216</span>              :   void Assemble(const Mesh &amp;mesh, const mfem::Array&lt;int&gt; &amp;bdr_attr_marker);</span>
-<span id="L217"><span class="lineNum">     217</span>              :   std::vector&lt;CeedIntScalar&gt; BuildBaseContext(int dim, bool is_2d) const;</span>
-<span id="L218"><span class="lineNum">     218</span>              :   void ConfigureGroupQFunction(bool is_2d, bool has_b, double side_scale,</span>
-<span id="L219"><span class="lineNum">     219</span>              :                                double normal_scale, int bdr_attr,</span>
-<span id="L220"><span class="lineNum">     220</span>              :                                const std::vector&lt;CeedIntScalar&gt; &amp;base_ctx,</span>
-<span id="L221"><span class="lineNum">     221</span>              :                                std::vector&lt;CeedIntScalar&gt; &amp;ctx,</span>
-<span id="L222"><span class="lineNum">     222</span>              :                                ceed::CeedQFunctionInfo &amp;info) const;</span>
-<span id="L223"><span class="lineNum">     223</span>              :   void AssembleLocal(const Mesh &amp;mesh, const mfem::Array&lt;int&gt; &amp;bdr_attr_marker);</span>
-<span id="L224"><span class="lineNum">     224</span>              :   void WarmUpBufferOperators() const;</span>
-<span id="L225"><span class="lineNum">     225</span>              : </span>
-<span id="L226"><span class="lineNum">     226</span>              :   // Apply all group operators with the field inputs pointed at the given source</span>
-<span id="L227"><span class="lineNum">     227</span>              :   // vectors, accumulating into the local output vector.</span>
-<span id="L228"><span class="lineNum">     228</span>              :   void ApplyAdd(const std::array&lt;const Vector *, 4&gt; &amp;srcs) const;</span>
+<span id="L198"><span class="lineNum">     198</span>              :   // Shared immutable boundary sampling setup for private point-field evaluators only.</span>
+<span id="L199"><span class="lineNum">     199</span>              :   // Public reduction functional constructors intentionally do not accept this plan.</span>
+<span id="L200"><span class="lineNum">     200</span>              :   std::shared_ptr&lt;const FaceSamplingPlan&gt; sampling_plan;</span>
+<span id="L201"><span class="lineNum">     201</span>              : </span>
+<span id="L202"><span class="lineNum">     202</span>              :   // Boundary point evaluators supplied by BoundaryPhysicalTraceCache consume the</span>
+<span id="L203"><span class="lineNum">     203</span>              :   // already Piola-mapped side traces through EVAL_NONE restrictions. Trace producers</span>
+<span id="L204"><span class="lineNum">     204</span>              :   // set trace_side (0/1) and keep their private buffers in canonical point order.</span>
+<span id="L205"><span class="lineNum">     205</span>              :   std::shared_ptr&lt;BoundaryPhysicalTraceCache&gt; trace_cache;</span>
+<span id="L206"><span class="lineNum">     206</span>              :   int trace_side = -1;</span>
+<span id="L207"><span class="lineNum">     207</span>              : </span>
+<span id="L208"><span class="lineNum">     208</span>              :   // Exact-size staging vectors used to initialize the passive field CeedVectors at</span>
+<span id="L209"><span class="lineNum">     209</span>              :   // construction, indexed by caller source slot. The CeedVectors are re-pointed at the</span>
+<span id="L210"><span class="lineNum">     210</span>              :   // caller's data on each Eval() call and must retain that source vector's exact length.</span>
+<span id="L211"><span class="lineNum">     211</span>              :   mutable std::array&lt;Vector, 4&gt; field_staging;</span>
+<span id="L212"><span class="lineNum">     212</span>              : </span>
+<span id="L213"><span class="lineNum">     213</span>              :   // Local output vector with one slot per marked boundary element on this process.</span>
+<span id="L214"><span class="lineNum">     214</span>              :   // Integral functionals also keep the originating boundary attribute for each slot so</span>
+<span id="L215"><span class="lineNum">     215</span>              :   // batched model-level callers can recover several independent reductions from one</span>
+<span id="L216"><span class="lineNum">     216</span>              :   // assembled operator without changing the per-element libCEED kernels.</span>
+<span id="L217"><span class="lineNum">     217</span>              :   mutable Vector local_out;</span>
+<span id="L218"><span class="lineNum">     218</span>              :   std::vector&lt;int&gt; local_out_attrs;</span>
+<span id="L219"><span class="lineNum">     219</span>              : </span>
+<span id="L220"><span class="lineNum">     220</span>              :   void Assemble(const Mesh &amp;mesh, const mfem::Array&lt;int&gt; &amp;bdr_attr_marker);</span>
+<span id="L221"><span class="lineNum">     221</span>              :   std::vector&lt;CeedIntScalar&gt; BuildBaseContext(int dim, bool is_2d) const;</span>
+<span id="L222"><span class="lineNum">     222</span>              :   void ConfigureGroupQFunction(bool is_2d, bool has_b, double side_scale,</span>
+<span id="L223"><span class="lineNum">     223</span>              :                                double normal_scale, int bdr_attr,</span>
+<span id="L224"><span class="lineNum">     224</span>              :                                const std::vector&lt;CeedIntScalar&gt; &amp;base_ctx,</span>
+<span id="L225"><span class="lineNum">     225</span>              :                                std::vector&lt;CeedIntScalar&gt; &amp;ctx,</span>
+<span id="L226"><span class="lineNum">     226</span>              :                                ceed::CeedQFunctionInfo &amp;info) const;</span>
+<span id="L227"><span class="lineNum">     227</span>              :   void AssembleLocal(const Mesh &amp;mesh, const mfem::Array&lt;int&gt; &amp;bdr_attr_marker);</span>
+<span id="L228"><span class="lineNum">     228</span>              :   void WarmUpBufferOperators() const;</span>
 <span id="L229"><span class="lineNum">     229</span>              : </span>
-<span id="L230"><span class="lineNum">     230</span>              :   // Zero the local output vector, apply, and return the local sum (no MPI reduction).</span>
-<span id="L231"><span class="lineNum">     231</span>              :   double EvalLocal(const std::array&lt;const Vector *, 4&gt; &amp;srcs) const;</span>
-<span id="L232"><span class="lineNum">     232</span>              : </span>
-<span id="L233"><span class="lineNum">     233</span>              :   // Add the current local output element slots into per-attribute bins.</span>
-<span id="L234"><span class="lineNum">     234</span>              :   void BinLocalOutByAttribute(const mfem::Array&lt;int&gt; &amp;attr_to_bin, int num_bins,</span>
-<span id="L235"><span class="lineNum">     235</span>              :                               std::vector&lt;double&gt; &amp;bins, double scale) const;</span>
+<span id="L230"><span class="lineNum">     230</span>              :   // Apply all group operators with the field inputs pointed at the given source</span>
+<span id="L231"><span class="lineNum">     231</span>              :   // vectors, accumulating into the local output vector.</span>
+<span id="L232"><span class="lineNum">     232</span>              :   void ApplyAdd(const std::array&lt;const Vector *, 4&gt; &amp;srcs) const;</span>
+<span id="L233"><span class="lineNum">     233</span>              : </span>
+<span id="L234"><span class="lineNum">     234</span>              :   // Zero the local output vector, apply, and return the local sum (no MPI reduction).</span>
+<span id="L235"><span class="lineNum">     235</span>              :   double EvalLocal(const std::array&lt;const Vector *, 4&gt; &amp;srcs) const;</span>
 <span id="L236"><span class="lineNum">     236</span>              : </span>
-<span id="L237"><span class="lineNum">     237</span>              :   // Construct boundary point-field evaluators. These are intentionally private to keep</span>
-<span id="L238"><span class="lineNum">     238</span>              :   // SurfaceFunctional reduction-oriented at call sites; PointFieldEvaluator owns the</span>
-<span id="L239"><span class="lineNum">     239</span>              :   // non-reducing visualization API.</span>
-<span id="L240"><span class="lineNum">     240</span>              :   SurfaceFunctional(PointFieldKind kind, const Mesh &amp;mesh,</span>
-<span id="L241"><span class="lineNum">     241</span>              :                     const mfem::Array&lt;int&gt; &amp;bdr_attr_marker,</span>
-<span id="L242"><span class="lineNum">     242</span>              :                     const mfem::ParFiniteElementSpace &amp;fespace, int lod,</span>
-<span id="L243"><span class="lineNum">     243</span>              :                     std::shared_ptr&lt;const FaceSamplingPlan&gt; sampling_plan,</span>
-<span id="L244"><span class="lineNum">     244</span>              :                     std::shared_ptr&lt;BoundaryPhysicalTraceCache&gt; trace_cache = nullptr,</span>
-<span id="L245"><span class="lineNum">     245</span>              :                     int trace_side = -1);</span>
-<span id="L246"><span class="lineNum">     246</span>              :   SurfaceFunctional(PointFieldKind kind, const Mesh &amp;mesh,</span>
-<span id="L247"><span class="lineNum">     247</span>              :                     const mfem::Array&lt;int&gt; &amp;bdr_attr_marker,</span>
-<span id="L248"><span class="lineNum">     248</span>              :                     const mfem::ParFiniteElementSpace &amp;fespace,</span>
-<span id="L249"><span class="lineNum">     249</span>              :                     const MaterialOperator &amp;mat_op, int lod, double scaling,</span>
-<span id="L250"><span class="lineNum">     250</span>              :                     std::shared_ptr&lt;const FaceSamplingPlan&gt; sampling_plan,</span>
-<span id="L251"><span class="lineNum">     251</span>              :                     std::shared_ptr&lt;BoundaryPhysicalTraceCache&gt; trace_cache = nullptr,</span>
-<span id="L252"><span class="lineNum">     252</span>              :                     bool imag_permittivity = false);</span>
-<span id="L253"><span class="lineNum">     253</span>              :   SurfaceFunctional(PointFieldKind kind, const Mesh &amp;mesh,</span>
-<span id="L254"><span class="lineNum">     254</span>              :                     const mfem::Array&lt;int&gt; &amp;bdr_attr_marker,</span>
-<span id="L255"><span class="lineNum">     255</span>              :                     const mfem::ParFiniteElementSpace &amp;nd_fespace,</span>
-<span id="L256"><span class="lineNum">     256</span>              :                     const mfem::ParFiniteElementSpace &amp;rt_fespace,</span>
-<span id="L257"><span class="lineNum">     257</span>              :                     const MaterialOperator &amp;mat_op, int lod, double scaling,</span>
-<span id="L258"><span class="lineNum">     258</span>              :                     std::shared_ptr&lt;const FaceSamplingPlan&gt; sampling_plan,</span>
-<span id="L259"><span class="lineNum">     259</span>              :                     std::shared_ptr&lt;BoundaryPhysicalTraceCache&gt; trace_cache = nullptr);</span>
-<span id="L260"><span class="lineNum">     260</span>              : </span>
-<span id="L261"><span class="lineNum">     261</span>              :   // Fill boundary visualization buffers. Friend-only; non-reducing callers use</span>
-<span id="L262"><span class="lineNum">     262</span>              :   // PointFieldEvaluator.</span>
-<span id="L263"><span class="lineNum">     263</span>              :   void EvalBuffer(const Vector &amp;u, Vector &amp;buffer) const;</span>
-<span id="L264"><span class="lineNum">     264</span>              :   void EvalBuffer(const GridFunction &amp;u, Vector &amp;buffer) const;</span>
-<span id="L265"><span class="lineNum">     265</span>              :   void EvalBuffer(const GridFunction &amp;E, const GridFunction &amp;B, Vector &amp;buffer) const;</span>
-<span id="L266"><span class="lineNum">     266</span>              : </span>
-<span id="L267"><span class="lineNum">     267</span>              :   // The trace overload receives canonical, component-major physical side buffers.</span>
-<span id="L268"><span class="lineNum">     268</span>              :   // It is private because PointFieldEvaluator controls source identity and cache</span>
-<span id="L269"><span class="lineNum">     269</span>              :   // generation.</span>
-<span id="L270"><span class="lineNum">     270</span>              :   void EvalBufferTrace(const std::array&lt;const Vector *, 4&gt; &amp;traces, Vector &amp;buffer,</span>
-<span id="L271"><span class="lineNum">     271</span>              :                        bool zero = true) const;</span>
-<span id="L272"><span class="lineNum">     272</span>              :   std::size_t TraceGroupCount() const { return groups.size(); }</span>
-<span id="L273"><span class="lineNum">     273</span>              : </span>
-<span id="L274"><span class="lineNum">     274</span>              : public:</span>
-<span id="L275"><span class="lineNum">     275</span>              :   // Construct a functional over the boundary elements with marked attributes (marker</span>
-<span id="L276"><span class="lineNum">     276</span>              :   // over global mfem boundary attributes). For field-less functionals (AREA), fespace</span>
-<span id="L277"><span class="lineNum">     277</span>              :   // may be nullptr but the mesh is still required.</span>
-<span id="L278"><span class="lineNum">     278</span>              :   SurfaceFunctional(Kind kind, const Mesh &amp;mesh, const mfem::Array&lt;int&gt; &amp;bdr_attr_marker,</span>
-<span id="L279"><span class="lineNum">     279</span>              :                     const mfem::ParFiniteElementSpace *fespace = nullptr);</span>
-<span id="L280"><span class="lineNum">     280</span>              : </span>
-<span id="L281"><span class="lineNum">     281</span>              :   // Construct an interface dielectric energy participation functional with the given</span>
-<span id="L282"><span class="lineNum">     282</span>              :   // interface type, thickness, and permittivity (see InterfaceDielectricCoefficient).</span>
-<span id="L283"><span class="lineNum">     283</span>              :   SurfaceFunctional(const Mesh &amp;mesh, const mfem::Array&lt;int&gt; &amp;bdr_attr_marker,</span>
-<span id="L284"><span class="lineNum">     284</span>              :                     const mfem::ParFiniteElementSpace &amp;nd_fespace,</span>
-<span id="L285"><span class="lineNum">     285</span>              :                     const MaterialOperator &amp;mat_op, InterfaceDielectric type, double t_i,</span>
-<span id="L286"><span class="lineNum">     286</span>              :                     double epsilon_i);</span>
-<span id="L287"><span class="lineNum">     287</span>              : </span>
-<span id="L288"><span class="lineNum">     288</span>              :   // Construct a surface flux functional (see BdrSurfaceFluxCoefficient). The required</span>
-<span id="L289"><span class="lineNum">     289</span>              :   // finite element spaces depend on the flux type: ELECTRIC requires nd_fespace,</span>
-<span id="L290"><span class="lineNum">     290</span>              :   // MAGNETIC requires rt_fespace, POWER requires both. For ELECTRIC, imag_permittivity</span>
-<span id="L291"><span class="lineNum">     291</span>              :   // selects Im{ε} in place of Re{ε} in D = ε E.</span>
-<span id="L292"><span class="lineNum">     292</span>              :   SurfaceFunctional(const Mesh &amp;mesh, const mfem::Array&lt;int&gt; &amp;bdr_attr_marker,</span>
-<span id="L293"><span class="lineNum">     293</span>              :                     const mfem::ParFiniteElementSpace *nd_fespace,</span>
-<span id="L294"><span class="lineNum">     294</span>              :                     const mfem::ParFiniteElementSpace *rt_fespace,</span>
-<span id="L295"><span class="lineNum">     295</span>              :                     const MaterialOperator &amp;mat_op, SurfaceFlux type, bool two_sided,</span>
-<span id="L296"><span class="lineNum">     296</span>              :                     const mfem::Vector &amp;x0, bool imag_permittivity = false);</span>
-<span id="L297"><span class="lineNum">     297</span>              : </span>
-<span id="L298"><span class="lineNum">     298</span>              :   // Construct a Stratton-Chu far-field functional for the given observation directions</span>
-<span id="L299"><span class="lineNum">     299</span>              :   // (see AddStrattonChuIntegrandAtElement; external boundaries only).</span>
-<span id="L300"><span class="lineNum">     300</span>              :   SurfaceFunctional(const Mesh &amp;mesh, const mfem::Array&lt;int&gt; &amp;bdr_attr_marker,</span>
-<span id="L301"><span class="lineNum">     301</span>              :                     const mfem::ParFiniteElementSpace &amp;nd_fespace,</span>
-<span id="L302"><span class="lineNum">     302</span>              :                     const mfem::ParFiniteElementSpace &amp;rt_fespace,</span>
-<span id="L303"><span class="lineNum">     303</span>              :                     const MaterialOperator &amp;mat_op,</span>
-<span id="L304"><span class="lineNum">     304</span>              :                     const std::vector&lt;std::array&lt;double, 3&gt;&gt; &amp;r_naughts);</span>
-<span id="L305"><span class="lineNum">     305</span>              : </span>
-<span id="L306"><span class="lineNum">     306</span>              :   // Construct a linear H(curl) mode-overlap functional, ∫ E · f_mode dS, for lumped-port</span>
-<span id="L307"><span class="lineNum">     307</span>              :   // voltage and S-parameter extraction. The mode coefficient data is real-valued; complex</span>
-<span id="L308"><span class="lineNum">     308</span>              :   // fields are evaluated by applying the same functional to the real and imaginary parts.</span>
-<span id="L309"><span class="lineNum">     309</span>              :   SurfaceFunctional(const Mesh &amp;mesh, const mfem::ParFiniteElementSpace &amp;nd_fespace,</span>
-<span id="L310"><span class="lineNum">     310</span>              :                     const std::vector&lt;SurfaceModeCoefficient&gt; &amp;mode_coeffs);</span>
+<span id="L237"><span class="lineNum">     237</span>              :   // Add the current local output element slots into per-attribute bins.</span>
+<span id="L238"><span class="lineNum">     238</span>              :   void BinLocalOutByAttribute(const mfem::Array&lt;int&gt; &amp;attr_to_bin, int num_bins,</span>
+<span id="L239"><span class="lineNum">     239</span>              :                               std::vector&lt;double&gt; &amp;bins, double scale) const;</span>
+<span id="L240"><span class="lineNum">     240</span>              : </span>
+<span id="L241"><span class="lineNum">     241</span>              :   // Construct boundary point-field evaluators. These are intentionally private to keep</span>
+<span id="L242"><span class="lineNum">     242</span>              :   // SurfaceFunctional reduction-oriented at call sites; PointFieldEvaluator owns the</span>
+<span id="L243"><span class="lineNum">     243</span>              :   // non-reducing visualization API.</span>
+<span id="L244"><span class="lineNum">     244</span>              :   SurfaceFunctional(PointFieldKind kind, const Mesh &amp;mesh,</span>
+<span id="L245"><span class="lineNum">     245</span>              :                     const mfem::Array&lt;int&gt; &amp;bdr_attr_marker,</span>
+<span id="L246"><span class="lineNum">     246</span>              :                     const mfem::ParFiniteElementSpace &amp;fespace, int lod,</span>
+<span id="L247"><span class="lineNum">     247</span>              :                     std::shared_ptr&lt;const FaceSamplingPlan&gt; sampling_plan,</span>
+<span id="L248"><span class="lineNum">     248</span>              :                     std::shared_ptr&lt;BoundaryPhysicalTraceCache&gt; trace_cache = nullptr,</span>
+<span id="L249"><span class="lineNum">     249</span>              :                     int trace_side = -1);</span>
+<span id="L250"><span class="lineNum">     250</span>              :   SurfaceFunctional(PointFieldKind kind, const Mesh &amp;mesh,</span>
+<span id="L251"><span class="lineNum">     251</span>              :                     const mfem::Array&lt;int&gt; &amp;bdr_attr_marker,</span>
+<span id="L252"><span class="lineNum">     252</span>              :                     const mfem::ParFiniteElementSpace &amp;fespace,</span>
+<span id="L253"><span class="lineNum">     253</span>              :                     const MaterialOperator &amp;mat_op, int lod, double scaling,</span>
+<span id="L254"><span class="lineNum">     254</span>              :                     std::shared_ptr&lt;const FaceSamplingPlan&gt; sampling_plan,</span>
+<span id="L255"><span class="lineNum">     255</span>              :                     std::shared_ptr&lt;BoundaryPhysicalTraceCache&gt; trace_cache = nullptr,</span>
+<span id="L256"><span class="lineNum">     256</span>              :                     bool imag_permittivity = false);</span>
+<span id="L257"><span class="lineNum">     257</span>              :   SurfaceFunctional(PointFieldKind kind, const Mesh &amp;mesh,</span>
+<span id="L258"><span class="lineNum">     258</span>              :                     const mfem::Array&lt;int&gt; &amp;bdr_attr_marker,</span>
+<span id="L259"><span class="lineNum">     259</span>              :                     const mfem::ParFiniteElementSpace &amp;nd_fespace,</span>
+<span id="L260"><span class="lineNum">     260</span>              :                     const mfem::ParFiniteElementSpace &amp;rt_fespace,</span>
+<span id="L261"><span class="lineNum">     261</span>              :                     const MaterialOperator &amp;mat_op, int lod, double scaling,</span>
+<span id="L262"><span class="lineNum">     262</span>              :                     std::shared_ptr&lt;const FaceSamplingPlan&gt; sampling_plan,</span>
+<span id="L263"><span class="lineNum">     263</span>              :                     std::shared_ptr&lt;BoundaryPhysicalTraceCache&gt; trace_cache = nullptr);</span>
+<span id="L264"><span class="lineNum">     264</span>              : </span>
+<span id="L265"><span class="lineNum">     265</span>              :   // Fill boundary visualization buffers. Friend-only; non-reducing callers use</span>
+<span id="L266"><span class="lineNum">     266</span>              :   // PointFieldEvaluator.</span>
+<span id="L267"><span class="lineNum">     267</span>              :   void EvalBuffer(const Vector &amp;u, Vector &amp;buffer) const;</span>
+<span id="L268"><span class="lineNum">     268</span>              :   void EvalBuffer(const GridFunction &amp;u, Vector &amp;buffer) const;</span>
+<span id="L269"><span class="lineNum">     269</span>              :   void EvalBuffer(const GridFunction &amp;E, const GridFunction &amp;B, Vector &amp;buffer) const;</span>
+<span id="L270"><span class="lineNum">     270</span>              : </span>
+<span id="L271"><span class="lineNum">     271</span>              :   // The trace overload receives canonical, component-major physical side buffers.</span>
+<span id="L272"><span class="lineNum">     272</span>              :   // It is private because PointFieldEvaluator controls source identity and cache</span>
+<span id="L273"><span class="lineNum">     273</span>              :   // generation.</span>
+<span id="L274"><span class="lineNum">     274</span>              :   void EvalBufferTrace(const std::array&lt;const Vector *, 4&gt; &amp;traces, Vector &amp;buffer,</span>
+<span id="L275"><span class="lineNum">     275</span>              :                        bool zero = true) const;</span>
+<span id="L276"><span class="lineNum">     276</span>              :   std::size_t TraceGroupCount() const { return groups.size(); }</span>
+<span id="L277"><span class="lineNum">     277</span>              : </span>
+<span id="L278"><span class="lineNum">     278</span>              : public:</span>
+<span id="L279"><span class="lineNum">     279</span>              :   // Construct a functional over the boundary elements with marked attributes (marker</span>
+<span id="L280"><span class="lineNum">     280</span>              :   // over global mfem boundary attributes). For field-less functionals (AREA), fespace</span>
+<span id="L281"><span class="lineNum">     281</span>              :   // may be nullptr but the mesh is still required.</span>
+<span id="L282"><span class="lineNum">     282</span>              :   SurfaceFunctional(Kind kind, const Mesh &amp;mesh, const mfem::Array&lt;int&gt; &amp;bdr_attr_marker,</span>
+<span id="L283"><span class="lineNum">     283</span>              :                     const mfem::ParFiniteElementSpace *fespace = nullptr);</span>
+<span id="L284"><span class="lineNum">     284</span>              : </span>
+<span id="L285"><span class="lineNum">     285</span>              :   // Construct an interface dielectric energy participation functional with the given</span>
+<span id="L286"><span class="lineNum">     286</span>              :   // interface type, thickness, and permittivity (see InterfaceDielectricCoefficient). On</span>
+<span id="L287"><span class="lineNum">     287</span>              :   // interior boundaries with attributes marked in sum_sides_marker (if given), the energies</span>
+<span id="L288"><span class="lineNum">     288</span>              :   // of both qualifying sides are summed, as for a mesh cut along the boundary.</span>
+<span id="L289"><span class="lineNum">     289</span>              :   SurfaceFunctional(const Mesh &amp;mesh, const mfem::Array&lt;int&gt; &amp;bdr_attr_marker,</span>
+<span id="L290"><span class="lineNum">     290</span>              :                     const mfem::ParFiniteElementSpace &amp;nd_fespace,</span>
+<span id="L291"><span class="lineNum">     291</span>              :                     const MaterialOperator &amp;mat_op, InterfaceDielectric type, double t_i,</span>
+<span id="L292"><span class="lineNum">     292</span>              :                     double epsilon_i, const mfem::Array&lt;int&gt; *sum_sides_marker = nullptr);</span>
+<span id="L293"><span class="lineNum">     293</span>              : </span>
+<span id="L294"><span class="lineNum">     294</span>              :   // Construct a surface flux functional (see BdrSurfaceFluxCoefficient). The required</span>
+<span id="L295"><span class="lineNum">     295</span>              :   // finite element spaces depend on the flux type: ELECTRIC requires nd_fespace,</span>
+<span id="L296"><span class="lineNum">     296</span>              :   // MAGNETIC requires rt_fespace, POWER requires both. For ELECTRIC, imag_permittivity</span>
+<span id="L297"><span class="lineNum">     297</span>              :   // selects Im{ε} in place of Re{ε} in D = ε E.</span>
+<span id="L298"><span class="lineNum">     298</span>              :   SurfaceFunctional(const Mesh &amp;mesh, const mfem::Array&lt;int&gt; &amp;bdr_attr_marker,</span>
+<span id="L299"><span class="lineNum">     299</span>              :                     const mfem::ParFiniteElementSpace *nd_fespace,</span>
+<span id="L300"><span class="lineNum">     300</span>              :                     const mfem::ParFiniteElementSpace *rt_fespace,</span>
+<span id="L301"><span class="lineNum">     301</span>              :                     const MaterialOperator &amp;mat_op, SurfaceFlux type, bool two_sided,</span>
+<span id="L302"><span class="lineNum">     302</span>              :                     const mfem::Vector &amp;x0, bool imag_permittivity = false);</span>
+<span id="L303"><span class="lineNum">     303</span>              : </span>
+<span id="L304"><span class="lineNum">     304</span>              :   // Construct a Stratton-Chu far-field functional for the given observation directions</span>
+<span id="L305"><span class="lineNum">     305</span>              :   // (see AddStrattonChuIntegrandAtElement; external boundaries only).</span>
+<span id="L306"><span class="lineNum">     306</span>              :   SurfaceFunctional(const Mesh &amp;mesh, const mfem::Array&lt;int&gt; &amp;bdr_attr_marker,</span>
+<span id="L307"><span class="lineNum">     307</span>              :                     const mfem::ParFiniteElementSpace &amp;nd_fespace,</span>
+<span id="L308"><span class="lineNum">     308</span>              :                     const mfem::ParFiniteElementSpace &amp;rt_fespace,</span>
+<span id="L309"><span class="lineNum">     309</span>              :                     const MaterialOperator &amp;mat_op,</span>
+<span id="L310"><span class="lineNum">     310</span>              :                     const std::vector&lt;std::array&lt;double, 3&gt;&gt; &amp;r_naughts);</span>
 <span id="L311"><span class="lineNum">     311</span>              : </span>
-<span id="L312"><span class="lineNum">     312</span>              :   ~SurfaceFunctional();</span>
-<span id="L313"><span class="lineNum">     313</span>              : </span>
-<span id="L314"><span class="lineNum">     314</span>              :   SurfaceFunctional(const SurfaceFunctional &amp;) = delete;</span>
-<span id="L315"><span class="lineNum">     315</span>              :   SurfaceFunctional &amp;operator=(const SurfaceFunctional &amp;) = delete;</span>
-<span id="L316"><span class="lineNum">     316</span>              : </span>
-<span id="L317"><span class="lineNum">     317</span>              :   // Whether the functional was successfully assembled. When false, evaluation is not</span>
-<span id="L318"><span class="lineNum">     318</span>              :   // possible; supported model-level paths should error rather than silently selecting a</span>
-<span id="L319"><span class="lineNum">     319</span>              :   // different implementation.</span>
-<span id="L320"><span class="lineNum">     320</span> <span class="tlaGNC">        2806 :   bool IsValid() const { return valid; }</span></span>
-<span id="L321"><span class="lineNum">     321</span>              : </span>
-<span id="L322"><span class="lineNum">     322</span>              :   // Evaluate the functional for the given field (L-vector, e.g. the local vector of a</span>
-<span id="L323"><span class="lineNum">     323</span>              :   // GridFunction on the field space). Collective on the mesh communicator. For</span>
-<span id="L324"><span class="lineNum">     324</span>              :   // field-less functionals, u is ignored and may be nullptr.</span>
-<span id="L325"><span class="lineNum">     325</span>              :   double Eval(const Vector *u = nullptr) const;</span>
-<span id="L326"><span class="lineNum">     326</span>              : </span>
-<span id="L327"><span class="lineNum">     327</span>              :   // Evaluate the functional for the given (possibly complex-valued) grid function. For</span>
-<span id="L328"><span class="lineNum">     328</span>              :   // complex fields, the real and imaginary part contributions add (the implemented</span>
-<span id="L329"><span class="lineNum">     329</span>              :   // integrands are quadratic in the field). Collective on the mesh communicator.</span>
-<span id="L330"><span class="lineNum">     330</span>              :   double Eval(const GridFunction &amp;u) const;</span>
-<span id="L331"><span class="lineNum">     331</span>              : </span>
-<span id="L332"><span class="lineNum">     332</span>              :   // Evaluate a surface flux functional for the given fields (either of which may be</span>
-<span id="L333"><span class="lineNum">     333</span>              :   // nullptr if not required by the flux type). For complex-valued fields, returns the</span>
-<span id="L334"><span class="lineNum">     334</span>              :   // real and imaginary parts of the flux (ELECTRIC, MAGNETIC), or the stationary real</span>
-<span id="L335"><span class="lineNum">     335</span>              :   // power (POWER). Collective on the mesh communicator.</span>
-<span id="L336"><span class="lineNum">     336</span>              :   std::complex&lt;double&gt; EvalFlux(const GridFunction *E, const GridFunction *B) const;</span>
+<span id="L312"><span class="lineNum">     312</span>              :   // Construct a linear H(curl) mode-overlap functional, ∫ E · f_mode dS, for lumped-port</span>
+<span id="L313"><span class="lineNum">     313</span>              :   // voltage and S-parameter extraction. The mode coefficient data is real-valued; complex</span>
+<span id="L314"><span class="lineNum">     314</span>              :   // fields are evaluated by applying the same functional to the real and imaginary parts.</span>
+<span id="L315"><span class="lineNum">     315</span>              :   SurfaceFunctional(const Mesh &amp;mesh, const mfem::ParFiniteElementSpace &amp;nd_fespace,</span>
+<span id="L316"><span class="lineNum">     316</span>              :                     const std::vector&lt;SurfaceModeCoefficient&gt; &amp;mode_coeffs);</span>
+<span id="L317"><span class="lineNum">     317</span>              : </span>
+<span id="L318"><span class="lineNum">     318</span>              :   ~SurfaceFunctional();</span>
+<span id="L319"><span class="lineNum">     319</span>              : </span>
+<span id="L320"><span class="lineNum">     320</span>              :   SurfaceFunctional(const SurfaceFunctional &amp;) = delete;</span>
+<span id="L321"><span class="lineNum">     321</span>              :   SurfaceFunctional &amp;operator=(const SurfaceFunctional &amp;) = delete;</span>
+<span id="L322"><span class="lineNum">     322</span>              : </span>
+<span id="L323"><span class="lineNum">     323</span>              :   // Whether the functional was successfully assembled. When false, evaluation is not</span>
+<span id="L324"><span class="lineNum">     324</span>              :   // possible; supported model-level paths should error rather than silently selecting a</span>
+<span id="L325"><span class="lineNum">     325</span>              :   // different implementation.</span>
+<span id="L326"><span class="lineNum">     326</span> <span class="tlaGNC">        2950 :   bool IsValid() const { return valid; }</span></span>
+<span id="L327"><span class="lineNum">     327</span>              : </span>
+<span id="L328"><span class="lineNum">     328</span>              :   // Evaluate the functional for the given field (L-vector, e.g. the local vector of a</span>
+<span id="L329"><span class="lineNum">     329</span>              :   // GridFunction on the field space). Collective on the mesh communicator. For</span>
+<span id="L330"><span class="lineNum">     330</span>              :   // field-less functionals, u is ignored and may be nullptr.</span>
+<span id="L331"><span class="lineNum">     331</span>              :   double Eval(const Vector *u = nullptr) const;</span>
+<span id="L332"><span class="lineNum">     332</span>              : </span>
+<span id="L333"><span class="lineNum">     333</span>              :   // Evaluate the functional for the given (possibly complex-valued) grid function. For</span>
+<span id="L334"><span class="lineNum">     334</span>              :   // complex fields, the real and imaginary part contributions add (the implemented</span>
+<span id="L335"><span class="lineNum">     335</span>              :   // integrands are quadratic in the field). Collective on the mesh communicator.</span>
+<span id="L336"><span class="lineNum">     336</span>              :   double Eval(const GridFunction &amp;u) const;</span>
 <span id="L337"><span class="lineNum">     337</span>              : </span>
-<span id="L338"><span class="lineNum">     338</span>              :   // Evaluate the complex power P = ∫ (E x H*) ⋅ n dS = -∫ E ⋅ (n x H*) dS following</span>
-<span id="L339"><span class="lineNum">     339</span>              :   // the conventions of LumpedPortData::GetPower (two-sided POWER flux functionals only).</span>
-<span id="L340"><span class="lineNum">     340</span>              :   // Collective on the mesh communicator.</span>
-<span id="L341"><span class="lineNum">     341</span>              :   std::complex&lt;double&gt; EvalComplexPower(const GridFunction &amp;E, const GridFunction &amp;B) const;</span>
-<span id="L342"><span class="lineNum">     342</span>              : </span>
-<span id="L343"><span class="lineNum">     343</span>              :   // Same complex-power convention as EvalComplexPower, but return one result per</span>
-<span id="L344"><span class="lineNum">     344</span>              :   // boundary-attribute bin. attr_to_bin is indexed by boundary attribute - 1 and uses -1</span>
-<span id="L345"><span class="lineNum">     345</span>              :   // for attributes not assigned to any output bin. This enables safe batching of many</span>
-<span id="L346"><span class="lineNum">     346</span>              :   // disjoint port surfaces while retaining per-port scalar outputs. Collective on the</span>
-<span id="L347"><span class="lineNum">     347</span>              :   // mesh communicator.</span>
-<span id="L348"><span class="lineNum">     348</span>              :   std::vector&lt;std::complex&lt;double&gt;&gt;</span>
-<span id="L349"><span class="lineNum">     349</span>              :   EvalComplexPowerByAttribute(const GridFunction &amp;E, const GridFunction &amp;B,</span>
-<span id="L350"><span class="lineNum">     350</span>              :                               const mfem::Array&lt;int&gt; &amp;attr_to_bin, int num_bins) const;</span>
-<span id="L351"><span class="lineNum">     351</span>              : </span>
-<span id="L352"><span class="lineNum">     352</span>              :   // Evaluate the far-field rE integrals for all observation directions at the given</span>
-<span id="L353"><span class="lineNum">     353</span>              :   // (complex) frequency, following SurfacePostOperator::GetFarFieldrE. Direction batches</span>
-<span id="L354"><span class="lineNum">     354</span>              :   // and frequency are updated in the retained QFunction contexts without reassembly.</span>
-<span id="L355"><span class="lineNum">     355</span>              :   // Collective on the mesh communicator.</span>
-<span id="L356"><span class="lineNum">     356</span>              :   std::vector&lt;std::array&lt;std::complex&lt;double&gt;, 3&gt;&gt;</span>
-<span id="L357"><span class="lineNum">     357</span>              :   EvalFarField(const GridFunction &amp;E, const GridFunction &amp;B, std::complex&lt;double&gt; omega);</span>
-<span id="L358"><span class="lineNum">     358</span>              : </span>
-<span id="L359"><span class="lineNum">     359</span>              :   // Evaluate the linear mode-overlap functional, returning the complex integral when the</span>
-<span id="L360"><span class="lineNum">     360</span>              :   // supplied field has real and imaginary parts.</span>
-<span id="L361"><span class="lineNum">     361</span>              :   std::complex&lt;double&gt; EvalModeOverlap(const GridFunction &amp;E) const;</span>
-<span id="L362"><span class="lineNum">     362</span>              : </span>
-<span id="L363"><span class="lineNum">     363</span>              :   // Same mode-overlap convention as EvalModeOverlap, but return one result per</span>
-<span id="L364"><span class="lineNum">     364</span>              :   // boundary-attribute bin. attr_to_bin is indexed by boundary attribute - 1 and uses -1</span>
-<span id="L365"><span class="lineNum">     365</span>              :   // for attributes not assigned to an output bin. Collective on the mesh communicator.</span>
-<span id="L366"><span class="lineNum">     366</span>              :   std::vector&lt;std::complex&lt;double&gt;&gt;</span>
-<span id="L367"><span class="lineNum">     367</span>              :   EvalModeOverlapByAttribute(const GridFunction &amp;E, const mfem::Array&lt;int&gt; &amp;attr_to_bin,</span>
-<span id="L368"><span class="lineNum">     368</span>              :                              int num_bins) const;</span>
-<span id="L369"><span class="lineNum">     369</span>              : };</span>
-<span id="L370"><span class="lineNum">     370</span>              : </span>
-<span id="L371"><span class="lineNum">     371</span>              : }  // namespace palace</span>
-<span id="L372"><span class="lineNum">     372</span>              : </span>
-<span id="L373"><span class="lineNum">     373</span>              : #endif  // PALACE_FEM_OUTPUT_FUNCTIONALS_HPP</span>
+<span id="L338"><span class="lineNum">     338</span>              :   // Evaluate a surface flux functional for the given fields (either of which may be</span>
+<span id="L339"><span class="lineNum">     339</span>              :   // nullptr if not required by the flux type). For complex-valued fields, returns the</span>
+<span id="L340"><span class="lineNum">     340</span>              :   // real and imaginary parts of the flux (ELECTRIC, MAGNETIC), or the stationary real</span>
+<span id="L341"><span class="lineNum">     341</span>              :   // power (POWER). Collective on the mesh communicator.</span>
+<span id="L342"><span class="lineNum">     342</span>              :   std::complex&lt;double&gt; EvalFlux(const GridFunction *E, const GridFunction *B) const;</span>
+<span id="L343"><span class="lineNum">     343</span>              : </span>
+<span id="L344"><span class="lineNum">     344</span>              :   // Evaluate the complex power P = ∫ (E x H*) ⋅ n dS = -∫ E ⋅ (n x H*) dS following</span>
+<span id="L345"><span class="lineNum">     345</span>              :   // the conventions of LumpedPortData::GetPower (two-sided POWER flux functionals only).</span>
+<span id="L346"><span class="lineNum">     346</span>              :   // Collective on the mesh communicator.</span>
+<span id="L347"><span class="lineNum">     347</span>              :   std::complex&lt;double&gt; EvalComplexPower(const GridFunction &amp;E, const GridFunction &amp;B) const;</span>
+<span id="L348"><span class="lineNum">     348</span>              : </span>
+<span id="L349"><span class="lineNum">     349</span>              :   // Same complex-power convention as EvalComplexPower, but return one result per</span>
+<span id="L350"><span class="lineNum">     350</span>              :   // boundary-attribute bin. attr_to_bin is indexed by boundary attribute - 1 and uses -1</span>
+<span id="L351"><span class="lineNum">     351</span>              :   // for attributes not assigned to any output bin. This enables safe batching of many</span>
+<span id="L352"><span class="lineNum">     352</span>              :   // disjoint port surfaces while retaining per-port scalar outputs. Collective on the</span>
+<span id="L353"><span class="lineNum">     353</span>              :   // mesh communicator.</span>
+<span id="L354"><span class="lineNum">     354</span>              :   std::vector&lt;std::complex&lt;double&gt;&gt;</span>
+<span id="L355"><span class="lineNum">     355</span>              :   EvalComplexPowerByAttribute(const GridFunction &amp;E, const GridFunction &amp;B,</span>
+<span id="L356"><span class="lineNum">     356</span>              :                               const mfem::Array&lt;int&gt; &amp;attr_to_bin, int num_bins) const;</span>
+<span id="L357"><span class="lineNum">     357</span>              : </span>
+<span id="L358"><span class="lineNum">     358</span>              :   // Evaluate the far-field rE integrals for all observation directions at the given</span>
+<span id="L359"><span class="lineNum">     359</span>              :   // (complex) frequency, following SurfacePostOperator::GetFarFieldrE. Direction batches</span>
+<span id="L360"><span class="lineNum">     360</span>              :   // and frequency are updated in the retained QFunction contexts without reassembly.</span>
+<span id="L361"><span class="lineNum">     361</span>              :   // Collective on the mesh communicator.</span>
+<span id="L362"><span class="lineNum">     362</span>              :   std::vector&lt;std::array&lt;std::complex&lt;double&gt;, 3&gt;&gt;</span>
+<span id="L363"><span class="lineNum">     363</span>              :   EvalFarField(const GridFunction &amp;E, const GridFunction &amp;B, std::complex&lt;double&gt; omega);</span>
+<span id="L364"><span class="lineNum">     364</span>              : </span>
+<span id="L365"><span class="lineNum">     365</span>              :   // Evaluate the linear mode-overlap functional, returning the complex integral when the</span>
+<span id="L366"><span class="lineNum">     366</span>              :   // supplied field has real and imaginary parts.</span>
+<span id="L367"><span class="lineNum">     367</span>              :   std::complex&lt;double&gt; EvalModeOverlap(const GridFunction &amp;E) const;</span>
+<span id="L368"><span class="lineNum">     368</span>              : </span>
+<span id="L369"><span class="lineNum">     369</span>              :   // Same mode-overlap convention as EvalModeOverlap, but return one result per</span>
+<span id="L370"><span class="lineNum">     370</span>              :   // boundary-attribute bin. attr_to_bin is indexed by boundary attribute - 1 and uses -1</span>
+<span id="L371"><span class="lineNum">     371</span>              :   // for attributes not assigned to an output bin. Collective on the mesh communicator.</span>
+<span id="L372"><span class="lineNum">     372</span>              :   std::vector&lt;std::complex&lt;double&gt;&gt;</span>
+<span id="L373"><span class="lineNum">     373</span>              :   EvalModeOverlapByAttribute(const GridFunction &amp;E, const mfem::Array&lt;int&gt; &amp;attr_to_bin,</span>
+<span id="L374"><span class="lineNum">     374</span>              :                              int num_bins) const;</span>
+<span id="L375"><span class="lineNum">     375</span>              : };</span>
+<span id="L376"><span class="lineNum">     376</span>              : </span>
+<span id="L377"><span class="lineNum">     377</span>              : }  // namespace palace</span>
+<span id="L378"><span class="lineNum">     378</span>              : </span>
+<span id="L379"><span class="lineNum">     379</span>              : #endif  // PALACE_FEM_OUTPUT_FUNCTIONALS_HPP</span>
         </pre>
               </td>
             </tr>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-10-23 01:41:56</td>
+            <td class="headerValue">2026-11-05 18:04:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">58.1&nbsp;%</td>
@@ -90,7 +90,7 @@
 <span id="L20"><span class="lineNum">      20</span>              : using Vector = mfem::Vector;</span>
 <span id="L21"><span class="lineNum">      21</span>              : </span>
 <span id="L22"><span class="lineNum">      22</span>              : // A complex-valued vector represented as two real vectors, one for each component.</span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC tlaBgGNC">      106429 : class ComplexVector</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC tlaBgGNC">      127070 : class ComplexVector</span></span>
 <span id="L24"><span class="lineNum">      24</span>              : {</span>
 <span id="L25"><span class="lineNum">      25</span>              : private:</span>
 <span id="L26"><span class="lineNum">      26</span>              :   Vector xr, xi;</span>
@@ -129,10 +129,10 @@
 <span id="L59"><span class="lineNum">      59</span>              :   void MakeRef(Vector &amp;y, int offset, int size);</span>
 <span id="L60"><span class="lineNum">      60</span>              : </span>
 <span id="L61"><span class="lineNum">      61</span>              :   // Get access to the real and imaginary vector parts.</span>
-<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">      307627 :   const Vector &amp;Real() const { return xr; }</span></span>
-<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">      340153 :   Vector &amp;Real() { return xr; }</span></span>
-<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">      307661 :   const Vector &amp;Imag() const { return xi; }</span></span>
-<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">      466740 :   Vector &amp;Imag() { return xi; }</span></span>
+<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">      311112 :   const Vector &amp;Real() const { return xr; }</span></span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">      394891 :   Vector &amp;Real() { return xr; }</span></span>
+<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">      311140 :   const Vector &amp;Imag() const { return xi; }</span></span>
+<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">      474837 :   Vector &amp;Imag() { return xi; }</span></span>
 <span id="L66"><span class="lineNum">      66</span>              : </span>
 <span id="L67"><span class="lineNum">      67</span>              :   // Set from a ComplexVector, without resizing.</span>
 <span id="L68"><span class="lineNum">      68</span>              :   void Set(const ComplexVector &amp;y);</span>
@@ -157,8 +157,8 @@
 <span id="L87"><span class="lineNum">      87</span>              :   ComplexVector &amp;operator=(std::complex&lt;double&gt; s);</span>
 <span id="L88"><span class="lineNum">      88</span>              :   ComplexVector &amp;operator=(double s)</span>
 <span id="L89"><span class="lineNum">      89</span>              :   {</span>
-<span id="L90"><span class="lineNum">      90</span> <span class="tlaGNC">       13751 :     *this = std::complex&lt;double&gt;(s, 0.0);</span></span>
-<span id="L91"><span class="lineNum">      91</span> <span class="tlaGNC">        8273 :     return *this;</span></span>
+<span id="L90"><span class="lineNum">      90</span> <span class="tlaGNC">       14279 :     *this = std::complex&lt;double&gt;(s, 0.0);</span></span>
+<span id="L91"><span class="lineNum">      91</span> <span class="tlaGNC">        8537 :     return *this;</span></span>
 <span id="L92"><span class="lineNum">      92</span>              :   }</span>
 <span id="L93"><span class="lineNum">      93</span>              : </span>
 <span id="L94"><span class="lineNum">      94</span>              :   // Set the vector from an array of blocks and coefficients, without resizing.</span>
@@ -184,7 +184,7 @@
 <span id="L114"><span class="lineNum">     114</span>              : </span>
 <span id="L115"><span class="lineNum">     115</span>              :   // In-place addition (*this) += alpha * x.</span>
 <span id="L116"><span class="lineNum">     116</span>              :   void AXPY(std::complex&lt;double&gt; alpha, const ComplexVector &amp;x);</span>
-<span id="L117"><span class="lineNum">     117</span> <span class="tlaGNC">      125896 :   void Add(std::complex&lt;double&gt; alpha, const ComplexVector &amp;x) { AXPY(alpha, x); }</span></span>
+<span id="L117"><span class="lineNum">     117</span> <span class="tlaGNC">      126688 :   void Add(std::complex&lt;double&gt; alpha, const ComplexVector &amp;x) { AXPY(alpha, x); }</span></span>
 <span id="L118"><span class="lineNum">     118</span>              :   void Subtract(std::complex&lt;double&gt; alpha, const ComplexVector &amp;x) { AXPY(-alpha, x); }</span>
 <span id="L119"><span class="lineNum">     119</span>              :   ComplexVector &amp;operator+=(const ComplexVector &amp;x)</span>
 <span id="L120"><span class="lineNum">     120</span>              :   {</span>
@@ -315,28 +315,28 @@
 <span id="L245"><span class="lineNum">     245</span>              : </span>
 <span id="L246"><span class="lineNum">     246</span>              : // Calculate the parallel inner product yᴴ x or yᵀ x.</span>
 <span id="L247"><span class="lineNum">     247</span>              : template &lt;typename VecType&gt;</span>
-<span id="L248"><span class="lineNum">     248</span> <span class="tlaGNC tlaBgGNC">       39712 : inline auto Dot(MPI_Comm comm, const VecType &amp;x, const VecType &amp;y)</span></span>
+<span id="L248"><span class="lineNum">     248</span> <span class="tlaGNC tlaBgGNC">       87877 : inline auto Dot(MPI_Comm comm, const VecType &amp;x, const VecType &amp;y)</span></span>
 <span id="L249"><span class="lineNum">     249</span>              : {</span>
-<span id="L250"><span class="lineNum">     250</span> <span class="tlaGNC">       39712 :   auto dot = LocalDot(x, y);</span></span>
+<span id="L250"><span class="lineNum">     250</span> <span class="tlaGNC">       87877 :   auto dot = LocalDot(x, y);</span></span>
 <span id="L251"><span class="lineNum">     251</span>              :   Mpi::GlobalSum(1, &amp;dot, comm);</span>
-<span id="L252"><span class="lineNum">     252</span> <span class="tlaGNC">       39712 :   return dot;</span></span>
+<span id="L252"><span class="lineNum">     252</span> <span class="tlaGNC">       87877 :   return dot;</span></span>
 <span id="L253"><span class="lineNum">     253</span>              : }</span>
 <span id="L254"><span class="lineNum">     254</span>              : </span>
 <span id="L255"><span class="lineNum">     255</span>              : // Calculate the vector 2-norm.</span>
 <span id="L256"><span class="lineNum">     256</span>              : template &lt;typename VecType&gt;</span>
-<span id="L257"><span class="lineNum">     257</span> <span class="tlaGNC">       22907 : inline auto Norml2(MPI_Comm comm, const VecType &amp;x)</span></span>
+<span id="L257"><span class="lineNum">     257</span> <span class="tlaGNC">       23696 : inline auto Norml2(MPI_Comm comm, const VecType &amp;x)</span></span>
 <span id="L258"><span class="lineNum">     258</span>              : {</span>
-<span id="L259"><span class="lineNum">     259</span> <span class="tlaGNC">       22907 :   return std::sqrt(std::abs(Dot(comm, x, x)));</span></span>
+<span id="L259"><span class="lineNum">     259</span> <span class="tlaGNC">       23696 :   return std::sqrt(std::abs(Dot(comm, x, x)));</span></span>
 <span id="L260"><span class="lineNum">     260</span>              : }</span>
 <span id="L261"><span class="lineNum">     261</span>              : </span>
 <span id="L262"><span class="lineNum">     262</span>              : // Normalize the vector, possibly with respect to an SPD matrix B.</span>
 <span id="L263"><span class="lineNum">     263</span>              : template &lt;typename VecType&gt;</span>
-<span id="L264"><span class="lineNum">     264</span> <span class="tlaGNC">         247 : inline auto Normalize(MPI_Comm comm, VecType &amp;x)</span></span>
+<span id="L264"><span class="lineNum">     264</span> <span class="tlaGNC">         271 : inline auto Normalize(MPI_Comm comm, VecType &amp;x)</span></span>
 <span id="L265"><span class="lineNum">     265</span>              : {</span>
-<span id="L266"><span class="lineNum">     266</span> <span class="tlaGNC">         247 :   auto norm = Norml2(comm, x);</span></span>
+<span id="L266"><span class="lineNum">     266</span> <span class="tlaGNC">         271 :   auto norm = Norml2(comm, x);</span></span>
 <span id="L267"><span class="lineNum">     267</span>              :   MFEM_ASSERT(norm &gt; 0.0, &quot;Zero vector norm in normalization!&quot;);</span>
-<span id="L268"><span class="lineNum">     268</span> <span class="tlaGNC">         247 :   x *= 1.0 / norm;</span></span>
-<span id="L269"><span class="lineNum">     269</span> <span class="tlaGNC">         247 :   return norm;</span></span>
+<span id="L268"><span class="lineNum">     268</span> <span class="tlaGNC">         271 :   x *= 1.0 / norm;</span></span>
+<span id="L269"><span class="lineNum">     269</span> <span class="tlaGNC">         271 :   return norm;</span></span>
 <span id="L270"><span class="lineNum">     270</span>              : }</span>
 <span id="L271"><span class="lineNum">     271</span>              : </span>
 <span id="L272"><span class="lineNum">     272</span>              : // Calculate the local sum of all elements in the vector.</span>
@@ -354,22 +354,22 @@
 <span id="L284"><span class="lineNum">     284</span>              : </span>
 <span id="L285"><span class="lineNum">     285</span>              : // Calculate the mean of all elements in the vector.</span>
 <span id="L286"><span class="lineNum">     286</span>              : template &lt;typename VecType&gt;</span>
-<span id="L287"><span class="lineNum">     287</span> <span class="tlaGNC">          93 : inline auto Mean(MPI_Comm comm, const VecType &amp;x)</span></span>
+<span id="L287"><span class="lineNum">     287</span> <span class="tlaGNC">         117 : inline auto Mean(MPI_Comm comm, const VecType &amp;x)</span></span>
 <span id="L288"><span class="lineNum">     288</span>              : {</span>
 <span id="L289"><span class="lineNum">     289</span>              :   using ScalarType = std::conditional_t&lt;std::is_same_v&lt;VecType, ComplexVector&gt;,</span>
 <span id="L290"><span class="lineNum">     290</span>              :                                         std::complex&lt;double&gt;, double&gt;;</span>
-<span id="L291"><span class="lineNum">     291</span> <span class="tlaGNC">          93 :   ScalarType sum[2] = {LocalSum(x), ScalarType(x.Size())};</span></span>
+<span id="L291"><span class="lineNum">     291</span> <span class="tlaGNC">         117 :   ScalarType sum[2] = {LocalSum(x), ScalarType(x.Size())};</span></span>
 <span id="L292"><span class="lineNum">     292</span>              :   Mpi::GlobalSum(2, sum, comm);</span>
-<span id="L293"><span class="lineNum">     293</span> <span class="tlaGNC">          93 :   return sum[0] / sum[1];</span></span>
+<span id="L293"><span class="lineNum">     293</span> <span class="tlaGNC">         117 :   return sum[0] / sum[1];</span></span>
 <span id="L294"><span class="lineNum">     294</span>              : }</span>
 <span id="L295"><span class="lineNum">     295</span>              : </span>
 <span id="L296"><span class="lineNum">     296</span>              : // Normalize a complex vector so its mean is on the positive real axis.</span>
 <span id="L297"><span class="lineNum">     297</span>              : // Returns the original mean phase.</span>
-<span id="L298"><span class="lineNum">     298</span> <span class="tlaGNC">          93 : inline double NormalizePhase(MPI_Comm comm, ComplexVector &amp;x)</span></span>
+<span id="L298"><span class="lineNum">     298</span> <span class="tlaGNC">         117 : inline double NormalizePhase(MPI_Comm comm, ComplexVector &amp;x)</span></span>
 <span id="L299"><span class="lineNum">     299</span>              : {</span>
-<span id="L300"><span class="lineNum">     300</span> <span class="tlaGNC">          93 :   std::complex&lt;double&gt; mean = Mean(comm, x);</span></span>
-<span id="L301"><span class="lineNum">     301</span> <span class="tlaGNC">          93 :   x *= std::conj(mean) / std::abs(mean);</span></span>
-<span id="L302"><span class="lineNum">     302</span> <span class="tlaGNC">          93 :   return std::atan2(mean.imag(), mean.real());</span></span>
+<span id="L300"><span class="lineNum">     300</span> <span class="tlaGNC">         117 :   std::complex&lt;double&gt; mean = Mean(comm, x);</span></span>
+<span id="L301"><span class="lineNum">     301</span> <span class="tlaGNC">         117 :   x *= std::conj(mean) / std::abs(mean);</span></span>
+<span id="L302"><span class="lineNum">     302</span> <span class="tlaGNC">         117 :   return std::atan2(mean.imag(), mean.real());</span></span>
 <span id="L303"><span class="lineNum">     303</span>              : }</span>
 <span id="L304"><span class="lineNum">     304</span>              : </span>
 <span id="L305"><span class="lineNum">     305</span>              : // Addition y += alpha * x.</span>
@@ -400,21 +400,21 @@
 <span id="L330"><span class="lineNum">     330</span>              : // If add is true, accumulate the result to C instead of overwriting its</span>
 <span id="L331"><span class="lineNum">     331</span>              : // content.</span>
 <span id="L332"><span class="lineNum">     332</span>              : template &lt;typename VecTypeA, typename VecTypeB, typename VecTypeC&gt;</span>
-<span id="L333"><span class="lineNum">     333</span> <span class="tlaGNC">      175685 : void Cross3(const VecTypeA &amp;A, const VecTypeB &amp;B, VecTypeC &amp;C, bool add = false)</span></span>
+<span id="L333"><span class="lineNum">     333</span> <span class="tlaGNC">      187349 : void Cross3(const VecTypeA &amp;A, const VecTypeB &amp;B, VecTypeC &amp;C, bool add = false)</span></span>
 <span id="L334"><span class="lineNum">     334</span>              : {</span>
-<span id="L335"><span class="lineNum">     335</span> <span class="tlaGNC">      175685 :   if (add)</span></span>
+<span id="L335"><span class="lineNum">     335</span> <span class="tlaGNC">      187349 :   if (add)</span></span>
 <span id="L336"><span class="lineNum">     336</span>              :   {</span>
-<span id="L337"><span class="lineNum">     337</span> <span class="tlaGNC">       25917 :     C[0] += A[1] * B[2] - A[2] * B[1];</span></span>
-<span id="L338"><span class="lineNum">     338</span> <span class="tlaGNC">       25917 :     C[1] += A[2] * B[0] - A[0] * B[2];</span></span>
-<span id="L339"><span class="lineNum">     339</span> <span class="tlaGNC">       25917 :     C[2] += A[0] * B[1] - A[1] * B[0];</span></span>
+<span id="L337"><span class="lineNum">     337</span> <span class="tlaGNC">       31749 :     C[0] += A[1] * B[2] - A[2] * B[1];</span></span>
+<span id="L338"><span class="lineNum">     338</span> <span class="tlaGNC">       31749 :     C[1] += A[2] * B[0] - A[0] * B[2];</span></span>
+<span id="L339"><span class="lineNum">     339</span> <span class="tlaGNC">       31749 :     C[2] += A[0] * B[1] - A[1] * B[0];</span></span>
 <span id="L340"><span class="lineNum">     340</span>              :   }</span>
 <span id="L341"><span class="lineNum">     341</span>              :   else</span>
 <span id="L342"><span class="lineNum">     342</span>              :   {</span>
-<span id="L343"><span class="lineNum">     343</span> <span class="tlaGNC">      149768 :     C[0] = A[1] * B[2] - A[2] * B[1];</span></span>
-<span id="L344"><span class="lineNum">     344</span> <span class="tlaGNC">      149768 :     C[1] = A[2] * B[0] - A[0] * B[2];</span></span>
-<span id="L345"><span class="lineNum">     345</span> <span class="tlaGNC">      149768 :     C[2] = A[0] * B[1] - A[1] * B[0];</span></span>
+<span id="L343"><span class="lineNum">     343</span> <span class="tlaGNC">      155600 :     C[0] = A[1] * B[2] - A[2] * B[1];</span></span>
+<span id="L344"><span class="lineNum">     344</span> <span class="tlaGNC">      155600 :     C[1] = A[2] * B[0] - A[0] * B[2];</span></span>
+<span id="L345"><span class="lineNum">     345</span> <span class="tlaGNC">      155600 :     C[2] = A[0] * B[1] - A[1] * B[0];</span></span>
 <span id="L346"><span class="lineNum">     346</span>              :   }</span>
-<span id="L347"><span class="lineNum">     347</span> <span class="tlaGNC">      175685 : }</span></span>
+<span id="L347"><span class="lineNum">     347</span> <span class="tlaGNC">      187349 : }</span></span>
 <span id="L348"><span class="lineNum">     348</span>              : </span>
 <span id="L349"><span class="lineNum">     349</span>              : }  // namespace linalg</span>
 <span id="L350"><span class="lineNum">     350</span>              : </span>

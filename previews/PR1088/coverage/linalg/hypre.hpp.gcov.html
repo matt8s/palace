@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-10-23 01:41:56</td>
+            <td class="headerValue">2026-11-05 18:04:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">-</td>
@@ -86,9 +86,9 @@
 <span id="L16"><span class="lineNum">      16</span>              : // configuration.</span>
 <span id="L17"><span class="lineNum">      17</span>              : inline void Initialize()</span>
 <span id="L18"><span class="lineNum">      18</span>              : {</span>
-<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC tlaBgGNC">         465 :   mfem::Hypre::Init();</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC tlaBgGNC">         579 :   mfem::Hypre::Init();</span></span>
 <span id="L20"><span class="lineNum">      20</span>              :   // HYPRE_SetSpGemmUseCusparse(1);  // MFEM sets to zero, so leave as is for now</span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">         465 : }</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">         579 : }</span></span>
 <span id="L22"><span class="lineNum">      22</span>              : </span>
 <span id="L23"><span class="lineNum">      23</span>              : //</span>
 <span id="L24"><span class="lineNum">      24</span>              : // Wrapper class for HYPRE's hypre_Vector, which can alias an mfem::Vector object for use</span>
@@ -108,7 +108,7 @@
 <span id="L38"><span class="lineNum">      38</span>              : </span>
 <span id="L39"><span class="lineNum">      39</span>              :   void Update(const Vector &amp;x);</span>
 <span id="L40"><span class="lineNum">      40</span>              : </span>
-<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">      563137 :   operator hypre_Vector *() const { return vec; }</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">      613339 :   operator hypre_Vector *() const { return vec; }</span></span>
 <span id="L42"><span class="lineNum">      42</span>              : };</span>
 <span id="L43"><span class="lineNum">      43</span>              : </span>
 <span id="L44"><span class="lineNum">      44</span>              : //</span>
@@ -128,14 +128,14 @@
 <span id="L58"><span class="lineNum">      58</span>              :   HypreCSRMatrix(const mfem::SparseMatrix &amp;m);</span>
 <span id="L59"><span class="lineNum">      59</span>              :   ~HypreCSRMatrix();</span>
 <span id="L60"><span class="lineNum">      60</span>              : </span>
-<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">        1664 :   auto NNZ() const { return hypre_CSRMatrixNumNonzeros(mat); }</span></span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">        2135 :   auto NNZ() const { return hypre_CSRMatrixNumNonzeros(mat); }</span></span>
 <span id="L62"><span class="lineNum">      62</span>              : </span>
 <span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">           6 :   const auto *GetI() const { return hypre_CSRMatrixI(mat); }</span></span>
-<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">       26632 :   auto *GetI() { return hypre_CSRMatrixI(mat); }</span></span>
+<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">       34030 :   auto *GetI() { return hypre_CSRMatrixI(mat); }</span></span>
 <span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">           6 :   const auto *GetJ() const { return hypre_CSRMatrixJ(mat); }</span></span>
-<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">       26620 :   auto *GetJ() { return hypre_CSRMatrixJ(mat); }</span></span>
+<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">       34018 :   auto *GetJ() { return hypre_CSRMatrixJ(mat); }</span></span>
 <span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">           6 :   const auto *GetData() const { return hypre_CSRMatrixData(mat); }</span></span>
-<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">       15340 :   auto *GetData() { return hypre_CSRMatrixData(mat); }</span></span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">       18766 :   auto *GetData() { return hypre_CSRMatrixData(mat); }</span></span>
 <span id="L69"><span class="lineNum">      69</span>              : </span>
 <span id="L70"><span class="lineNum">      70</span>              :   void AssembleDiagonal(Vector &amp;diag) const override;</span>
 <span id="L71"><span class="lineNum">      71</span>              : </span>
@@ -147,7 +147,7 @@
 <span id="L77"><span class="lineNum">      77</span>              : </span>
 <span id="L78"><span class="lineNum">      78</span>              :   void AddMultTranspose(const Vector &amp;x, Vector &amp;y, const double a = 1.0) const override;</span>
 <span id="L79"><span class="lineNum">      79</span>              : </span>
-<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">       26742 :   operator hypre_CSRMatrix *() const { return mat; }</span></span>
+<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">       36156 :   operator hypre_CSRMatrix *() const { return mat; }</span></span>
 <span id="L81"><span class="lineNum">      81</span>              : };</span>
 <span id="L82"><span class="lineNum">      82</span>              : </span>
 <span id="L83"><span class="lineNum">      83</span>              : }  // namespace palace::hypre</span>

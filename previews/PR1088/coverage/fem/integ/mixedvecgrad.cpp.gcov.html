@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-10-23 01:41:56</td>
+            <td class="headerValue">2026-11-05 18:04:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -90,7 +90,7 @@
 <span id="L20"><span class="lineNum">      20</span>              : </span>
 <span id="L21"><span class="lineNum">      21</span>              : using namespace ceed;</span>
 <span id="L22"><span class="lineNum">      22</span>              : </span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC tlaBgGNC">        2399 : void MixedVectorGradientIntegrator::Assemble(Ceed ceed, CeedElemRestriction trial_restr,</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC tlaBgGNC">        2452 : void MixedVectorGradientIntegrator::Assemble(Ceed ceed, CeedElemRestriction trial_restr,</span></span>
 <span id="L24"><span class="lineNum">      24</span>              :                                              CeedElemRestriction test_restr,</span>
 <span id="L25"><span class="lineNum">      25</span>              :                                              CeedBasis trial_basis, CeedBasis test_basis,</span>
 <span id="L26"><span class="lineNum">      26</span>              :                                              CeedVector geom_data,</span>
@@ -98,24 +98,24 @@
 <span id="L28"><span class="lineNum">      28</span>              :                                              CeedOperator *op) const</span>
 <span id="L29"><span class="lineNum">      29</span>              : {</span>
 <span id="L30"><span class="lineNum">      30</span>              :   CeedQFunctionInfo info;</span>
-<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">        2399 :   info.assemble_q_data = assemble_q_data;</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">        2452 :   info.assemble_q_data = assemble_q_data;</span></span>
 <span id="L32"><span class="lineNum">      32</span>              : </span>
 <span id="L33"><span class="lineNum">      33</span>              :   // Set up QFunctions.</span>
 <span id="L34"><span class="lineNum">      34</span>              :   CeedInt dim, space_dim, trial_num_comp, test_num_comp;</span>
-<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">        2399 :   PalaceCeedCall(ceed, CeedBasisGetDimension(trial_basis, &amp;dim));</span></span>
-<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">        2399 :   PalaceCeedCall(ceed, CeedGeometryDataGetSpaceDimension(geom_data_restr, dim, &amp;space_dim));</span></span>
-<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">        2399 :   PalaceCeedCall(ceed, CeedBasisGetNumComponents(trial_basis, &amp;trial_num_comp));</span></span>
-<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">        2399 :   PalaceCeedCall(ceed, CeedBasisGetNumComponents(test_basis, &amp;test_num_comp));</span></span>
-<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">        2399 :   MFEM_VERIFY(trial_num_comp == test_num_comp &amp;&amp; trial_num_comp == 1,</span></span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">        2452 :   PalaceCeedCall(ceed, CeedBasisGetDimension(trial_basis, &amp;dim));</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">        2452 :   PalaceCeedCall(ceed, CeedGeometryDataGetSpaceDimension(geom_data_restr, dim, &amp;space_dim));</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">        2452 :   PalaceCeedCall(ceed, CeedBasisGetNumComponents(trial_basis, &amp;trial_num_comp));</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">        2452 :   PalaceCeedCall(ceed, CeedBasisGetNumComponents(test_basis, &amp;test_num_comp));</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">        2452 :   MFEM_VERIFY(trial_num_comp == test_num_comp &amp;&amp; trial_num_comp == 1,</span></span>
 <span id="L40"><span class="lineNum">      40</span>              :               &quot;MixedVectorGradientIntegrator requires test and trial spaces with a single &quot;</span>
 <span id="L41"><span class="lineNum">      41</span>              :               &quot;component!&quot;);</span>
-<span id="L42"><span class="lineNum">      42</span> <span class="tlaGNC">        2399 :   switch (10 * space_dim + dim)</span></span>
+<span id="L42"><span class="lineNum">      42</span> <span class="tlaGNC">        2452 :   switch (10 * space_dim + dim)</span></span>
 <span id="L43"><span class="lineNum">      43</span>              :   {</span>
-<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">        1024 :     case 22:</span></span>
-<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">        1024 :       if (test_map_type == mfem::FiniteElement::H_CURL)</span></span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">        1029 :     case 22:</span></span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">        1029 :       if (test_map_type == mfem::FiniteElement::H_CURL)</span></span>
 <span id="L46"><span class="lineNum">      46</span>              :       {</span>
-<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">         592 :         info.apply_qf = assemble_q_data ? f_build_hcurl_22 : f_apply_hcurl_22;</span></span>
-<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">         592 :         info.apply_qf_path = PalaceQFunctionRelativePath(</span></span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">         597 :         info.apply_qf = assemble_q_data ? f_build_hcurl_22 : f_apply_hcurl_22;</span></span>
+<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">         597 :         info.apply_qf_path = PalaceQFunctionRelativePath(</span></span>
 <span id="L49"><span class="lineNum">      49</span>              :             assemble_q_data ? f_build_hcurl_22_loc : f_apply_hcurl_22_loc);</span>
 <span id="L50"><span class="lineNum">      50</span>              :       }</span>
 <span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">         432 :       else if (test_map_type == mfem::FiniteElement::H_DIV)</span></span>
@@ -183,11 +183,11 @@
 <span id="L113"><span class="lineNum">     113</span> <span class="tlaUNC">           0 :         MFEM_ABORT(&quot;Invalid test map type for MixedVectorGradientIntegrator!&quot;);</span></span>
 <span id="L114"><span class="lineNum">     114</span>              :       }</span>
 <span id="L115"><span class="lineNum">     115</span>              :       break;</span>
-<span id="L116"><span class="lineNum">     116</span> <span class="tlaGNC tlaBgGNC">         601 :     case 32:</span></span>
-<span id="L117"><span class="lineNum">     117</span> <span class="tlaGNC">         601 :       if (test_map_type == mfem::FiniteElement::H_CURL)</span></span>
+<span id="L116"><span class="lineNum">     116</span> <span class="tlaGNC tlaBgGNC">         649 :     case 32:</span></span>
+<span id="L117"><span class="lineNum">     117</span> <span class="tlaGNC">         649 :       if (test_map_type == mfem::FiniteElement::H_CURL)</span></span>
 <span id="L118"><span class="lineNum">     118</span>              :       {</span>
-<span id="L119"><span class="lineNum">     119</span> <span class="tlaGNC">         601 :         info.apply_qf = assemble_q_data ? f_build_hcurl_32 : f_apply_hcurl_32;</span></span>
-<span id="L120"><span class="lineNum">     120</span> <span class="tlaGNC">         601 :         info.apply_qf_path = PalaceQFunctionRelativePath(</span></span>
+<span id="L119"><span class="lineNum">     119</span> <span class="tlaGNC">         649 :         info.apply_qf = assemble_q_data ? f_build_hcurl_32 : f_apply_hcurl_32;</span></span>
+<span id="L120"><span class="lineNum">     120</span> <span class="tlaGNC">         649 :         info.apply_qf_path = PalaceQFunctionRelativePath(</span></span>
 <span id="L121"><span class="lineNum">     121</span>              :             assemble_q_data ? f_build_hcurl_32_loc : f_apply_hcurl_32_loc);</span>
 <span id="L122"><span class="lineNum">     122</span>              :       }</span>
 <span id="L123"><span class="lineNum">     123</span> <span class="tlaUNC tlaBgUNC">           0 :       else if (test_map_type == mfem::FiniteElement::H_DIV)</span></span>
@@ -205,39 +205,39 @@
 <span id="L135"><span class="lineNum">     135</span> <span class="tlaUNC">           0 :       MFEM_ABORT(&quot;Invalid value of (dim, space_dim) = (&quot;</span></span>
 <span id="L136"><span class="lineNum">     136</span>              :                  &lt;&lt; dim &lt;&lt; &quot;, &quot; &lt;&lt; space_dim &lt;&lt; &quot;) for MixedVectorGradientIntegrator!&quot;);</span>
 <span id="L137"><span class="lineNum">     137</span>              :   }</span>
-<span id="L138"><span class="lineNum">     138</span> <span class="tlaGNC tlaBgGNC">        2399 :   info.trial_ops = EvalMode::Grad;</span></span>
-<span id="L139"><span class="lineNum">     139</span> <span class="tlaGNC">        2399 :   info.test_ops = EvalMode::Interp;</span></span>
+<span id="L138"><span class="lineNum">     138</span> <span class="tlaGNC tlaBgGNC">        2452 :   info.trial_ops = EvalMode::Grad;</span></span>
+<span id="L139"><span class="lineNum">     139</span> <span class="tlaGNC">        2452 :   info.test_ops = EvalMode::Interp;</span></span>
 <span id="L140"><span class="lineNum">     140</span>              : </span>
 <span id="L141"><span class="lineNum">     141</span>              :   // Set up the coefficient and assemble.</span>
-<span id="L142"><span class="lineNum">     142</span> <span class="tlaGNC">        2399 :   auto ctx = PopulateCoefficientContext(space_dim, Q, transpose);</span></span>
-<span id="L143"><span class="lineNum">     143</span> <span class="tlaGNC">        2399 :   AssembleCeedOperator(info, (void *)ctx.data(), ctx.size() * sizeof(CeedIntScalar), ceed,</span></span>
+<span id="L142"><span class="lineNum">     142</span> <span class="tlaGNC">        2452 :   auto ctx = PopulateCoefficientContext(space_dim, Q, transpose);</span></span>
+<span id="L143"><span class="lineNum">     143</span> <span class="tlaGNC">        2452 :   AssembleCeedOperator(info, (void *)ctx.data(), ctx.size() * sizeof(CeedIntScalar), ceed,</span></span>
 <span id="L144"><span class="lineNum">     144</span>              :                        trial_restr, test_restr, trial_basis, test_basis, geom_data,</span>
 <span id="L145"><span class="lineNum">     145</span>              :                        geom_data_restr, op);</span>
-<span id="L146"><span class="lineNum">     146</span> <span class="tlaGNC">        2399 : }</span></span>
+<span id="L146"><span class="lineNum">     146</span> <span class="tlaGNC">        2452 : }</span></span>
 <span id="L147"><span class="lineNum">     147</span>              : </span>
-<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">        1247 : void MixedVectorWeakDivergenceIntegrator::Assemble(</span></span>
+<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">        1245 : void MixedVectorWeakDivergenceIntegrator::Assemble(</span></span>
 <span id="L149"><span class="lineNum">     149</span>              :     Ceed ceed, CeedElemRestriction trial_restr, CeedElemRestriction test_restr,</span>
 <span id="L150"><span class="lineNum">     150</span>              :     CeedBasis trial_basis, CeedBasis test_basis, CeedVector geom_data,</span>
 <span id="L151"><span class="lineNum">     151</span>              :     CeedElemRestriction geom_data_restr, CeedOperator *op) const</span>
 <span id="L152"><span class="lineNum">     152</span>              : {</span>
 <span id="L153"><span class="lineNum">     153</span>              :   CeedQFunctionInfo info;</span>
-<span id="L154"><span class="lineNum">     154</span> <span class="tlaGNC">        1247 :   info.assemble_q_data = assemble_q_data;</span></span>
+<span id="L154"><span class="lineNum">     154</span> <span class="tlaGNC">        1245 :   info.assemble_q_data = assemble_q_data;</span></span>
 <span id="L155"><span class="lineNum">     155</span>              : </span>
 <span id="L156"><span class="lineNum">     156</span>              :   // Set up QFunctions.</span>
 <span id="L157"><span class="lineNum">     157</span>              :   CeedInt dim, space_dim, trial_num_comp, test_num_comp;</span>
-<span id="L158"><span class="lineNum">     158</span> <span class="tlaGNC">        1247 :   PalaceCeedCall(ceed, CeedBasisGetDimension(trial_basis, &amp;dim));</span></span>
-<span id="L159"><span class="lineNum">     159</span> <span class="tlaGNC">        1247 :   PalaceCeedCall(ceed, CeedGeometryDataGetSpaceDimension(geom_data_restr, dim, &amp;space_dim));</span></span>
-<span id="L160"><span class="lineNum">     160</span> <span class="tlaGNC">        1247 :   PalaceCeedCall(ceed, CeedBasisGetNumComponents(trial_basis, &amp;trial_num_comp));</span></span>
-<span id="L161"><span class="lineNum">     161</span> <span class="tlaGNC">        1247 :   PalaceCeedCall(ceed, CeedBasisGetNumComponents(test_basis, &amp;test_num_comp));</span></span>
-<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">        1247 :   MFEM_VERIFY(</span></span>
+<span id="L158"><span class="lineNum">     158</span> <span class="tlaGNC">        1245 :   PalaceCeedCall(ceed, CeedBasisGetDimension(trial_basis, &amp;dim));</span></span>
+<span id="L159"><span class="lineNum">     159</span> <span class="tlaGNC">        1245 :   PalaceCeedCall(ceed, CeedGeometryDataGetSpaceDimension(geom_data_restr, dim, &amp;space_dim));</span></span>
+<span id="L160"><span class="lineNum">     160</span> <span class="tlaGNC">        1245 :   PalaceCeedCall(ceed, CeedBasisGetNumComponents(trial_basis, &amp;trial_num_comp));</span></span>
+<span id="L161"><span class="lineNum">     161</span> <span class="tlaGNC">        1245 :   PalaceCeedCall(ceed, CeedBasisGetNumComponents(test_basis, &amp;test_num_comp));</span></span>
+<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">        1245 :   MFEM_VERIFY(</span></span>
 <span id="L163"><span class="lineNum">     163</span>              :       trial_num_comp == test_num_comp &amp;&amp; trial_num_comp == 1,</span>
 <span id="L164"><span class="lineNum">     164</span>              :       &quot;MixedVectorWeakDivergenceIntegrator requires test and trial spaces with a single &quot;</span>
 <span id="L165"><span class="lineNum">     165</span>              :       &quot;component!&quot;);</span>
-<span id="L166"><span class="lineNum">     166</span> <span class="tlaGNC">        1247 :   switch (10 * space_dim + dim)</span></span>
+<span id="L166"><span class="lineNum">     166</span> <span class="tlaGNC">        1245 :   switch (10 * space_dim + dim)</span></span>
 <span id="L167"><span class="lineNum">     167</span>              :   {</span>
-<span id="L168"><span class="lineNum">     168</span> <span class="tlaGNC">         432 :     case 22:</span></span>
-<span id="L169"><span class="lineNum">     169</span> <span class="tlaGNC">         432 :       info.apply_qf = assemble_q_data ? f_build_hcurl_22 : f_apply_hcurl_22;</span></span>
-<span id="L170"><span class="lineNum">     170</span> <span class="tlaGNC">         432 :       info.apply_qf_path = PalaceQFunctionRelativePath(</span></span>
+<span id="L168"><span class="lineNum">     168</span> <span class="tlaGNC">         431 :     case 22:</span></span>
+<span id="L169"><span class="lineNum">     169</span> <span class="tlaGNC">         431 :       info.apply_qf = assemble_q_data ? f_build_hcurl_22 : f_apply_hcurl_22;</span></span>
+<span id="L170"><span class="lineNum">     170</span> <span class="tlaGNC">         431 :       info.apply_qf_path = PalaceQFunctionRelativePath(</span></span>
 <span id="L171"><span class="lineNum">     171</span>              :           assemble_q_data ? f_build_hcurl_22_loc : f_apply_hcurl_22_loc);</span>
 <span id="L172"><span class="lineNum">     172</span>              :       break;</span>
 <span id="L173"><span class="lineNum">     173</span> <span class="tlaGNC">         387 :     case 33:</span></span>
@@ -255,9 +255,9 @@
 <span id="L185"><span class="lineNum">     185</span> <span class="tlaUNC">           0 :       info.apply_qf_path = PalaceQFunctionRelativePath(</span></span>
 <span id="L186"><span class="lineNum">     186</span>              :           assemble_q_data ? f_build_hcurl_31_loc : f_apply_hcurl_31_loc);</span>
 <span id="L187"><span class="lineNum">     187</span>              :       break;</span>
-<span id="L188"><span class="lineNum">     188</span> <span class="tlaGNC tlaBgGNC">         428 :     case 32:</span></span>
-<span id="L189"><span class="lineNum">     189</span> <span class="tlaGNC">         428 :       info.apply_qf = assemble_q_data ? f_build_hcurl_32 : f_apply_hcurl_32;</span></span>
-<span id="L190"><span class="lineNum">     190</span> <span class="tlaGNC">         428 :       info.apply_qf_path = PalaceQFunctionRelativePath(</span></span>
+<span id="L188"><span class="lineNum">     188</span> <span class="tlaGNC tlaBgGNC">         427 :     case 32:</span></span>
+<span id="L189"><span class="lineNum">     189</span> <span class="tlaGNC">         427 :       info.apply_qf = assemble_q_data ? f_build_hcurl_32 : f_apply_hcurl_32;</span></span>
+<span id="L190"><span class="lineNum">     190</span> <span class="tlaGNC">         427 :       info.apply_qf_path = PalaceQFunctionRelativePath(</span></span>
 <span id="L191"><span class="lineNum">     191</span>              :           assemble_q_data ? f_build_hcurl_32_loc : f_apply_hcurl_32_loc);</span>
 <span id="L192"><span class="lineNum">     192</span>              :       break;</span>
 <span id="L193"><span class="lineNum">     193</span> <span class="tlaUNC tlaBgUNC">           0 :     default:</span></span>
@@ -265,15 +265,15 @@
 <span id="L195"><span class="lineNum">     195</span>              :                  &lt;&lt; dim &lt;&lt; &quot;, &quot; &lt;&lt; space_dim</span>
 <span id="L196"><span class="lineNum">     196</span>              :                  &lt;&lt; &quot;) for MixedVectorWeakDivergenceIntegrator!&quot;);</span>
 <span id="L197"><span class="lineNum">     197</span>              :   }</span>
-<span id="L198"><span class="lineNum">     198</span> <span class="tlaGNC tlaBgGNC">        1247 :   info.trial_ops = EvalMode::Interp;</span></span>
-<span id="L199"><span class="lineNum">     199</span> <span class="tlaGNC">        1247 :   info.test_ops = EvalMode::Grad;</span></span>
+<span id="L198"><span class="lineNum">     198</span> <span class="tlaGNC tlaBgGNC">        1245 :   info.trial_ops = EvalMode::Interp;</span></span>
+<span id="L199"><span class="lineNum">     199</span> <span class="tlaGNC">        1245 :   info.test_ops = EvalMode::Grad;</span></span>
 <span id="L200"><span class="lineNum">     200</span>              : </span>
 <span id="L201"><span class="lineNum">     201</span>              :   // Set up the coefficient and assemble.</span>
-<span id="L202"><span class="lineNum">     202</span> <span class="tlaGNC">        1247 :   auto ctx = PopulateCoefficientContext(space_dim, Q, transpose, -1.0);</span></span>
-<span id="L203"><span class="lineNum">     203</span> <span class="tlaGNC">        1247 :   AssembleCeedOperator(info, (void *)ctx.data(), ctx.size() * sizeof(CeedIntScalar), ceed,</span></span>
+<span id="L202"><span class="lineNum">     202</span> <span class="tlaGNC">        1245 :   auto ctx = PopulateCoefficientContext(space_dim, Q, transpose, -1.0);</span></span>
+<span id="L203"><span class="lineNum">     203</span> <span class="tlaGNC">        1245 :   AssembleCeedOperator(info, (void *)ctx.data(), ctx.size() * sizeof(CeedIntScalar), ceed,</span></span>
 <span id="L204"><span class="lineNum">     204</span>              :                        trial_restr, test_restr, trial_basis, test_basis, geom_data,</span>
 <span id="L205"><span class="lineNum">     205</span>              :                        geom_data_restr, op);</span>
-<span id="L206"><span class="lineNum">     206</span> <span class="tlaGNC">        1247 : }</span></span>
+<span id="L206"><span class="lineNum">     206</span> <span class="tlaGNC">        1245 : }</span></span>
 <span id="L207"><span class="lineNum">     207</span>              : </span>
 <span id="L208"><span class="lineNum">     208</span>              : }  // namespace palace</span>
         </pre>

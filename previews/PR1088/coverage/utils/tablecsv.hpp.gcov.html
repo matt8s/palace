@@ -37,12 +37,12 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-10-23 01:41:56</td>
+            <td class="headerValue">2026-11-05 18:04:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryLo">67.9&nbsp;%</td>
-            <td class="headerCovTableEntry">28</td>
-            <td class="headerCovTableEntry">19</td>
+            <td class="headerCovTableEntryLo">69.0&nbsp;%</td>
+            <td class="headerCovTableEntry">29</td>
+            <td class="headerCovTableEntry">20</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -136,13 +136,13 @@
 <span id="L66"><span class="lineNum">      66</span>              :   // a templated &amp; type erased solution).</span>
 <span id="L67"><span class="lineNum">      67</span>              :   bool print_as_int = false;</span>
 <span id="L68"><span class="lineNum">      68</span>              : </span>
-<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">        3722 :   [[nodiscard]] inline std::size_t n_rows() const { return data.size(); }</span></span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">        3794 :   [[nodiscard]] inline std::size_t n_rows() const { return data.size(); }</span></span>
 <span id="L70"><span class="lineNum">      70</span>              : </span>
 <span id="L71"><span class="lineNum">      71</span>              :   // Convenience operator at higher level.</span>
 <span id="L72"><span class="lineNum">      72</span>              :   inline auto &amp;operator&lt;&lt;(double val)</span>
 <span id="L73"><span class="lineNum">      73</span>              :   {</span>
-<span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC">        1379 :     data.emplace_back(val);</span></span>
-<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">        1204 :     return *this;</span></span>
+<span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC">        1919 :     data.emplace_back(val);</span></span>
+<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">        1744 :     return *this;</span></span>
 <span id="L76"><span class="lineNum">      76</span>              :   }</span>
 <span id="L77"><span class="lineNum">      77</span>              : };</span>
 <span id="L78"><span class="lineNum">      78</span>              : </span>
@@ -162,7 +162,7 @@
 <span id="L92"><span class="lineNum">      92</span>              :   std::size_t reserve_n_rows = 0;</span>
 <span id="L93"><span class="lineNum">      93</span>              : </span>
 <span id="L94"><span class="lineNum">      94</span>              : public:</span>
-<span id="L95"><span class="lineNum">      95</span> <span class="tlaGNC">         224 :   Table() = default;</span></span>
+<span id="L95"><span class="lineNum">      95</span> <span class="tlaGNC">         234 :   Table() = default;</span></span>
 <span id="L96"><span class="lineNum">      96</span>              :   explicit Table(std::string_view table_str,</span>
 <span id="L97"><span class="lineNum">      97</span>              :                  std::optional&lt;std::string_view&gt; print_col_separator_ = std::nullopt,</span>
 <span id="L98"><span class="lineNum">      98</span>              :                  std::optional&lt;std::string_view&gt; print_row_separator_ = std::nullopt);</span>
@@ -189,9 +189,9 @@
 <span id="L119"><span class="lineNum">     119</span>              :   // Insert columns: map like interface.</span>
 <span id="L120"><span class="lineNum">     120</span>              :   bool insert(Column &amp;&amp;column);</span>
 <span id="L121"><span class="lineNum">     121</span>              :   template &lt;typename... Args&gt;</span>
-<span id="L122"><span class="lineNum">     122</span> <span class="tlaGNC">        1067 :   bool insert(Args &amp;&amp;...args)</span></span>
+<span id="L122"><span class="lineNum">     122</span> <span class="tlaGNC">        1132 :   bool insert(Args &amp;&amp;...args)</span></span>
 <span id="L123"><span class="lineNum">     123</span>              :   {</span>
-<span id="L124"><span class="lineNum">     124</span> <span class="tlaGNC">        2169 :     return insert(Column(std::forward&lt;Args&gt;(args)...));</span></span>
+<span id="L124"><span class="lineNum">     124</span> <span class="tlaGNC">        2304 :     return insert(Column(std::forward&lt;Args&gt;(args)...));</span></span>
 <span id="L125"><span class="lineNum">     125</span>              :   }</span>
 <span id="L126"><span class="lineNum">     126</span>              : </span>
 <span id="L127"><span class="lineNum">     127</span>              :   // Check if a column with the given name exists.</span>
@@ -229,7 +229,7 @@
 <span id="L159"><span class="lineNum">     159</span>              : </span>
 <span id="L160"><span class="lineNum">     160</span>              : // Wrapper for storing Table to csv file.</span>
 <span id="L161"><span class="lineNum">     161</span>              : </span>
-<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">         328 : class TableWithCSVFile</span></span>
+<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">         343 : class TableWithCSVFile</span></span>
 <span id="L163"><span class="lineNum">     163</span>              : {</span>
 <span id="L164"><span class="lineNum">     164</span>              :   std::string csv_file_fullpath_;</span>
 <span id="L165"><span class="lineNum">     165</span>              : </span>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-10-23 01:41:56</td>
+            <td class="headerValue">2026-11-05 18:04:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">-</td>
@@ -86,7 +86,7 @@
 <span id="L16"><span class="lineNum">      16</span>              : // each component. This unifies mfem::ParGridFunction and mfem::ParComplexGridFunction, and</span>
 <span id="L17"><span class="lineNum">      17</span>              : // replaces the latter due to some issues observed with memory aliasing on GPUs.</span>
 <span id="L18"><span class="lineNum">      18</span>              : //</span>
-<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC tlaBgGNC">        2310 : class GridFunction</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC tlaBgGNC">        2564 : class GridFunction</span></span>
 <span id="L20"><span class="lineNum">      20</span>              : {</span>
 <span id="L21"><span class="lineNum">      21</span>              : private:</span>
 <span id="L22"><span class="lineNum">      22</span>              :   mfem::ParGridFunction gfr, gfi;</span>
@@ -96,19 +96,19 @@
 <span id="L26"><span class="lineNum">      26</span>              :   GridFunction(FiniteElementSpace &amp;fespace, bool complex = false);</span>
 <span id="L27"><span class="lineNum">      27</span>              : </span>
 <span id="L28"><span class="lineNum">      28</span>              :   // Get access to the real and imaginary grid function parts.</span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">      788724 :   const mfem::ParGridFunction &amp;Real() const { return gfr; }</span></span>
-<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">        1691 :   mfem::ParGridFunction &amp;Real() { return gfr; }</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">      845762 :   const mfem::ParGridFunction &amp;Real() const { return gfr; }</span></span>
+<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">        1474 :   mfem::ParGridFunction &amp;Real() { return gfr; }</span></span>
 <span id="L31"><span class="lineNum">      31</span>              :   const mfem::ParGridFunction &amp;Imag() const</span>
 <span id="L32"><span class="lineNum">      32</span>              :   {</span>
 <span id="L33"><span class="lineNum">      33</span>              :     MFEM_ASSERT(HasImag(),</span>
 <span id="L34"><span class="lineNum">      34</span>              :                 &quot;Invalid access of imaginary part of a real-valued GridFunction object!&quot;);</span>
-<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">      692240 :     return gfi;</span></span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">      745374 :     return gfi;</span></span>
 <span id="L36"><span class="lineNum">      36</span>              :   }</span>
 <span id="L37"><span class="lineNum">      37</span>              :   mfem::ParGridFunction &amp;Imag()</span>
 <span id="L38"><span class="lineNum">      38</span>              :   {</span>
 <span id="L39"><span class="lineNum">      39</span>              :     MFEM_ASSERT(HasImag(),</span>
 <span id="L40"><span class="lineNum">      40</span>              :                 &quot;Invalid access of imaginary part of a real-valued GridFunction object!&quot;);</span>
-<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">        1081 :     return gfi;</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">         850 :     return gfi;</span></span>
 <span id="L42"><span class="lineNum">      42</span>              :   }</span>
 <span id="L43"><span class="lineNum">      43</span>              : </span>
 <span id="L44"><span class="lineNum">      44</span>              :   // Check if the grid function is suited for storing complex-valued fields.</span>
@@ -131,19 +131,20 @@
 <span id="L61"><span class="lineNum">      61</span>              :     return *this;</span>
 <span id="L62"><span class="lineNum">      62</span>              :   }</span>
 <span id="L63"><span class="lineNum">      63</span>              : </span>
-<span id="L64"><span class="lineNum">      64</span>              :   // Scale all entries by s.</span>
-<span id="L65"><span class="lineNum">      65</span>              :   GridFunction &amp;operator*=(double s);</span>
-<span id="L66"><span class="lineNum">      66</span>              : </span>
-<span id="L67"><span class="lineNum">      67</span>              :   // Transform for space update (for example on mesh change).</span>
-<span id="L68"><span class="lineNum">      68</span>              :   void Update();</span>
-<span id="L69"><span class="lineNum">      69</span>              : </span>
-<span id="L70"><span class="lineNum">      70</span>              :   // Get the associated MPI communicator.</span>
-<span id="L71"><span class="lineNum">      71</span>              :   MPI_Comm GetComm() const { return ParFESpace()-&gt;GetComm(); }</span>
-<span id="L72"><span class="lineNum">      72</span>              : };</span>
-<span id="L73"><span class="lineNum">      73</span>              : </span>
-<span id="L74"><span class="lineNum">      74</span>              : }  // namespace palace</span>
-<span id="L75"><span class="lineNum">      75</span>              : </span>
-<span id="L76"><span class="lineNum">      76</span>              : #endif  // PALACE_FEM_GRIDFUNCTION_HPP</span>
+<span id="L64"><span class="lineNum">      64</span>              :   // Scale all entries by s, including any cached face-neighbor data, so the cache stays</span>
+<span id="L65"><span class="lineNum">      65</span>              :   // consistent with the field until the next ExchangeFaceNbrData.</span>
+<span id="L66"><span class="lineNum">      66</span>              :   GridFunction &amp;operator*=(double s);</span>
+<span id="L67"><span class="lineNum">      67</span>              : </span>
+<span id="L68"><span class="lineNum">      68</span>              :   // Transform for space update (for example on mesh change).</span>
+<span id="L69"><span class="lineNum">      69</span>              :   void Update();</span>
+<span id="L70"><span class="lineNum">      70</span>              : </span>
+<span id="L71"><span class="lineNum">      71</span>              :   // Get the associated MPI communicator.</span>
+<span id="L72"><span class="lineNum">      72</span>              :   MPI_Comm GetComm() const { return ParFESpace()-&gt;GetComm(); }</span>
+<span id="L73"><span class="lineNum">      73</span>              : };</span>
+<span id="L74"><span class="lineNum">      74</span>              : </span>
+<span id="L75"><span class="lineNum">      75</span>              : }  // namespace palace</span>
+<span id="L76"><span class="lineNum">      76</span>              : </span>
+<span id="L77"><span class="lineNum">      77</span>              : #endif  // PALACE_FEM_GRIDFUNCTION_HPP</span>
         </pre>
               </td>
             </tr>

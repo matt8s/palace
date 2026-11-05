@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-10-23 01:41:56</td>
+            <td class="headerValue">2026-11-05 18:04:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">33.3&nbsp;%</td>
@@ -83,7 +83,7 @@
 <span id="L13"><span class="lineNum">      13</span>              : </span>
 <span id="L14"><span class="lineNum">      14</span>              : strumpack::CompressionType GetCompressionType(SparseCompression type)</span>
 <span id="L15"><span class="lineNum">      15</span>              : {</span>
-<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC tlaBgGNC">         195 :   switch (type)</span></span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC tlaBgGNC">         219 :   switch (type)</span></span>
 <span id="L17"><span class="lineNum">      17</span>              :   {</span>
 <span id="L18"><span class="lineNum">      18</span>              :     case SparseCompression::HSS:</span>
 <span id="L19"><span class="lineNum">      19</span>              :       return strumpack::CompressionType::HSS;</span>
@@ -108,18 +108,18 @@
 <span id="L38"><span class="lineNum">      38</span>              : }  // namespace</span>
 <span id="L39"><span class="lineNum">      39</span>              : </span>
 <span id="L40"><span class="lineNum">      40</span>              : template &lt;typename StrumpackSolverType&gt;</span>
-<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">         195 : StrumpackSolverBase&lt;StrumpackSolverType&gt;::StrumpackSolverBase(</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">         219 : StrumpackSolverBase&lt;StrumpackSolverType&gt;::StrumpackSolverBase(</span></span>
 <span id="L42"><span class="lineNum">      42</span>              :     MPI_Comm comm, SymbolicFactorization reorder, SparseCompression compression,</span>
 <span id="L43"><span class="lineNum">      43</span>              :     double lr_tol, int butterfly_l, int lossy_prec, bool reorder_reuse, int print)</span>
-<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">         195 :   : StrumpackSolverType(comm), comm(comm)</span></span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">         219 :   : StrumpackSolverType(comm), comm(comm)</span></span>
 <span id="L45"><span class="lineNum">      45</span>              : {</span>
 <span id="L46"><span class="lineNum">      46</span>              :   // Configure the solver.</span>
-<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">         195 :   this-&gt;SetPrintFactorStatistics(print &gt; 1);</span></span>
-<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">         195 :   this-&gt;SetPrintSolveStatistics(print &gt; 1);</span></span>
-<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">         195 :   this-&gt;SetKrylovSolver(strumpack::KrylovSolver::DIRECT);  // Always as a preconditioner or</span></span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">         219 :   this-&gt;SetPrintFactorStatistics(print &gt; 1);</span></span>
+<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">         219 :   this-&gt;SetPrintSolveStatistics(print &gt; 1);</span></span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">         219 :   this-&gt;SetKrylovSolver(strumpack::KrylovSolver::DIRECT);  // Always as a preconditioner or</span></span>
 <span id="L50"><span class="lineNum">      50</span>              :                                                            // direct solver</span>
-<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">         195 :   this-&gt;SetMatching(strumpack::MatchingJob::NONE);</span></span>
-<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">         195 :   switch (reorder)</span></span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">         219 :   this-&gt;SetMatching(strumpack::MatchingJob::NONE);</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">         219 :   switch (reorder)</span></span>
 <span id="L53"><span class="lineNum">      53</span>              :   {</span>
 <span id="L54"><span class="lineNum">      54</span> <span class="tlaUNC tlaBgUNC">           0 :     case SymbolicFactorization::METIS:</span></span>
 <span id="L55"><span class="lineNum">      55</span> <span class="tlaUNC">           0 :       this-&gt;SetReorderingStrategy(strumpack::ReorderingStrategy::METIS);</span></span>
@@ -145,12 +145,12 @@
 <span id="L75"><span class="lineNum">      75</span>              :       // Should have good default.</span>
 <span id="L76"><span class="lineNum">      76</span>              :       break;</span>
 <span id="L77"><span class="lineNum">      77</span>              :   }</span>
-<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC tlaBgGNC">         195 :   this-&gt;SetReorderingReuse(</span></span>
+<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC tlaBgGNC">         219 :   this-&gt;SetReorderingReuse(</span></span>
 <span id="L79"><span class="lineNum">      79</span>              :       reorder_reuse);  // If true repeated calls use same sparsity pattern</span>
 <span id="L80"><span class="lineNum">      80</span>              : </span>
 <span id="L81"><span class="lineNum">      81</span>              :   // Configure compression.</span>
-<span id="L82"><span class="lineNum">      82</span> <span class="tlaGNC">         195 :   this-&gt;SetCompression(GetCompressionType(compression));</span></span>
-<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">         195 :   switch (compression)</span></span>
+<span id="L82"><span class="lineNum">      82</span> <span class="tlaGNC">         219 :   this-&gt;SetCompression(GetCompressionType(compression));</span></span>
+<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">         219 :   switch (compression)</span></span>
 <span id="L84"><span class="lineNum">      84</span>              :   {</span>
 <span id="L85"><span class="lineNum">      85</span> <span class="tlaUNC tlaBgUNC">           0 :     case SparseCompression::ZFP:</span></span>
 <span id="L86"><span class="lineNum">      86</span> <span class="tlaUNC">           0 :       if (lossy_prec &lt;= 0)</span></span>
@@ -180,36 +180,36 @@
 <span id="L110"><span class="lineNum">     110</span>              :   // }</span>
 <span id="L111"><span class="lineNum">     111</span>              :   // else</span>
 <span id="L112"><span class="lineNum">     112</span>              :   {</span>
-<span id="L113"><span class="lineNum">     113</span> <span class="tlaGNC tlaBgGNC">         195 :     this-&gt;DisableGPU();</span></span>
+<span id="L113"><span class="lineNum">     113</span> <span class="tlaGNC tlaBgGNC">         219 :     this-&gt;DisableGPU();</span></span>
 <span id="L114"><span class="lineNum">     114</span>              :   }</span>
-<span id="L115"><span class="lineNum">     115</span> <span class="tlaGNC">         195 : }</span></span>
+<span id="L115"><span class="lineNum">     115</span> <span class="tlaGNC">         219 : }</span></span>
 <span id="L116"><span class="lineNum">     116</span>              : </span>
 <span id="L117"><span class="lineNum">     117</span>              : template &lt;typename StrumpackSolverType&gt;</span>
-<span id="L118"><span class="lineNum">     118</span> <span class="tlaGNC">         244 : void StrumpackSolverBase&lt;StrumpackSolverType&gt;::SetOperator(const Operator &amp;op)</span></span>
+<span id="L118"><span class="lineNum">     118</span> <span class="tlaGNC">         268 : void StrumpackSolverBase&lt;StrumpackSolverType&gt;::SetOperator(const Operator &amp;op)</span></span>
 <span id="L119"><span class="lineNum">     119</span>              : {</span>
 <span id="L120"><span class="lineNum">     120</span>              :   // Convert the input operator to a distributed STRUMPACK matrix (always assume a symmetric</span>
 <span id="L121"><span class="lineNum">     121</span>              :   // sparsity pattern). This is very similar to the MFEM's STRUMPACKRowLocMatrix from a</span>
 <span id="L122"><span class="lineNum">     122</span>              :   // HypreParMatrix but avoids using the communicator from the Hypre matrix in the case that</span>
 <span id="L123"><span class="lineNum">     123</span>              :   // the solver is constructed on a different communicator.</span>
-<span id="L124"><span class="lineNum">     124</span> <span class="tlaGNC">         244 :   const auto *hA = dynamic_cast&lt;const mfem::HypreParMatrix *&gt;(&amp;op);</span></span>
-<span id="L125"><span class="lineNum">     125</span> <span class="tlaGNC">         244 :   MFEM_VERIFY(hA &amp;&amp; hA-&gt;GetGlobalNumRows() == hA-&gt;GetGlobalNumCols(),</span></span>
+<span id="L124"><span class="lineNum">     124</span> <span class="tlaGNC">         268 :   const auto *hA = dynamic_cast&lt;const mfem::HypreParMatrix *&gt;(&amp;op);</span></span>
+<span id="L125"><span class="lineNum">     125</span> <span class="tlaGNC">         268 :   MFEM_VERIFY(hA &amp;&amp; hA-&gt;GetGlobalNumRows() == hA-&gt;GetGlobalNumCols(),</span></span>
 <span id="L126"><span class="lineNum">     126</span>              :               &quot;StrumpackSolver requires a square HypreParMatrix operator!&quot;);</span>
 <span id="L127"><span class="lineNum">     127</span>              :   auto *parcsr = (hypre_ParCSRMatrix *)const_cast&lt;mfem::HypreParMatrix &amp;&gt;(*hA);</span>
-<span id="L128"><span class="lineNum">     128</span> <span class="tlaGNC">         244 :   hypre_CSRMatrix *csr = hypre_MergeDiagAndOffd(parcsr);</span></span>
-<span id="L129"><span class="lineNum">     129</span> <span class="tlaGNC">         244 :   hypre_CSRMatrixMigrate(csr, HYPRE_MEMORY_HOST);</span></span>
+<span id="L128"><span class="lineNum">     128</span> <span class="tlaGNC">         268 :   hypre_CSRMatrix *csr = hypre_MergeDiagAndOffd(parcsr);</span></span>
+<span id="L129"><span class="lineNum">     129</span> <span class="tlaGNC">         268 :   hypre_CSRMatrixMigrate(csr, HYPRE_MEMORY_HOST);</span></span>
 <span id="L130"><span class="lineNum">     130</span>              : </span>
 <span id="L131"><span class="lineNum">     131</span>              :   // Create the STRUMPACKRowLocMatrix by taking the internal data from a hypre_CSRMatrix.</span>
-<span id="L132"><span class="lineNum">     132</span> <span class="tlaGNC">         244 :   HYPRE_BigInt glob_n = hypre_ParCSRMatrixGlobalNumRows(parcsr);</span></span>
-<span id="L133"><span class="lineNum">     133</span> <span class="tlaGNC">         244 :   HYPRE_BigInt first_row = hypre_ParCSRMatrixFirstRowIndex(parcsr);</span></span>
-<span id="L134"><span class="lineNum">     134</span> <span class="tlaGNC">         244 :   HYPRE_Int n_loc = hypre_CSRMatrixNumRows(csr);</span></span>
-<span id="L135"><span class="lineNum">     135</span> <span class="tlaGNC">         244 :   HYPRE_Int *I = hypre_CSRMatrixI(csr);</span></span>
-<span id="L136"><span class="lineNum">     136</span> <span class="tlaGNC">         244 :   HYPRE_BigInt *J = hypre_CSRMatrixBigJ(csr);</span></span>
-<span id="L137"><span class="lineNum">     137</span> <span class="tlaGNC">         244 :   double *data = hypre_CSRMatrixData(csr);</span></span>
+<span id="L132"><span class="lineNum">     132</span> <span class="tlaGNC">         268 :   HYPRE_BigInt glob_n = hypre_ParCSRMatrixGlobalNumRows(parcsr);</span></span>
+<span id="L133"><span class="lineNum">     133</span> <span class="tlaGNC">         268 :   HYPRE_BigInt first_row = hypre_ParCSRMatrixFirstRowIndex(parcsr);</span></span>
+<span id="L134"><span class="lineNum">     134</span> <span class="tlaGNC">         268 :   HYPRE_Int n_loc = hypre_CSRMatrixNumRows(csr);</span></span>
+<span id="L135"><span class="lineNum">     135</span> <span class="tlaGNC">         268 :   HYPRE_Int *I = hypre_CSRMatrixI(csr);</span></span>
+<span id="L136"><span class="lineNum">     136</span> <span class="tlaGNC">         268 :   HYPRE_BigInt *J = hypre_CSRMatrixBigJ(csr);</span></span>
+<span id="L137"><span class="lineNum">     137</span> <span class="tlaGNC">         268 :   double *data = hypre_CSRMatrixData(csr);</span></span>
 <span id="L138"><span class="lineNum">     138</span>              : </span>
 <span id="L139"><span class="lineNum">     139</span>              :   // Safe to delete the matrix since STRUMPACK copies it on input. Also clean up the Hypre</span>
 <span id="L140"><span class="lineNum">     140</span>              :   // data structure once we are done with it.</span>
 <span id="L141"><span class="lineNum">     141</span>              : #if !defined(HYPRE_BIGINT)</span>
-<span id="L142"><span class="lineNum">     142</span> <span class="tlaGNC">         244 :   mfem::STRUMPACKRowLocMatrix A(comm, n_loc, first_row, glob_n, glob_n, I, J, data, true);</span></span>
+<span id="L142"><span class="lineNum">     142</span> <span class="tlaGNC">         268 :   mfem::STRUMPACKRowLocMatrix A(comm, n_loc, first_row, glob_n, glob_n, I, J, data, true);</span></span>
 <span id="L143"><span class="lineNum">     143</span>              : #else</span>
 <span id="L144"><span class="lineNum">     144</span>              :   int n_loc_int = static_cast&lt;int&gt;(n_loc);</span>
 <span id="L145"><span class="lineNum">     145</span>              :   MFEM_ASSERT(n_loc == (HYPRE_Int)n_loc_int,</span>
@@ -223,9 +223,9 @@
 <span id="L153"><span class="lineNum">     153</span>              :   mfem::STRUMPACKRowLocMatrix A(comm, n_loc_int, first_row, glob_n, glob_n, II.HostRead(),</span>
 <span id="L154"><span class="lineNum">     154</span>              :                                 J, data, true);</span>
 <span id="L155"><span class="lineNum">     155</span>              : #endif</span>
-<span id="L156"><span class="lineNum">     156</span> <span class="tlaGNC">         244 :   StrumpackSolverType::SetOperator(A);</span></span>
-<span id="L157"><span class="lineNum">     157</span> <span class="tlaGNC">         244 :   hypre_CSRMatrixDestroy(csr);</span></span>
-<span id="L158"><span class="lineNum">     158</span> <span class="tlaGNC">         244 : }</span></span>
+<span id="L156"><span class="lineNum">     156</span> <span class="tlaGNC">         268 :   StrumpackSolverType::SetOperator(A);</span></span>
+<span id="L157"><span class="lineNum">     157</span> <span class="tlaGNC">         268 :   hypre_CSRMatrixDestroy(csr);</span></span>
+<span id="L158"><span class="lineNum">     158</span> <span class="tlaGNC">         268 : }</span></span>
 <span id="L159"><span class="lineNum">     159</span>              : </span>
 <span id="L160"><span class="lineNum">     160</span>              : template &lt;typename StrumpackSolverType&gt;</span>
 <span id="L161"><span class="lineNum">     161</span> <span class="tlaUNC tlaBgUNC">           0 : void StrumpackSolverBase&lt;StrumpackSolverType&gt;::SetReorderReuse(bool reorder_reuse)</span></span>

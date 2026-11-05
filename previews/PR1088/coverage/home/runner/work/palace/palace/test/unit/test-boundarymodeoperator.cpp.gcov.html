@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntryHi">99.9&nbsp;%</td>
-            <td class="headerCovTableEntry">744</td>
-            <td class="headerCovTableEntry">743</td>
+            <td class="headerCovTableEntry">760</td>
+            <td class="headerCovTableEntry">759</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-10-23 01:41:56</td>
+            <td class="headerValue">2026-11-05 18:04:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -1173,352 +1173,382 @@
 <span id="L1103"><span class="lineNum">    1103</span>              : </span>
 <span id="L1104"><span class="lineNum">    1104</span>              : // BoundaryMode cross-section extracted from a nonconforming 3D mesh: the wave port of</span>
 <span id="L1105"><span class="lineNum">    1105</span>              : // cpw_wave_2dmode on the uncracked mesh, with the elements next to the port refined on</span>
-<span id="L1106"><span class="lineNum">    1106</span>              : // one side of the traces (as an adapted mesh can be). The 2D mesh must keep its boundary</span>
-<span id="L1107"><span class="lineNum">    1107</span>              : // elements through partitioning and uniform refinement, and the DoFs on the PEC edges</span>
-<span id="L1108"><span class="lineNum">    1108</span>              : // (master edges included) must be essential, and no others.</span>
-<span id="L1109"><span class="lineNum">    1109</span> <span class="tlaGNC">           6 : TEST_CASE_METHOD(palace::test::SharedTempDir,</span></span>
-<span id="L1110"><span class="lineNum">    1110</span>              :                  &quot;BoundaryMode cross-section of a nonconforming 3D mesh&quot;,</span>
-<span id="L1111"><span class="lineNum">    1111</span>              :                  &quot;[boundarymodeoperator][Serial][Parallel]&quot;)</span>
-<span id="L1112"><span class="lineNum">    1112</span>              : {</span>
-<span id="L1113"><span class="lineNum">    1113</span> <span class="tlaGNC">           3 :   MPI_Comm comm = Mpi::World();</span></span>
-<span id="L1114"><span class="lineNum">    1114</span> <span class="tlaGNC">           3 :   const auto cpw_dir = fs::path(PALACE_TEST_DATA_DIR) / &quot;regression&quot; / &quot;input&quot; / &quot;cpw&quot;;</span></span>
-<span id="L1115"><span class="lineNum">    1115</span> <span class="tlaGNC">           9 :   auto buffer = PreprocessFile((cpw_dir / &quot;cpw_wave_2dmode.json&quot;).string().c_str());</span></span>
-<span id="L1116"><span class="lineNum">    1116</span> <span class="tlaGNC">           3 :   auto setup = nlohmann::json::parse(buffer);</span></span>
-<span id="L1117"><span class="lineNum">    1117</span> <span class="tlaGNC">          12 :   setup[&quot;Model&quot;][&quot;Mesh&quot;] = (cpw_dir / setup[&quot;Model&quot;][&quot;Mesh&quot;].get&lt;std::string&gt;()).string();</span></span>
-<span id="L1118"><span class="lineNum">    1118</span> <span class="tlaGNC">           6 :   setup[&quot;Model&quot;][&quot;CrackInternalBoundaryElements&quot;] = false;</span></span>
-<span id="L1119"><span class="lineNum">    1119</span> <span class="tlaGNC">          15 :   setup[&quot;Model&quot;][&quot;Refinement&quot;] = {{&quot;UniformLevels&quot;, 1}};</span></span>
-<span id="L1120"><span class="lineNum">    1120</span> <span class="tlaGNC">           3 :   setup[&quot;Problem&quot;][&quot;Output&quot;] = temp_dir.string();</span></span>
-<span id="L1121"><span class="lineNum">    1121</span> <span class="tlaGNC">           3 :   IoData iodata(setup, /*print=*/false);</span></span>
-<span id="L1122"><span class="lineNum">    1122</span> <span class="tlaGNC">           3 :   const std::vector&lt;int&gt; pec = iodata.boundaries.pec.attributes;</span></span>
-<span id="L1123"><span class="lineNum">    1123</span>              : </span>
-<span id="L1124"><span class="lineNum">    1124</span> <span class="tlaGNC">           3 :   auto smesh = mesh::Load(iodata, comm);</span></span>
-<span id="L1125"><span class="lineNum">    1125</span> <span class="tlaGNC">           3 :   if (smesh)</span></span>
-<span id="L1126"><span class="lineNum">    1126</span>              :   {</span>
-<span id="L1127"><span class="lineNum">    1127</span>              :     // Refine the elements next to the cross-section on one side of the traces, the</span>
-<span id="L1128"><span class="lineNum">    1128</span>              :     // interior PEC boundary elements.</span>
-<span id="L1129"><span class="lineNum">    1129</span> <span class="tlaGNC">           2 :     double z_trace = mfem::infinity();</span></span>
-<span id="L1130"><span class="lineNum">    1130</span> <span class="tlaGNC">        8002 :     for (int be = 0; be &lt; smesh-&gt;GetNBE(); be++)</span></span>
-<span id="L1131"><span class="lineNum">    1131</span>              :     {</span>
-<span id="L1132"><span class="lineNum">    1132</span>              :       int e1, e2;</span>
-<span id="L1133"><span class="lineNum">    1133</span> <span class="tlaGNC">        8000 :       smesh-&gt;GetFaceElements(smesh-&gt;GetBdrElementFaceIndex(be), &amp;e1, &amp;e2);</span></span>
-<span id="L1134"><span class="lineNum">    1134</span> <span class="tlaGNC">        8000 :       if (e2 &gt;= 0 &amp;&amp;</span></span>
-<span id="L1135"><span class="lineNum">    1135</span> <span class="tlaGNC">        8000 :           std::find(pec.begin(), pec.end(), smesh-&gt;GetBdrAttribute(be)) != pec.end())</span></span>
-<span id="L1136"><span class="lineNum">    1136</span>              :       {</span>
-<span id="L1137"><span class="lineNum">    1137</span>              :         mfem::Array&lt;int&gt; v;</span>
-<span id="L1138"><span class="lineNum">    1138</span>              :         smesh-&gt;GetBdrElementVertices(be, v);</span>
-<span id="L1139"><span class="lineNum">    1139</span> <span class="tlaGNC">        3894 :         z_trace = std::min(z_trace, smesh-&gt;GetVertex(v[0])[2]);</span></span>
-<span id="L1140"><span class="lineNum">    1140</span>              :       }</span>
-<span id="L1141"><span class="lineNum">    1141</span>              :     }</span>
-<span id="L1142"><span class="lineNum">    1142</span> <span class="tlaGNC">           2 :     REQUIRE(z_trace &lt; mfem::infinity());</span></span>
-<span id="L1143"><span class="lineNum">    1143</span>              :     const auto &amp;attrs = iodata.solver.boundary_mode.attributes;</span>
-<span id="L1144"><span class="lineNum">    1144</span> <span class="tlaGNC">           2 :     smesh-&gt;EnsureNCMesh(true);</span></span>
-<span id="L1145"><span class="lineNum">    1145</span>              :     mfem::Array&lt;int&gt; marked;</span>
-<span id="L1146"><span class="lineNum">    1146</span>              :     mfem::Vector c;</span>
-<span id="L1147"><span class="lineNum">    1147</span> <span class="tlaGNC">        8002 :     for (int be = 0; be &lt; smesh-&gt;GetNBE(); be++)</span></span>
-<span id="L1148"><span class="lineNum">    1148</span>              :     {</span>
-<span id="L1149"><span class="lineNum">    1149</span> <span class="tlaGNC">        8000 :       if (std::find(attrs.begin(), attrs.end(), smesh-&gt;GetBdrAttribute(be)) == attrs.end())</span></span>
-<span id="L1150"><span class="lineNum">    1150</span>              :       {</span>
-<span id="L1151"><span class="lineNum">    1151</span> <span class="tlaGNC">        7812 :         continue;</span></span>
-<span id="L1152"><span class="lineNum">    1152</span>              :       }</span>
-<span id="L1153"><span class="lineNum">    1153</span>              :       int e1, e2;</span>
-<span id="L1154"><span class="lineNum">    1154</span> <span class="tlaGNC">         188 :       smesh-&gt;GetFaceElements(smesh-&gt;GetBdrElementFaceIndex(be), &amp;e1, &amp;e2);</span></span>
-<span id="L1155"><span class="lineNum">    1155</span> <span class="tlaGNC">         188 :       smesh-&gt;GetElementCenter(e1, c);</span></span>
-<span id="L1156"><span class="lineNum">    1156</span> <span class="tlaGNC">         188 :       if (c(2) &gt; z_trace)</span></span>
-<span id="L1157"><span class="lineNum">    1157</span>              :       {</span>
-<span id="L1158"><span class="lineNum">    1158</span> <span class="tlaGNC">          92 :         marked.Append(e1);</span></span>
-<span id="L1159"><span class="lineNum">    1159</span>              :       }</span>
-<span id="L1160"><span class="lineNum">    1160</span>              :     }</span>
-<span id="L1161"><span class="lineNum">    1161</span>              :     marked.Sort();</span>
-<span id="L1162"><span class="lineNum">    1162</span> <span class="tlaGNC">           2 :     marked.Unique();</span></span>
-<span id="L1163"><span class="lineNum">    1163</span> <span class="tlaGNC">           2 :     REQUIRE(marked.Size() &gt; 0);</span></span>
-<span id="L1164"><span class="lineNum">    1164</span> <span class="tlaGNC">           2 :     smesh-&gt;GeneralRefinement(marked, 1, 0);</span></span>
-<span id="L1165"><span class="lineNum">    1165</span>              :   }</span>
-<span id="L1166"><span class="lineNum">    1166</span> <span class="tlaGNC">           3 :   BoundaryModeSolver solver(iodata, Mpi::Root(comm), Mpi::Size(comm), 1, nullptr);</span></span>
-<span id="L1167"><span class="lineNum">    1167</span> <span class="tlaGNC">           3 :   solver.Preprocess(iodata, smesh, comm);</span></span>
-<span id="L1168"><span class="lineNum">    1168</span> <span class="tlaGNC">           3 :   std::vector&lt;std::unique_ptr&lt;mfem::ParMesh&gt;&gt; mfem_mesh;</span></span>
-<span id="L1169"><span class="lineNum">    1169</span> <span class="tlaGNC">           3 :   mfem_mesh.push_back(mesh::Partition(iodata, std::move(smesh), comm));</span></span>
-<span id="L1170"><span class="lineNum">    1170</span>              : </span>
-<span id="L1171"><span class="lineNum">    1171</span>              :   // Segments of the PEC boundary elements of the 2D mesh before its uniform refinement,</span>
-<span id="L1172"><span class="lineNum">    1172</span>              :   // gathered from all ranks (the other wave ports are relabelled as PEC), and the numbers</span>
-<span id="L1173"><span class="lineNum">    1173</span>              :   // of PEC boundary elements and of those in the interior.</span>
-<span id="L1174"><span class="lineNum">    1174</span> <span class="tlaGNC">           6 :   auto CountPEC = [&amp;](const mfem::ParMesh &amp;pmesh, std::vector&lt;double&gt; *segs)</span></span>
-<span id="L1175"><span class="lineNum">    1175</span>              :   {</span>
-<span id="L1176"><span class="lineNum">    1176</span> <span class="tlaGNC">           6 :     std::array&lt;int, 2&gt; n = {0, 0};</span></span>
-<span id="L1177"><span class="lineNum">    1177</span> <span class="tlaGNC">         240 :     for (int be = 0; be &lt; pmesh.GetNBE(); be++)</span></span>
-<span id="L1178"><span class="lineNum">    1178</span>              :     {</span>
-<span id="L1179"><span class="lineNum">    1179</span> <span class="tlaGNC">         234 :       if (std::find(pec.begin(), pec.end(), pmesh.GetBdrAttribute(be)) == pec.end())</span></span>
+<span id="L1106"><span class="lineNum">    1106</span>              : // one side of the traces (as an adapted mesh can be), with straight or curved elements.</span>
+<span id="L1107"><span class="lineNum">    1107</span>              : // The 2D mesh must keep its boundary elements through partitioning and uniform refinement,</span>
+<span id="L1108"><span class="lineNum">    1108</span>              : // the sides of the traces must be identified for error estimation, and the DoFs on the PEC</span>
+<span id="L1109"><span class="lineNum">    1109</span>              : // edges (master edges included) must be essential, and no others.</span>
+<span id="L1110"><span class="lineNum">    1110</span> <span class="tlaGNC">          18 : TEST_CASE_METHOD(palace::test::SharedTempDir,</span></span>
+<span id="L1111"><span class="lineNum">    1111</span>              :                  &quot;BoundaryMode cross-section of a nonconforming 3D mesh&quot;,</span>
+<span id="L1112"><span class="lineNum">    1112</span>              :                  &quot;[boundarymodeoperator][Serial][Parallel]&quot;)</span>
+<span id="L1113"><span class="lineNum">    1113</span>              : {</span>
+<span id="L1114"><span class="lineNum">    1114</span> <span class="tlaGNC">           9 :   const bool curved = GENERATE(false, true);</span></span>
+<span id="L1115"><span class="lineNum">    1115</span> <span class="tlaGNC">           6 :   MPI_Comm comm = Mpi::World();</span></span>
+<span id="L1116"><span class="lineNum">    1116</span> <span class="tlaGNC">           6 :   const auto cpw_dir = fs::path(PALACE_TEST_DATA_DIR) / &quot;regression&quot; / &quot;input&quot; / &quot;cpw&quot;;</span></span>
+<span id="L1117"><span class="lineNum">    1117</span> <span class="tlaGNC">          18 :   auto buffer = PreprocessFile((cpw_dir / &quot;cpw_wave_2dmode.json&quot;).string().c_str());</span></span>
+<span id="L1118"><span class="lineNum">    1118</span> <span class="tlaGNC">           6 :   auto setup = nlohmann::json::parse(buffer);</span></span>
+<span id="L1119"><span class="lineNum">    1119</span> <span class="tlaGNC">          24 :   setup[&quot;Model&quot;][&quot;Mesh&quot;] = (cpw_dir / setup[&quot;Model&quot;][&quot;Mesh&quot;].get&lt;std::string&gt;()).string();</span></span>
+<span id="L1120"><span class="lineNum">    1120</span> <span class="tlaGNC">          12 :   setup[&quot;Model&quot;][&quot;CrackInternalBoundaryElements&quot;] = false;</span></span>
+<span id="L1121"><span class="lineNum">    1121</span> <span class="tlaGNC">          30 :   setup[&quot;Model&quot;][&quot;Refinement&quot;] = {{&quot;UniformLevels&quot;, 1}};</span></span>
+<span id="L1122"><span class="lineNum">    1122</span> <span class="tlaGNC">           6 :   setup[&quot;Problem&quot;][&quot;Output&quot;] = temp_dir.string();</span></span>
+<span id="L1123"><span class="lineNum">    1123</span> <span class="tlaGNC">           6 :   IoData iodata(setup, /*print=*/false);</span></span>
+<span id="L1124"><span class="lineNum">    1124</span> <span class="tlaGNC">           6 :   const std::vector&lt;int&gt; pec = iodata.boundaries.pec.attributes;</span></span>
+<span id="L1125"><span class="lineNum">    1125</span>              : </span>
+<span id="L1126"><span class="lineNum">    1126</span> <span class="tlaGNC">           6 :   auto smesh = mesh::Load(iodata, comm);</span></span>
+<span id="L1127"><span class="lineNum">    1127</span> <span class="tlaGNC">           6 :   if (smesh)</span></span>
+<span id="L1128"><span class="lineNum">    1128</span>              :   {</span>
+<span id="L1129"><span class="lineNum">    1129</span>              :     // Refine the elements next to the cross-section on one side of the traces, the</span>
+<span id="L1130"><span class="lineNum">    1130</span>              :     // interior PEC boundary elements.</span>
+<span id="L1131"><span class="lineNum">    1131</span> <span class="tlaGNC">           4 :     double z_trace = mfem::infinity();</span></span>
+<span id="L1132"><span class="lineNum">    1132</span> <span class="tlaGNC">       16004 :     for (int be = 0; be &lt; smesh-&gt;GetNBE(); be++)</span></span>
+<span id="L1133"><span class="lineNum">    1133</span>              :     {</span>
+<span id="L1134"><span class="lineNum">    1134</span>              :       int e1, e2;</span>
+<span id="L1135"><span class="lineNum">    1135</span> <span class="tlaGNC">       16000 :       smesh-&gt;GetFaceElements(smesh-&gt;GetBdrElementFaceIndex(be), &amp;e1, &amp;e2);</span></span>
+<span id="L1136"><span class="lineNum">    1136</span> <span class="tlaGNC">       16000 :       if (e2 &gt;= 0 &amp;&amp;</span></span>
+<span id="L1137"><span class="lineNum">    1137</span> <span class="tlaGNC">       16000 :           std::find(pec.begin(), pec.end(), smesh-&gt;GetBdrAttribute(be)) != pec.end())</span></span>
+<span id="L1138"><span class="lineNum">    1138</span>              :       {</span>
+<span id="L1139"><span class="lineNum">    1139</span>              :         mfem::Array&lt;int&gt; v;</span>
+<span id="L1140"><span class="lineNum">    1140</span>              :         smesh-&gt;GetBdrElementVertices(be, v);</span>
+<span id="L1141"><span class="lineNum">    1141</span> <span class="tlaGNC">        7788 :         z_trace = std::min(z_trace, smesh-&gt;GetVertex(v[0])[2]);</span></span>
+<span id="L1142"><span class="lineNum">    1142</span>              :       }</span>
+<span id="L1143"><span class="lineNum">    1143</span>              :     }</span>
+<span id="L1144"><span class="lineNum">    1144</span> <span class="tlaGNC">           4 :     REQUIRE(z_trace &lt; mfem::infinity());</span></span>
+<span id="L1145"><span class="lineNum">    1145</span> <span class="tlaGNC">           4 :     if (curved)</span></span>
+<span id="L1146"><span class="lineNum">    1146</span>              :     {</span>
+<span id="L1147"><span class="lineNum">    1147</span>              :       // Curve the elements in the plane of the cross-section with a smooth displacement</span>
+<span id="L1148"><span class="lineNum">    1148</span>              :       // along y and z, which keeps the planes x = const and the exterior boundaries. Its</span>
+<span id="L1149"><span class="lineNum">    1149</span>              :       // direction varies, such that the Jacobian determinant of the elements is quadratic.</span>
+<span id="L1150"><span class="lineNum">    1150</span>              :       mfem::Vector min, max;</span>
+<span id="L1151"><span class="lineNum">    1151</span> <span class="tlaGNC">           2 :       smesh-&gt;GetBoundingBox(min, max);</span></span>
+<span id="L1152"><span class="lineNum">    1152</span> <span class="tlaGNC">           2 :       smesh-&gt;SetCurvature(2);</span></span>
+<span id="L1153"><span class="lineNum">    1153</span>              :       auto &amp;nodes = *smesh-&gt;GetNodes();</span>
+<span id="L1154"><span class="lineNum">    1154</span>              :       const auto &amp;fes = *nodes.FESpace();</span>
+<span id="L1155"><span class="lineNum">    1155</span> <span class="tlaGNC">       41280 :       for (int i = 0; i &lt; fes.GetNDofs(); i++)</span></span>
+<span id="L1156"><span class="lineNum">    1156</span>              :       {</span>
+<span id="L1157"><span class="lineNum">    1157</span> <span class="tlaGNC">       41278 :         const int iy = fes.DofToVDof(i, 1), iz = fes.DofToVDof(i, 2);</span></span>
+<span id="L1158"><span class="lineNum">    1158</span> <span class="tlaGNC">       41278 :         const double sy = (nodes(iy) - min(1)) / (max(1) - min(1)),</span></span>
+<span id="L1159"><span class="lineNum">    1159</span> <span class="tlaGNC">       41278 :                      sz = (nodes(iz) - min(2)) / (max(2) - min(2));</span></span>
+<span id="L1160"><span class="lineNum">    1160</span> <span class="tlaGNC">       41278 :         const double sin_z = std::sin(std::numbers::pi * sz);</span></span>
+<span id="L1161"><span class="lineNum">    1161</span> <span class="tlaGNC">       41278 :         nodes(iy) += 0.02 * (max(1) - min(1)) * std::sin(std::numbers::pi * sy) * sin_z;</span></span>
+<span id="L1162"><span class="lineNum">    1162</span> <span class="tlaGNC">       41278 :         nodes(iz) +=</span></span>
+<span id="L1163"><span class="lineNum">    1163</span> <span class="tlaGNC">       41278 :             0.02 * (max(2) - min(2)) * std::sin(2.0 * std::numbers::pi * sy) * sin_z;</span></span>
+<span id="L1164"><span class="lineNum">    1164</span>              :       }</span>
+<span id="L1165"><span class="lineNum">    1165</span>              :     }</span>
+<span id="L1166"><span class="lineNum">    1166</span>              :     const auto &amp;attrs = iodata.solver.boundary_mode.attributes;</span>
+<span id="L1167"><span class="lineNum">    1167</span> <span class="tlaGNC">           4 :     smesh-&gt;EnsureNCMesh(true);</span></span>
+<span id="L1168"><span class="lineNum">    1168</span>              :     mfem::Array&lt;int&gt; marked;</span>
+<span id="L1169"><span class="lineNum">    1169</span>              :     mfem::Vector c;</span>
+<span id="L1170"><span class="lineNum">    1170</span> <span class="tlaGNC">       16004 :     for (int be = 0; be &lt; smesh-&gt;GetNBE(); be++)</span></span>
+<span id="L1171"><span class="lineNum">    1171</span>              :     {</span>
+<span id="L1172"><span class="lineNum">    1172</span> <span class="tlaGNC">       16000 :       if (std::find(attrs.begin(), attrs.end(), smesh-&gt;GetBdrAttribute(be)) == attrs.end())</span></span>
+<span id="L1173"><span class="lineNum">    1173</span>              :       {</span>
+<span id="L1174"><span class="lineNum">    1174</span> <span class="tlaGNC">       15624 :         continue;</span></span>
+<span id="L1175"><span class="lineNum">    1175</span>              :       }</span>
+<span id="L1176"><span class="lineNum">    1176</span>              :       int e1, e2;</span>
+<span id="L1177"><span class="lineNum">    1177</span> <span class="tlaGNC">         376 :       smesh-&gt;GetFaceElements(smesh-&gt;GetBdrElementFaceIndex(be), &amp;e1, &amp;e2);</span></span>
+<span id="L1178"><span class="lineNum">    1178</span> <span class="tlaGNC">         376 :       smesh-&gt;GetElementCenter(e1, c);</span></span>
+<span id="L1179"><span class="lineNum">    1179</span> <span class="tlaGNC">         376 :       if (c(2) &gt; z_trace)</span></span>
 <span id="L1180"><span class="lineNum">    1180</span>              :       {</span>
-<span id="L1181"><span class="lineNum">    1181</span> <span class="tlaUNC tlaBgUNC">           0 :         continue;</span></span>
+<span id="L1181"><span class="lineNum">    1181</span> <span class="tlaGNC">         198 :         marked.Append(e1);</span></span>
 <span id="L1182"><span class="lineNum">    1182</span>              :       }</span>
-<span id="L1183"><span class="lineNum">    1183</span> <span class="tlaGNC tlaBgGNC">         234 :       n[0]++;</span></span>
-<span id="L1184"><span class="lineNum">    1184</span> <span class="tlaGNC">         234 :       n[1] += pmesh.FaceIsInterior(pmesh.GetBdrElementFaceIndex(be));</span></span>
-<span id="L1185"><span class="lineNum">    1185</span>              :       mfem::Array&lt;int&gt; v;</span>
-<span id="L1186"><span class="lineNum">    1186</span>              :       pmesh.GetBdrElementVertices(be, v);</span>
-<span id="L1187"><span class="lineNum">    1187</span> <span class="tlaGNC">         702 :       for (int i : v)</span></span>
-<span id="L1188"><span class="lineNum">    1188</span>              :       {</span>
-<span id="L1189"><span class="lineNum">    1189</span>              :         double x[2];</span>
-<span id="L1190"><span class="lineNum">    1190</span> <span class="tlaGNC">         468 :         pmesh.GetNode(i, x);</span></span>
-<span id="L1191"><span class="lineNum">    1191</span> <span class="tlaGNC">         468 :         if (segs)</span></span>
-<span id="L1192"><span class="lineNum">    1192</span>              :         {</span>
-<span id="L1193"><span class="lineNum">    1193</span>              :           segs-&gt;insert(segs-&gt;end(), x, x + 2);</span>
-<span id="L1194"><span class="lineNum">    1194</span>              :         }</span>
-<span id="L1195"><span class="lineNum">    1195</span>              :       }</span>
-<span id="L1196"><span class="lineNum">    1196</span>              :     }</span>
-<span id="L1197"><span class="lineNum">    1197</span> <span class="tlaGNC">           6 :     Mpi::GlobalSum(2, n.data(), comm);</span></span>
-<span id="L1198"><span class="lineNum">    1198</span> <span class="tlaGNC">           6 :     return n;</span></span>
-<span id="L1199"><span class="lineNum">    1199</span> <span class="tlaGNC">           3 :   };</span></span>
-<span id="L1200"><span class="lineNum">    1200</span> <span class="tlaGNC">           3 :   std::vector&lt;double&gt; segs;</span></span>
-<span id="L1201"><span class="lineNum">    1201</span> <span class="tlaGNC">           3 :   const auto ne = mfem_mesh.back()-&gt;GetGlobalNE();</span></span>
-<span id="L1202"><span class="lineNum">    1202</span> <span class="tlaGNC">           3 :   const auto nbe_pec = CountPEC(*mfem_mesh.back(), &amp;segs);</span></span>
-<span id="L1203"><span class="lineNum">    1203</span> <span class="tlaGNC">           3 :   CHECK(nbe_pec[0] &gt; 0);</span></span>
-<span id="L1204"><span class="lineNum">    1204</span> <span class="tlaGNC">           3 :   CHECK(nbe_pec[1] &gt; 0);</span></span>
-<span id="L1205"><span class="lineNum">    1205</span> <span class="tlaGNC">           3 :   mesh::RefineMesh(iodata, mfem_mesh);</span></span>
-<span id="L1206"><span class="lineNum">    1206</span> <span class="tlaGNC">           3 :   std::vector&lt;std::unique_ptr&lt;Mesh&gt;&gt; mesh;</span></span>
-<span id="L1207"><span class="lineNum">    1207</span> <span class="tlaGNC">           6 :   for (auto &amp;m : mfem_mesh)</span></span>
-<span id="L1208"><span class="lineNum">    1208</span>              :   {</span>
-<span id="L1209"><span class="lineNum">    1209</span> <span class="tlaGNC">           6 :     mesh.push_back(std::make_unique&lt;Mesh&gt;(std::move(m)));</span></span>
-<span id="L1210"><span class="lineNum">    1210</span>              :   }</span>
-<span id="L1211"><span class="lineNum">    1211</span>              :   const auto &amp;pmesh = mesh.back()-&gt;Get();</span>
-<span id="L1212"><span class="lineNum">    1212</span> <span class="tlaGNC">           6 :   REQUIRE(pmesh.Nonconforming());</span></span>
-<span id="L1213"><span class="lineNum">    1213</span> <span class="tlaGNC">           3 :   REQUIRE(pmesh.GetGlobalNE() == 4 * ne);</span></span>
-<span id="L1214"><span class="lineNum">    1214</span> <span class="tlaGNC">           3 :   CHECK(CountPEC(pmesh, nullptr) == std::array&lt;int, 2&gt;{2 * nbe_pec[0], 2 * nbe_pec[1]});</span></span>
-<span id="L1215"><span class="lineNum">    1215</span> <span class="tlaGNC">           3 :   MaterialOperator mat_op(iodata, *mesh.back());</span></span>
-<span id="L1216"><span class="lineNum">    1216</span> <span class="tlaGNC">           3 :   BoundaryModeOperator mode_op(iodata, mesh, mat_op);</span></span>
-<span id="L1217"><span class="lineNum">    1217</span>              : </span>
-<span id="L1218"><span class="lineNum">    1218</span> <span class="tlaGNC">           3 :   int nloc = static_cast&lt;int&gt;(segs.size()), nproc = Mpi::Size(comm);</span></span>
-<span id="L1219"><span class="lineNum">    1219</span> <span class="tlaGNC">           3 :   std::vector&lt;int&gt; sizes(nproc), displs(nproc, 0);</span></span>
-<span id="L1220"><span class="lineNum">    1220</span> <span class="tlaGNC">           3 :   MPI_Allgather(&amp;nloc, 1, MPI_INT, sizes.data(), 1, MPI_INT, comm);</span></span>
-<span id="L1221"><span class="lineNum">    1221</span> <span class="tlaGNC">           5 :   for (int r = 1; r &lt; nproc; r++)</span></span>
-<span id="L1222"><span class="lineNum">    1222</span>              :   {</span>
-<span id="L1223"><span class="lineNum">    1223</span> <span class="tlaGNC">           2 :     displs[r] = displs[r - 1] + sizes[r - 1];</span></span>
-<span id="L1224"><span class="lineNum">    1224</span>              :   }</span>
-<span id="L1225"><span class="lineNum">    1225</span> <span class="tlaGNC">           3 :   std::vector&lt;double&gt; all_segs(displs.back() + sizes.back());</span></span>
-<span id="L1226"><span class="lineNum">    1226</span> <span class="tlaGNC">           3 :   MPI_Allgatherv(segs.data(), nloc, MPI_DOUBLE, all_segs.data(), sizes.data(),</span></span>
-<span id="L1227"><span class="lineNum">    1227</span>              :                  displs.data(), MPI_DOUBLE, comm);</span>
-<span id="L1228"><span class="lineNum">    1228</span> <span class="tlaGNC">        7872 :   auto OnPEC = [&amp;](const double *x)</span></span>
-<span id="L1229"><span class="lineNum">    1229</span>              :   {</span>
-<span id="L1230"><span class="lineNum">    1230</span> <span class="tlaGNC">      300796 :     for (std::size_t k = 0; k &lt; all_segs.size(); k += 4)</span></span>
-<span id="L1231"><span class="lineNum">    1231</span>              :     {</span>
-<span id="L1232"><span class="lineNum">    1232</span> <span class="tlaGNC">      293600 :       const double *a = &amp;all_segs[k], *b = &amp;all_segs[k + 2];</span></span>
-<span id="L1233"><span class="lineNum">    1233</span> <span class="tlaGNC">      293600 :       const double ab2 = (b[0] - a[0]) * (b[0] - a[0]) + (b[1] - a[1]) * (b[1] - a[1]);</span></span>
-<span id="L1234"><span class="lineNum">    1234</span> <span class="tlaGNC">      293600 :       const double ax_ab = (x[0] - a[0]) * (b[0] - a[0]) + (x[1] - a[1]) * (b[1] - a[1]);</span></span>
-<span id="L1235"><span class="lineNum">    1235</span> <span class="tlaGNC">      293600 :       const double ax2 = (x[0] - a[0]) * (x[0] - a[0]) + (x[1] - a[1]) * (x[1] - a[1]);</span></span>
-<span id="L1236"><span class="lineNum">    1236</span> <span class="tlaGNC">      293600 :       const double t = ax_ab / ab2;</span></span>
-<span id="L1237"><span class="lineNum">    1237</span> <span class="tlaGNC">      293600 :       if (t &gt; -1.0e-9 &amp;&amp; t &lt; 1.0 + 1.0e-9 &amp;&amp; ax2 - t * t * ab2 &lt; 1.0e-12 * ab2)</span></span>
-<span id="L1238"><span class="lineNum">    1238</span>              :       {</span>
-<span id="L1239"><span class="lineNum">    1239</span>              :         return true;</span>
-<span id="L1240"><span class="lineNum">    1240</span>              :       }</span>
-<span id="L1241"><span class="lineNum">    1241</span>              :     }</span>
-<span id="L1242"><span class="lineNum">    1242</span>              :     return false;</span>
-<span id="L1243"><span class="lineNum">    1243</span> <span class="tlaGNC">           3 :   };</span></span>
-<span id="L1244"><span class="lineNum">    1244</span>              : </span>
-<span id="L1245"><span class="lineNum">    1245</span>              :   // Numbers of checked true DoFs on the PEC edges and off them, and on master edges.</span>
-<span id="L1246"><span class="lineNum">    1246</span> <span class="tlaGNC">           3 :   int counts[3] = {0, 0, 0};</span></span>
-<span id="L1247"><span class="lineNum">    1247</span>              :   auto CheckDbcTDofs =</span>
-<span id="L1248"><span class="lineNum">    1248</span> <span class="tlaGNC">           6 :       [&amp;](const FiniteElementSpace &amp;fespace, const mfem::Array&lt;int&gt; &amp;dbc_tdof_list)</span></span>
-<span id="L1249"><span class="lineNum">    1249</span>              :   {</span>
-<span id="L1250"><span class="lineNum">    1250</span>              :     const auto &amp;fes = fespace.Get();</span>
-<span id="L1251"><span class="lineNum">    1251</span> <span class="tlaGNC">           6 :     std::vector&lt;bool&gt; is_dbc(fes.GetTrueVSize(), false);</span></span>
-<span id="L1252"><span class="lineNum">    1252</span> <span class="tlaGNC">         552 :     for (auto t : dbc_tdof_list)</span></span>
-<span id="L1253"><span class="lineNum">    1253</span>              :     {</span>
-<span id="L1254"><span class="lineNum">    1254</span>              :       is_dbc[t] = true;</span>
-<span id="L1255"><span class="lineNum">    1255</span>              :     }</span>
-<span id="L1256"><span class="lineNum">    1256</span> <span class="tlaGNC">        7872 :     auto Check = [&amp;](const mfem::Array&lt;int&gt; &amp;dofs, bool on_pec, bool master)</span></span>
+<span id="L1183"><span class="lineNum">    1183</span>              :     }</span>
+<span id="L1184"><span class="lineNum">    1184</span>              :     marked.Sort();</span>
+<span id="L1185"><span class="lineNum">    1185</span> <span class="tlaGNC">           4 :     marked.Unique();</span></span>
+<span id="L1186"><span class="lineNum">    1186</span> <span class="tlaGNC">           4 :     REQUIRE(marked.Size() &gt; 0);</span></span>
+<span id="L1187"><span class="lineNum">    1187</span> <span class="tlaGNC">           4 :     smesh-&gt;GeneralRefinement(marked, 1, 0);</span></span>
+<span id="L1188"><span class="lineNum">    1188</span>              :   }</span>
+<span id="L1189"><span class="lineNum">    1189</span> <span class="tlaGNC">           6 :   BoundaryModeSolver solver(iodata, Mpi::Root(comm), Mpi::Size(comm), 1, nullptr);</span></span>
+<span id="L1190"><span class="lineNum">    1190</span> <span class="tlaGNC">           6 :   solver.Preprocess(iodata, smesh, comm);</span></span>
+<span id="L1191"><span class="lineNum">    1191</span> <span class="tlaGNC">           6 :   std::vector&lt;std::unique_ptr&lt;mfem::ParMesh&gt;&gt; mfem_mesh;</span></span>
+<span id="L1192"><span class="lineNum">    1192</span> <span class="tlaGNC">           6 :   mfem_mesh.push_back(mesh::Partition(iodata, std::move(smesh), comm));</span></span>
+<span id="L1193"><span class="lineNum">    1193</span>              : </span>
+<span id="L1194"><span class="lineNum">    1194</span>              :   // Segments of the PEC boundary elements of the 2D mesh before its uniform refinement,</span>
+<span id="L1195"><span class="lineNum">    1195</span>              :   // gathered from all ranks (the other wave ports are relabelled as PEC), and the numbers</span>
+<span id="L1196"><span class="lineNum">    1196</span>              :   // of PEC boundary elements and of those in the interior.</span>
+<span id="L1197"><span class="lineNum">    1197</span> <span class="tlaGNC">          12 :   auto CountPEC = [&amp;](const mfem::ParMesh &amp;pmesh, std::vector&lt;double&gt; *segs)</span></span>
+<span id="L1198"><span class="lineNum">    1198</span>              :   {</span>
+<span id="L1199"><span class="lineNum">    1199</span> <span class="tlaGNC">          12 :     std::array&lt;int, 2&gt; n = {0, 0};</span></span>
+<span id="L1200"><span class="lineNum">    1200</span> <span class="tlaGNC">         480 :     for (int be = 0; be &lt; pmesh.GetNBE(); be++)</span></span>
+<span id="L1201"><span class="lineNum">    1201</span>              :     {</span>
+<span id="L1202"><span class="lineNum">    1202</span> <span class="tlaGNC">         468 :       if (std::find(pec.begin(), pec.end(), pmesh.GetBdrAttribute(be)) == pec.end())</span></span>
+<span id="L1203"><span class="lineNum">    1203</span>              :       {</span>
+<span id="L1204"><span class="lineNum">    1204</span> <span class="tlaUNC tlaBgUNC">           0 :         continue;</span></span>
+<span id="L1205"><span class="lineNum">    1205</span>              :       }</span>
+<span id="L1206"><span class="lineNum">    1206</span> <span class="tlaGNC tlaBgGNC">         468 :       n[0]++;</span></span>
+<span id="L1207"><span class="lineNum">    1207</span> <span class="tlaGNC">         468 :       n[1] += pmesh.FaceIsInterior(pmesh.GetBdrElementFaceIndex(be));</span></span>
+<span id="L1208"><span class="lineNum">    1208</span>              :       mfem::Array&lt;int&gt; v;</span>
+<span id="L1209"><span class="lineNum">    1209</span>              :       pmesh.GetBdrElementVertices(be, v);</span>
+<span id="L1210"><span class="lineNum">    1210</span> <span class="tlaGNC">        1404 :       for (int i : v)</span></span>
+<span id="L1211"><span class="lineNum">    1211</span>              :       {</span>
+<span id="L1212"><span class="lineNum">    1212</span>              :         double x[2];</span>
+<span id="L1213"><span class="lineNum">    1213</span> <span class="tlaGNC">         936 :         pmesh.GetNode(i, x);</span></span>
+<span id="L1214"><span class="lineNum">    1214</span> <span class="tlaGNC">         936 :         if (segs)</span></span>
+<span id="L1215"><span class="lineNum">    1215</span>              :         {</span>
+<span id="L1216"><span class="lineNum">    1216</span>              :           segs-&gt;insert(segs-&gt;end(), x, x + 2);</span>
+<span id="L1217"><span class="lineNum">    1217</span>              :         }</span>
+<span id="L1218"><span class="lineNum">    1218</span>              :       }</span>
+<span id="L1219"><span class="lineNum">    1219</span>              :     }</span>
+<span id="L1220"><span class="lineNum">    1220</span> <span class="tlaGNC">          12 :     Mpi::GlobalSum(2, n.data(), comm);</span></span>
+<span id="L1221"><span class="lineNum">    1221</span> <span class="tlaGNC">          12 :     return n;</span></span>
+<span id="L1222"><span class="lineNum">    1222</span> <span class="tlaGNC">           6 :   };</span></span>
+<span id="L1223"><span class="lineNum">    1223</span> <span class="tlaGNC">           6 :   std::vector&lt;double&gt; segs;</span></span>
+<span id="L1224"><span class="lineNum">    1224</span> <span class="tlaGNC">           6 :   const auto ne = mfem_mesh.back()-&gt;GetGlobalNE();</span></span>
+<span id="L1225"><span class="lineNum">    1225</span> <span class="tlaGNC">           6 :   const auto nbe_pec = CountPEC(*mfem_mesh.back(), &amp;segs);</span></span>
+<span id="L1226"><span class="lineNum">    1226</span> <span class="tlaGNC">           6 :   CHECK(nbe_pec[0] &gt; 0);</span></span>
+<span id="L1227"><span class="lineNum">    1227</span> <span class="tlaGNC">           6 :   CHECK(nbe_pec[1] &gt; 0);</span></span>
+<span id="L1228"><span class="lineNum">    1228</span> <span class="tlaGNC">           6 :   mesh::RefineMesh(iodata, mfem_mesh);</span></span>
+<span id="L1229"><span class="lineNum">    1229</span> <span class="tlaGNC">           6 :   std::vector&lt;std::unique_ptr&lt;Mesh&gt;&gt; mesh;</span></span>
+<span id="L1230"><span class="lineNum">    1230</span> <span class="tlaGNC">          12 :   for (auto &amp;m : mfem_mesh)</span></span>
+<span id="L1231"><span class="lineNum">    1231</span>              :   {</span>
+<span id="L1232"><span class="lineNum">    1232</span> <span class="tlaGNC">          12 :     mesh.push_back(std::make_unique&lt;Mesh&gt;(std::move(m)));</span></span>
+<span id="L1233"><span class="lineNum">    1233</span>              :   }</span>
+<span id="L1234"><span class="lineNum">    1234</span>              :   const auto &amp;pmesh = mesh.back()-&gt;Get();</span>
+<span id="L1235"><span class="lineNum">    1235</span> <span class="tlaGNC">          12 :   REQUIRE(pmesh.Nonconforming());</span></span>
+<span id="L1236"><span class="lineNum">    1236</span> <span class="tlaGNC">           6 :   REQUIRE(pmesh.GetGlobalNE() == 4 * ne);</span></span>
+<span id="L1237"><span class="lineNum">    1237</span> <span class="tlaGNC">           6 :   CHECK(CountPEC(pmesh, nullptr) == std::array&lt;int, 2&gt;{2 * nbe_pec[0], 2 * nbe_pec[1]});</span></span>
+<span id="L1238"><span class="lineNum">    1238</span> <span class="tlaGNC">           6 :   bool any_crack = mesh.back()-&gt;GetCrackSides(iodata.boundaries.GetSheetAttributes()).Any();</span></span>
+<span id="L1239"><span class="lineNum">    1239</span> <span class="tlaGNC">           6 :   Mpi::GlobalOr(1, &amp;any_crack, comm);</span></span>
+<span id="L1240"><span class="lineNum">    1240</span> <span class="tlaGNC">          12 :   CHECK(any_crack);</span></span>
+<span id="L1241"><span class="lineNum">    1241</span> <span class="tlaGNC">           6 :   MaterialOperator mat_op(iodata, *mesh.back());</span></span>
+<span id="L1242"><span class="lineNum">    1242</span> <span class="tlaGNC">           6 :   BoundaryModeOperator mode_op(iodata, mesh, mat_op);</span></span>
+<span id="L1243"><span class="lineNum">    1243</span>              : </span>
+<span id="L1244"><span class="lineNum">    1244</span> <span class="tlaGNC">           6 :   int nloc = static_cast&lt;int&gt;(segs.size()), nproc = Mpi::Size(comm);</span></span>
+<span id="L1245"><span class="lineNum">    1245</span> <span class="tlaGNC">           6 :   std::vector&lt;int&gt; sizes(nproc), displs(nproc, 0);</span></span>
+<span id="L1246"><span class="lineNum">    1246</span> <span class="tlaGNC">           6 :   MPI_Allgather(&amp;nloc, 1, MPI_INT, sizes.data(), 1, MPI_INT, comm);</span></span>
+<span id="L1247"><span class="lineNum">    1247</span> <span class="tlaGNC">          10 :   for (int r = 1; r &lt; nproc; r++)</span></span>
+<span id="L1248"><span class="lineNum">    1248</span>              :   {</span>
+<span id="L1249"><span class="lineNum">    1249</span> <span class="tlaGNC">           4 :     displs[r] = displs[r - 1] + sizes[r - 1];</span></span>
+<span id="L1250"><span class="lineNum">    1250</span>              :   }</span>
+<span id="L1251"><span class="lineNum">    1251</span> <span class="tlaGNC">           6 :   std::vector&lt;double&gt; all_segs(displs.back() + sizes.back());</span></span>
+<span id="L1252"><span class="lineNum">    1252</span> <span class="tlaGNC">           6 :   MPI_Allgatherv(segs.data(), nloc, MPI_DOUBLE, all_segs.data(), sizes.data(),</span></span>
+<span id="L1253"><span class="lineNum">    1253</span>              :                  displs.data(), MPI_DOUBLE, comm);</span>
+<span id="L1254"><span class="lineNum">    1254</span> <span class="tlaGNC">        7872 :   auto OnPEC = [&amp;](const double *x)</span></span>
+<span id="L1255"><span class="lineNum">    1255</span>              :   {</span>
+<span id="L1256"><span class="lineNum">    1256</span> <span class="tlaGNC">      301198 :     for (std::size_t k = 0; k &lt; all_segs.size(); k += 4)</span></span>
 <span id="L1257"><span class="lineNum">    1257</span>              :     {</span>
-<span id="L1258"><span class="lineNum">    1258</span> <span class="tlaGNC">       17624 :       for (auto d : dofs)</span></span>
-<span id="L1259"><span class="lineNum">    1259</span>              :       {</span>
-<span id="L1260"><span class="lineNum">    1260</span> <span class="tlaGNC">        9752 :         const int t = fes.GetLocalTDofNumber((d &gt;= 0) ? d : -1 - d);</span></span>
-<span id="L1261"><span class="lineNum">    1261</span> <span class="tlaGNC">        9752 :         if (t &lt; 0)</span></span>
-<span id="L1262"><span class="lineNum">    1262</span>              :         {</span>
-<span id="L1263"><span class="lineNum">    1263</span> <span class="tlaGNC">         294 :           continue;</span></span>
-<span id="L1264"><span class="lineNum">    1264</span>              :         }</span>
-<span id="L1265"><span class="lineNum">    1265</span> <span class="tlaGNC">        9458 :         CHECK(is_dbc[t] == on_pec);</span></span>
-<span id="L1266"><span class="lineNum">    1266</span> <span class="tlaGNC">        9458 :         counts[on_pec ? 0 : 1]++;</span></span>
-<span id="L1267"><span class="lineNum">    1267</span> <span class="tlaGNC">        9458 :         counts[2] += (on_pec &amp;&amp; master);</span></span>
-<span id="L1268"><span class="lineNum">    1268</span>              :       }</span>
-<span id="L1269"><span class="lineNum">    1269</span> <span class="tlaGNC">        7872 :     };</span></span>
-<span id="L1270"><span class="lineNum">    1270</span> <span class="tlaGNC">           6 :     const auto &amp;edge_list = pmesh.ncmesh-&gt;GetEdgeList();</span></span>
-<span id="L1271"><span class="lineNum">    1271</span>              :     mfem::Array&lt;int&gt; v, dofs;</span>
-<span id="L1272"><span class="lineNum">    1272</span> <span class="tlaGNC">        5822 :     for (int e = 0; e &lt; pmesh.GetNEdges(); e++)</span></span>
-<span id="L1273"><span class="lineNum">    1273</span>              :     {</span>
-<span id="L1274"><span class="lineNum">    1274</span>              :       double x0[2], x1[2];</span>
-<span id="L1275"><span class="lineNum">    1275</span> <span class="tlaGNC">        5816 :       pmesh.GetEdgeVertices(e, v);</span></span>
-<span id="L1276"><span class="lineNum">    1276</span> <span class="tlaGNC">        5816 :       pmesh.GetNode(v[0], x0);</span></span>
-<span id="L1277"><span class="lineNum">    1277</span> <span class="tlaGNC">        5816 :       pmesh.GetNode(v[1], x1);</span></span>
-<span id="L1278"><span class="lineNum">    1278</span> <span class="tlaGNC">        5816 :       const double mid[2] = {0.5 * (x0[0] + x1[0]), 0.5 * (x0[1] + x1[1])};</span></span>
-<span id="L1279"><span class="lineNum">    1279</span> <span class="tlaGNC">        5816 :       fes.GetEdgeInteriorDofs(e, dofs);</span></span>
-<span id="L1280"><span class="lineNum">    1280</span> <span class="tlaGNC">        5816 :       Check(dofs, OnPEC(mid),</span></span>
-<span id="L1281"><span class="lineNum">    1281</span> <span class="tlaGNC">        5816 :             edge_list.GetMeshIdAndType(e).type == mfem::NCMesh::NCList::MeshIdType::MASTER);</span></span>
-<span id="L1282"><span class="lineNum">    1282</span>              :     }</span>
-<span id="L1283"><span class="lineNum">    1283</span> <span class="tlaGNC">        2062 :     for (int i = 0; i &lt; pmesh.GetNV(); i++)</span></span>
-<span id="L1284"><span class="lineNum">    1284</span>              :     {</span>
-<span id="L1285"><span class="lineNum">    1285</span>              :       double x[2];</span>
-<span id="L1286"><span class="lineNum">    1286</span> <span class="tlaGNC">        2056 :       pmesh.GetNode(i, x);</span></span>
-<span id="L1287"><span class="lineNum">    1287</span> <span class="tlaGNC">        2056 :       fes.GetVertexDofs(i, dofs);</span></span>
-<span id="L1288"><span class="lineNum">    1288</span> <span class="tlaGNC">        2056 :       Check(dofs, OnPEC(x), false);</span></span>
-<span id="L1289"><span class="lineNum">    1289</span>              :     }</span>
-<span id="L1290"><span class="lineNum">    1290</span> <span class="tlaGNC">           9 :   };</span></span>
-<span id="L1291"><span class="lineNum">    1291</span> <span class="tlaGNC">           3 :   CheckDbcTDofs(mode_op.GetNDSpace(), mode_op.GetNDDbcTDofLists().back());</span></span>
-<span id="L1292"><span class="lineNum">    1292</span> <span class="tlaGNC">           3 :   CheckDbcTDofs(mode_op.GetH1Space(), mode_op.GetH1DbcTDofLists().back());</span></span>
-<span id="L1293"><span class="lineNum">    1293</span> <span class="tlaGNC">           3 :   Mpi::GlobalSum(3, counts, comm);</span></span>
-<span id="L1294"><span class="lineNum">    1294</span> <span class="tlaGNC">           3 :   CHECK(counts[0] &gt; 0);</span></span>
-<span id="L1295"><span class="lineNum">    1295</span> <span class="tlaGNC">           3 :   CHECK(counts[1] &gt; 0);</span></span>
-<span id="L1296"><span class="lineNum">    1296</span> <span class="tlaGNC">           3 :   CHECK(counts[2] &gt; 0);</span></span>
-<span id="L1297"><span class="lineNum">    1297</span> <span class="tlaGNC">          24 : }</span></span>
-<span id="L1298"><span class="lineNum">    1298</span>              : </span>
-<span id="L1299"><span class="lineNum">    1299</span> <span class="tlaGNC">           1 : TEST_CASE(&quot;Mode target distance&quot;, &quot;[boundarymodeoperator][Serial]&quot;)</span></span>
-<span id="L1300"><span class="lineNum">    1300</span>              : {</span>
-<span id="L1301"><span class="lineNum">    1301</span>              :   using mode_assembly::TargetDistance;</span>
-<span id="L1302"><span class="lineNum">    1302</span>              : </span>
-<span id="L1303"><span class="lineNum">    1303</span>              :   // Reported wave-port selections of a strongly evanescent mode of a lossy cross-section</span>
-<span id="L1304"><span class="lineNum">    1304</span>              :   // whose real part lies closer to the target than that of the guided mode, so ranking by</span>
-<span id="L1305"><span class="lineNum">    1305</span>              :   // |Re{kn} - kn_target| picked it: a CPW with absorbing and conductivity boundaries at</span>
-<span id="L1306"><span class="lineNum">    1306</span>              :   // 1 GHz (awslabs/palace#920, in 1/m) and examples/cpw/cpw_wave_uniform.json at 0.1 GHz</span>
-<span id="L1307"><span class="lineNum">    1307</span>              :   // after a sweep to 50 GHz (awslabs/palace#996, nondimensional).</span>
-<span id="L1308"><span class="lineNum">    1308</span>              :   struct ReportedSelection</span>
-<span id="L1309"><span class="lineNum">    1309</span>              :   {</span>
-<span id="L1310"><span class="lineNum">    1310</span>              :     int issue;</span>
-<span id="L1311"><span class="lineNum">    1311</span>              :     double kn_target;</span>
-<span id="L1312"><span class="lineNum">    1312</span>              :     std::complex&lt;double&gt; kn_guided, kn_evanescent;</span>
-<span id="L1313"><span class="lineNum">    1313</span>              :   };</span>
-<span id="L1314"><span class="lineNum">    1314</span> <span class="tlaGNC">           1 :   const ReportedSelection reported[] = {</span></span>
-<span id="L1315"><span class="lineNum">    1315</span>              :       {920, 60.2, {38.07, -4.445}, {51.03, 5677.0}},</span>
-<span id="L1316"><span class="lineNum">    1316</span>              :       {996, 2.981703e-2, {1.988221e-2, -5.136255e-7}, {3.341085e-2, 1.574046e1}}};</span>
-<span id="L1317"><span class="lineNum">    1317</span> <span class="tlaGNC">           3 :   for (const auto &amp;r : reported)</span></span>
+<span id="L1258"><span class="lineNum">    1258</span> <span class="tlaGNC">      294002 :       const double *a = &amp;all_segs[k], *b = &amp;all_segs[k + 2];</span></span>
+<span id="L1259"><span class="lineNum">    1259</span> <span class="tlaGNC">      294002 :       const double ab2 = (b[0] - a[0]) * (b[0] - a[0]) + (b[1] - a[1]) * (b[1] - a[1]);</span></span>
+<span id="L1260"><span class="lineNum">    1260</span> <span class="tlaGNC">      294002 :       const double ax_ab = (x[0] - a[0]) * (b[0] - a[0]) + (x[1] - a[1]) * (b[1] - a[1]);</span></span>
+<span id="L1261"><span class="lineNum">    1261</span> <span class="tlaGNC">      294002 :       const double ax2 = (x[0] - a[0]) * (x[0] - a[0]) + (x[1] - a[1]) * (x[1] - a[1]);</span></span>
+<span id="L1262"><span class="lineNum">    1262</span> <span class="tlaGNC">      294002 :       const double t = ax_ab / ab2;</span></span>
+<span id="L1263"><span class="lineNum">    1263</span> <span class="tlaGNC">      294002 :       if (t &gt; -1.0e-9 &amp;&amp; t &lt; 1.0 + 1.0e-9 &amp;&amp; ax2 - t * t * ab2 &lt; 1.0e-12 * ab2)</span></span>
+<span id="L1264"><span class="lineNum">    1264</span>              :       {</span>
+<span id="L1265"><span class="lineNum">    1265</span>              :         return true;</span>
+<span id="L1266"><span class="lineNum">    1266</span>              :       }</span>
+<span id="L1267"><span class="lineNum">    1267</span>              :     }</span>
+<span id="L1268"><span class="lineNum">    1268</span>              :     return false;</span>
+<span id="L1269"><span class="lineNum">    1269</span> <span class="tlaGNC">           6 :   };</span></span>
+<span id="L1270"><span class="lineNum">    1270</span>              : </span>
+<span id="L1271"><span class="lineNum">    1271</span>              :   // Numbers of checked true DoFs on the PEC edges and off them, and on master edges.</span>
+<span id="L1272"><span class="lineNum">    1272</span> <span class="tlaGNC">           6 :   int counts[3] = {0, 0, 0};</span></span>
+<span id="L1273"><span class="lineNum">    1273</span>              :   auto CheckDbcTDofs =</span>
+<span id="L1274"><span class="lineNum">    1274</span> <span class="tlaGNC">           6 :       [&amp;](const FiniteElementSpace &amp;fespace, const mfem::Array&lt;int&gt; &amp;dbc_tdof_list)</span></span>
+<span id="L1275"><span class="lineNum">    1275</span>              :   {</span>
+<span id="L1276"><span class="lineNum">    1276</span>              :     const auto &amp;fes = fespace.Get();</span>
+<span id="L1277"><span class="lineNum">    1277</span> <span class="tlaGNC">           6 :     std::vector&lt;bool&gt; is_dbc(fes.GetTrueVSize(), false);</span></span>
+<span id="L1278"><span class="lineNum">    1278</span> <span class="tlaGNC">         552 :     for (auto t : dbc_tdof_list)</span></span>
+<span id="L1279"><span class="lineNum">    1279</span>              :     {</span>
+<span id="L1280"><span class="lineNum">    1280</span>              :       is_dbc[t] = true;</span>
+<span id="L1281"><span class="lineNum">    1281</span>              :     }</span>
+<span id="L1282"><span class="lineNum">    1282</span> <span class="tlaGNC">        7872 :     auto Check = [&amp;](const mfem::Array&lt;int&gt; &amp;dofs, bool on_pec, bool master)</span></span>
+<span id="L1283"><span class="lineNum">    1283</span>              :     {</span>
+<span id="L1284"><span class="lineNum">    1284</span> <span class="tlaGNC">       17624 :       for (auto d : dofs)</span></span>
+<span id="L1285"><span class="lineNum">    1285</span>              :       {</span>
+<span id="L1286"><span class="lineNum">    1286</span> <span class="tlaGNC">        9752 :         const int t = fes.GetLocalTDofNumber((d &gt;= 0) ? d : -1 - d);</span></span>
+<span id="L1287"><span class="lineNum">    1287</span> <span class="tlaGNC">        9752 :         if (t &lt; 0)</span></span>
+<span id="L1288"><span class="lineNum">    1288</span>              :         {</span>
+<span id="L1289"><span class="lineNum">    1289</span> <span class="tlaGNC">         294 :           continue;</span></span>
+<span id="L1290"><span class="lineNum">    1290</span>              :         }</span>
+<span id="L1291"><span class="lineNum">    1291</span> <span class="tlaGNC">        9458 :         CHECK(is_dbc[t] == on_pec);</span></span>
+<span id="L1292"><span class="lineNum">    1292</span> <span class="tlaGNC">        9458 :         counts[on_pec ? 0 : 1]++;</span></span>
+<span id="L1293"><span class="lineNum">    1293</span> <span class="tlaGNC">        9458 :         counts[2] += (on_pec &amp;&amp; master);</span></span>
+<span id="L1294"><span class="lineNum">    1294</span>              :       }</span>
+<span id="L1295"><span class="lineNum">    1295</span> <span class="tlaGNC">        7872 :     };</span></span>
+<span id="L1296"><span class="lineNum">    1296</span> <span class="tlaGNC">           6 :     const auto &amp;edge_list = pmesh.ncmesh-&gt;GetEdgeList();</span></span>
+<span id="L1297"><span class="lineNum">    1297</span>              :     mfem::Array&lt;int&gt; v, dofs;</span>
+<span id="L1298"><span class="lineNum">    1298</span> <span class="tlaGNC">        5822 :     for (int e = 0; e &lt; pmesh.GetNEdges(); e++)</span></span>
+<span id="L1299"><span class="lineNum">    1299</span>              :     {</span>
+<span id="L1300"><span class="lineNum">    1300</span>              :       double x0[2], x1[2];</span>
+<span id="L1301"><span class="lineNum">    1301</span> <span class="tlaGNC">        5816 :       pmesh.GetEdgeVertices(e, v);</span></span>
+<span id="L1302"><span class="lineNum">    1302</span> <span class="tlaGNC">        5816 :       pmesh.GetNode(v[0], x0);</span></span>
+<span id="L1303"><span class="lineNum">    1303</span> <span class="tlaGNC">        5816 :       pmesh.GetNode(v[1], x1);</span></span>
+<span id="L1304"><span class="lineNum">    1304</span> <span class="tlaGNC">        5816 :       const double mid[2] = {0.5 * (x0[0] + x1[0]), 0.5 * (x0[1] + x1[1])};</span></span>
+<span id="L1305"><span class="lineNum">    1305</span> <span class="tlaGNC">        5816 :       fes.GetEdgeInteriorDofs(e, dofs);</span></span>
+<span id="L1306"><span class="lineNum">    1306</span> <span class="tlaGNC">        5816 :       Check(dofs, OnPEC(mid),</span></span>
+<span id="L1307"><span class="lineNum">    1307</span> <span class="tlaGNC">        5816 :             edge_list.GetMeshIdAndType(e).type == mfem::NCMesh::NCList::MeshIdType::MASTER);</span></span>
+<span id="L1308"><span class="lineNum">    1308</span>              :     }</span>
+<span id="L1309"><span class="lineNum">    1309</span> <span class="tlaGNC">        2062 :     for (int i = 0; i &lt; pmesh.GetNV(); i++)</span></span>
+<span id="L1310"><span class="lineNum">    1310</span>              :     {</span>
+<span id="L1311"><span class="lineNum">    1311</span>              :       double x[2];</span>
+<span id="L1312"><span class="lineNum">    1312</span> <span class="tlaGNC">        2056 :       pmesh.GetNode(i, x);</span></span>
+<span id="L1313"><span class="lineNum">    1313</span> <span class="tlaGNC">        2056 :       fes.GetVertexDofs(i, dofs);</span></span>
+<span id="L1314"><span class="lineNum">    1314</span> <span class="tlaGNC">        2056 :       Check(dofs, OnPEC(x), false);</span></span>
+<span id="L1315"><span class="lineNum">    1315</span>              :     }</span>
+<span id="L1316"><span class="lineNum">    1316</span> <span class="tlaGNC">           6 :   };</span></span>
+<span id="L1317"><span class="lineNum">    1317</span> <span class="tlaGNC">           6 :   if (!curved)</span></span>
 <span id="L1318"><span class="lineNum">    1318</span>              :   {</span>
-<span id="L1319"><span class="lineNum">    1319</span> <span class="tlaGNC">           2 :     CAPTURE(r.issue);</span></span>
-<span id="L1320"><span class="lineNum">    1320</span> <span class="tlaGNC">           2 :     REQUIRE(std::abs(r.kn_evanescent.real() - r.kn_target) &lt;</span></span>
-<span id="L1321"><span class="lineNum">    1321</span>              :             std::abs(r.kn_guided.real() - r.kn_target));</span>
-<span id="L1322"><span class="lineNum">    1322</span> <span class="tlaGNC">           2 :     CHECK(TargetDistance(r.kn_guided, r.kn_target) &lt;</span></span>
-<span id="L1323"><span class="lineNum">    1323</span>              :           TargetDistance(r.kn_evanescent, r.kn_target));</span>
-<span id="L1324"><span class="lineNum">    1324</span> <span class="tlaGNC">           2 :   }</span></span>
-<span id="L1325"><span class="lineNum">    1325</span>              :   const double kn_target = reported[1].kn_target;</span>
-<span id="L1326"><span class="lineNum">    1326</span>              :   const std::complex&lt;double&gt; kn_cpw = reported[1].kn_guided;</span>
-<span id="L1327"><span class="lineNum">    1327</span> <span class="tlaGNC">           1 :   const std::complex&lt;double&gt; kn_evanescent = reported[1].kn_evanescent;</span></span>
+<span id="L1319"><span class="lineNum">    1319</span>              :     // The PEC edges are straight segments.</span>
+<span id="L1320"><span class="lineNum">    1320</span> <span class="tlaGNC">           3 :     CheckDbcTDofs(mode_op.GetNDSpace(), mode_op.GetNDDbcTDofLists().back());</span></span>
+<span id="L1321"><span class="lineNum">    1321</span> <span class="tlaGNC">           3 :     CheckDbcTDofs(mode_op.GetH1Space(), mode_op.GetH1DbcTDofLists().back());</span></span>
+<span id="L1322"><span class="lineNum">    1322</span> <span class="tlaGNC">           3 :     Mpi::GlobalSum(3, counts, comm);</span></span>
+<span id="L1323"><span class="lineNum">    1323</span> <span class="tlaGNC">           3 :     CHECK(counts[0] &gt; 0);</span></span>
+<span id="L1324"><span class="lineNum">    1324</span> <span class="tlaGNC">           3 :     CHECK(counts[1] &gt; 0);</span></span>
+<span id="L1325"><span class="lineNum">    1325</span> <span class="tlaGNC">           3 :     CHECK(counts[2] &gt; 0);</span></span>
+<span id="L1326"><span class="lineNum">    1326</span>              :   }</span>
+<span id="L1327"><span class="lineNum">    1327</span> <span class="tlaGNC">          48 : }</span></span>
 <span id="L1328"><span class="lineNum">    1328</span>              : </span>
-<span id="L1329"><span class="lineNum">    1329</span>              :   // Lossless propagating modes below the target rank by descending kn, ahead of all</span>
-<span id="L1330"><span class="lineNum">    1330</span>              :   // lossless evanescent modes, which rank by ascending attenuation.</span>
-<span id="L1331"><span class="lineNum">    1331</span>              :   const double kt = 1.0;</span>
-<span id="L1332"><span class="lineNum">    1332</span> <span class="tlaGNC">           1 :   CHECK(TargetDistance(0.9 * kt, kt) &lt; TargetDistance(0.5 * kt, kt));</span></span>
-<span id="L1333"><span class="lineNum">    1333</span> <span class="tlaGNC">           1 :   CHECK(TargetDistance(0.5 * kt, kt) &lt; TargetDistance(1.0e-3 * kt, kt));</span></span>
-<span id="L1334"><span class="lineNum">    1334</span> <span class="tlaGNC">           1 :   CHECK(TargetDistance(1.0e-3 * kt, kt) &lt;</span></span>
-<span id="L1335"><span class="lineNum">    1335</span>              :         TargetDistance(std::complex&lt;double&gt;(0.0, 1.0e-3 * kt), kt));</span>
-<span id="L1336"><span class="lineNum">    1336</span> <span class="tlaGNC">           1 :   CHECK(TargetDistance(std::complex&lt;double&gt;(0.0, 1.0e-3 * kt), kt) &lt;</span></span>
-<span id="L1337"><span class="lineNum">    1337</span>              :         TargetDistance(std::complex&lt;double&gt;(0.0, 10.0 * kt), kt));</span>
-<span id="L1338"><span class="lineNum">    1338</span>              : </span>
-<span id="L1339"><span class="lineNum">    1339</span>              :   // Invariant under conjugation: a near-cutoff mode may land on either side of the branch</span>
-<span id="L1340"><span class="lineNum">    1340</span>              :   // cut of the principal square root.</span>
-<span id="L1341"><span class="lineNum">    1341</span> <span class="tlaGNC">           4 :   for (const auto kn : {kn_cpw, kn_evanescent, std::complex&lt;double&gt;(0.3, -0.7)})</span></span>
-<span id="L1342"><span class="lineNum">    1342</span>              :   {</span>
-<span id="L1343"><span class="lineNum">    1343</span> <span class="tlaGNC">           3 :     CHECK(TargetDistance(std::conj(kn), kn_target) == TargetDistance(kn, kn_target));</span></span>
-<span id="L1344"><span class="lineNum">    1344</span>              :   }</span>
-<span id="L1345"><span class="lineNum">    1345</span>              : </span>
-<span id="L1346"><span class="lineNum">    1346</span>              :   // Non-finite values rank last, after any finite candidate.</span>
-<span id="L1347"><span class="lineNum">    1347</span>              :   const double inf = std::numeric_limits&lt;double&gt;::infinity();</span>
-<span id="L1348"><span class="lineNum">    1348</span>              :   const double nan = std::numeric_limits&lt;double&gt;::quiet_NaN();</span>
-<span id="L1349"><span class="lineNum">    1349</span> <span class="tlaGNC">           1 :   CHECK(TargetDistance(std::complex&lt;double&gt;(nan, 0.0), kt) == inf);</span></span>
-<span id="L1350"><span class="lineNum">    1350</span> <span class="tlaGNC">           1 :   CHECK(TargetDistance(std::complex&lt;double&gt;(0.0, nan), kt) == inf);</span></span>
-<span id="L1351"><span class="lineNum">    1351</span> <span class="tlaGNC">           1 :   CHECK(TargetDistance(std::complex&lt;double&gt;(nan, inf), kt) == inf);</span></span>
-<span id="L1352"><span class="lineNum">    1352</span> <span class="tlaGNC">           1 :   CHECK(TargetDistance(std::complex&lt;double&gt;(inf, 0.0), kt) == inf);</span></span>
-<span id="L1353"><span class="lineNum">    1353</span> <span class="tlaGNC">           1 :   CHECK(TargetDistance(kn_evanescent, kt) &lt; inf);</span></span>
-<span id="L1354"><span class="lineNum">    1354</span> <span class="tlaGNC">           1 : }</span></span>
-<span id="L1355"><span class="lineNum">    1355</span>              : </span>
-<span id="L1356"><span class="lineNum">    1356</span> <span class="tlaGNC">           3 : TEST_CASE(&quot;ModeEigenSolver ranks evanescent modes below cutoff by attenuation&quot;,</span></span>
-<span id="L1357"><span class="lineNum">    1357</span>              :           &quot;[boundarymodeoperator][Serial][Parallel]&quot;)</span>
-<span id="L1358"><span class="lineNum">    1358</span>              : {</span>
-<span id="L1359"><span class="lineNum">    1359</span>              :   // Below the TE10 cutoff (75 GHz for this 1000 x 500 um guide with eps = 4) every mode of</span>
-<span id="L1360"><span class="lineNum">    1360</span>              :   // a lossless guide is evanescent: the real parts of the computed kn are round-off and</span>
-<span id="L1361"><span class="lineNum">    1361</span>              :   // carry no ranking information, and ranking on them returned an arbitrary evanescent mode</span>
-<span id="L1362"><span class="lineNum">    1362</span>              :   // as mode 1 (e.g. |S11| &gt; 0 dB for a lossless shorted guide driven below cutoff). Both</span>
-<span id="L1363"><span class="lineNum">    1363</span>              :   // the exact and the reduced solve must rank the modes least-attenuated first, so mode 1</span>
-<span id="L1364"><span class="lineNum">    1364</span>              :   // is the continuation of TE10 through cutoff.</span>
-<span id="L1365"><span class="lineNum">    1365</span>              :   constexpr int num_modes = 3;</span>
-<span id="L1366"><span class="lineNum">    1366</span>              :   constexpr double freq_ghz = 60.0, epsilon_r = 4.0;</span>
-<span id="L1367"><span class="lineNum">    1367</span> <span class="tlaGNC">           6 :   auto exact = SolveRectangularModes(1000.0, 500.0, freq_ghz, epsilon_r, 2, num_modes,</span></span>
-<span id="L1368"><span class="lineNum">    1368</span> <span class="tlaGNC">           3 :                                      [](IoData &amp;) {});</span></span>
-<span id="L1369"><span class="lineNum">    1369</span> <span class="tlaGNC">           3 :   REQUIRE(exact.num_converged &gt;= num_modes);</span></span>
-<span id="L1370"><span class="lineNum">    1370</span> <span class="tlaGNC">          18 :   for (int i = 0; i &lt; exact.num_converged; i++)</span></span>
-<span id="L1371"><span class="lineNum">    1371</span>              :   {</span>
-<span id="L1372"><span class="lineNum">    1372</span> <span class="tlaGNC">          15 :     CAPTURE(i, exact.kn[i]);</span></span>
-<span id="L1373"><span class="lineNum">    1373</span> <span class="tlaGNC">          15 :     REQUIRE(std::abs(exact.kn[i].real()) &lt;= 1.0e-6 * std::abs(exact.kn[i].imag()));</span></span>
-<span id="L1374"><span class="lineNum">    1374</span> <span class="tlaGNC">          15 :     if (i &gt; 0)</span></span>
-<span id="L1375"><span class="lineNum">    1375</span>              :     {</span>
-<span id="L1376"><span class="lineNum">    1376</span> <span class="tlaGNC">          12 :       CHECK(std::abs(exact.kn[i - 1].imag()) &lt;=</span></span>
-<span id="L1377"><span class="lineNum">    1377</span>              :             (1.0 + 1.0e-6) * std::abs(exact.kn[i].imag()));</span>
-<span id="L1378"><span class="lineNum">    1378</span>              :     }</span>
-<span id="L1379"><span class="lineNum">    1379</span> <span class="tlaGNC">          15 :   }</span></span>
-<span id="L1380"><span class="lineNum">    1380</span>              : </span>
-<span id="L1381"><span class="lineNum">    1381</span>              :   // TE10 attenuation constant sqrt((pi/a)^2 - eps k0^2), nondimensionalized by 1 um.</span>
-<span id="L1382"><span class="lineNum">    1382</span>              :   const double kc = std::numbers::pi / 1000.0;</span>
-<span id="L1383"><span class="lineNum">    1383</span>              :   const double k = std::sqrt(epsilon_r) * 2.0 * std::numbers::pi * freq_ghz * 1.0e9 /</span>
-<span id="L1384"><span class="lineNum">    1384</span>              :                    electromagnetics::c0_ * 1.0e-6;</span>
-<span id="L1385"><span class="lineNum">    1385</span> <span class="tlaGNC">           3 :   CHECK_THAT(std::abs(exact.kn[0].imag()), WithinRel(std::sqrt(kc * kc - k * k), 1.0e-3));</span></span>
-<span id="L1386"><span class="lineNum">    1386</span>              : </span>
-<span id="L1387"><span class="lineNum">    1387</span>              :   // Train the reduced model below cutoff as well (0.9 and 1.1 times the frequency). Compare</span>
-<span id="L1388"><span class="lineNum">    1388</span>              :   // kn^2, which does not depend on the sign of i|kn| returned for an evanescent mode.</span>
-<span id="L1389"><span class="lineNum">    1389</span> <span class="tlaGNC">           6 :   auto reduced = SolveRectangularModes(</span></span>
-<span id="L1390"><span class="lineNum">    1390</span> <span class="tlaGNC">           3 :       1000.0, 500.0, freq_ghz, epsilon_r, 2, num_modes, [](IoData &amp;) {}, true);</span></span>
-<span id="L1391"><span class="lineNum">    1391</span> <span class="tlaGNC">           3 :   REQUIRE(reduced.reduced_stats.reduced_solves == 1);</span></span>
-<span id="L1392"><span class="lineNum">    1392</span> <span class="tlaGNC">           3 :   REQUIRE(reduced.kn.size() == num_modes);</span></span>
-<span id="L1393"><span class="lineNum">    1393</span> <span class="tlaGNC">          12 :   for (int i = 0; i &lt; num_modes; i++)</span></span>
-<span id="L1394"><span class="lineNum">    1394</span>              :   {</span>
-<span id="L1395"><span class="lineNum">    1395</span> <span class="tlaGNC">           9 :     CAPTURE(i, reduced.kn[i], exact.kn[i]);</span></span>
-<span id="L1396"><span class="lineNum">    1396</span> <span class="tlaGNC">           9 :     CHECK(std::abs(reduced.kn[i] * reduced.kn[i] - exact.kn[i] * exact.kn[i]) &lt;=</span></span>
-<span id="L1397"><span class="lineNum">    1397</span>              :           1.0e-6 * std::norm(exact.kn[i]));</span>
-<span id="L1398"><span class="lineNum">    1398</span> <span class="tlaGNC">           9 :   }</span></span>
-<span id="L1399"><span class="lineNum">    1399</span> <span class="tlaGNC">           3 : }</span></span>
-<span id="L1400"><span class="lineNum">    1400</span>              : </span>
-<span id="L1401"><span class="lineNum">    1401</span> <span class="tlaGNC">           3 : TEST_CASE(&quot;ModeEigenSolver ranks lossy modes by complex target distance&quot;,</span></span>
-<span id="L1402"><span class="lineNum">    1402</span>              :           &quot;[boundarymodeoperator][Serial][Parallel]&quot;)</span>
-<span id="L1403"><span class="lineNum">    1403</span>              : {</span>
-<span id="L1404"><span class="lineNum">    1404</span>              :   // A resistive top wall gives the modes attenuation comparable to the spacing of their</span>
-<span id="L1405"><span class="lineNum">    1405</span>              :   // phase constants, so ranking by |Re{kn} - kn_target| and by |kn - kn_target| disagree.</span>
-<span id="L1406"><span class="lineNum">    1406</span>              :   // Exact and reduced solves must both return the modes in ascending complex distance.</span>
-<span id="L1407"><span class="lineNum">    1407</span> <span class="tlaGNC">           6 :   auto configure_resistive_wall = [](IoData &amp;iodata)</span></span>
-<span id="L1408"><span class="lineNum">    1408</span>              :   {</span>
-<span id="L1409"><span class="lineNum">    1409</span> <span class="tlaGNC">           6 :     iodata.boundaries.pec.attributes = {1, 2, 4};</span></span>
-<span id="L1410"><span class="lineNum">    1410</span> <span class="tlaGNC">           6 :     auto &amp;imp = iodata.boundaries.impedance.emplace_back();</span></span>
-<span id="L1411"><span class="lineNum">    1411</span> <span class="tlaGNC">           6 :     imp.attributes = {3};</span></span>
-<span id="L1412"><span class="lineNum">    1412</span> <span class="tlaGNC">           6 :     imp.Rs = 377.0;</span></span>
-<span id="L1413"><span class="lineNum">    1413</span> <span class="tlaGNC">           6 :   };</span></span>
-<span id="L1414"><span class="lineNum">    1414</span>              :   constexpr int num_modes = 3;</span>
-<span id="L1415"><span class="lineNum">    1415</span> <span class="tlaGNC">           6 :   auto exact = SolveRectangularModes(1000.0, 500.0, 200.0, 4.0, 2, num_modes,</span></span>
-<span id="L1416"><span class="lineNum">    1416</span> <span class="tlaGNC">           3 :                                      configure_resistive_wall);</span></span>
-<span id="L1417"><span class="lineNum">    1417</span> <span class="tlaGNC">           3 :   REQUIRE(exact.num_converged &gt;= num_modes);</span></span>
-<span id="L1418"><span class="lineNum">    1418</span> <span class="tlaGNC">           3 :   const double kn_target = exact.kn_target;</span></span>
-<span id="L1419"><span class="lineNum">    1419</span> <span class="tlaGNC">           9 :   for (int i = 1; i &lt; exact.num_converged; i++)</span></span>
-<span id="L1420"><span class="lineNum">    1420</span>              :   {</span>
-<span id="L1421"><span class="lineNum">    1421</span> <span class="tlaGNC">           6 :     CAPTURE(i, exact.kn[i - 1], exact.kn[i]);</span></span>
-<span id="L1422"><span class="lineNum">    1422</span> <span class="tlaGNC">           6 :     CHECK(mode_assembly::TargetDistance(exact.kn[i - 1], kn_target) &lt;=</span></span>
-<span id="L1423"><span class="lineNum">    1423</span>              :           mode_assembly::TargetDistance(exact.kn[i], kn_target));</span>
-<span id="L1424"><span class="lineNum">    1424</span> <span class="tlaGNC">           6 :   }</span></span>
-<span id="L1425"><span class="lineNum">    1425</span>              : </span>
-<span id="L1426"><span class="lineNum">    1426</span>              :   // Guard the premise: some returned mode has a real part closer to the target than the</span>
-<span id="L1427"><span class="lineNum">    1427</span>              :   // first-ranked mode, so a real-part ranking would select differently.</span>
-<span id="L1428"><span class="lineNum">    1428</span>              :   bool real_part_ranking_differs = false;</span>
-<span id="L1429"><span class="lineNum">    1429</span> <span class="tlaGNC">           9 :   for (int i = 1; i &lt; exact.num_converged; i++)</span></span>
-<span id="L1430"><span class="lineNum">    1430</span>              :   {</span>
-<span id="L1431"><span class="lineNum">    1431</span>              :     real_part_ranking_differs =</span>
-<span id="L1432"><span class="lineNum">    1432</span> <span class="tlaGNC">           6 :         real_part_ranking_differs ||</span></span>
-<span id="L1433"><span class="lineNum">    1433</span> <span class="tlaGNC">           3 :         std::abs(exact.kn[i].real() - kn_target) &lt; std::abs(exact.kn[0].real() - kn_target);</span></span>
-<span id="L1434"><span class="lineNum">    1434</span>              :   }</span>
-<span id="L1435"><span class="lineNum">    1435</span> <span class="tlaGNC">           6 :   REQUIRE(real_part_ranking_differs);</span></span>
-<span id="L1436"><span class="lineNum">    1436</span>              : </span>
-<span id="L1437"><span class="lineNum">    1437</span>              :   // The reduced wave-port solve, trained with all ranked modes around the target, must</span>
-<span id="L1438"><span class="lineNum">    1438</span>              :   // select the same modes in the same order.</span>
-<span id="L1439"><span class="lineNum">    1439</span> <span class="tlaGNC">           6 :   auto reduced = SolveRectangularModes(1000.0, 500.0, 200.0, 4.0, 2, num_modes,</span></span>
-<span id="L1440"><span class="lineNum">    1440</span>              :                                        configure_resistive_wall, true, 1, 16,</span>
-<span id="L1441"><span class="lineNum">    1441</span> <span class="tlaGNC">           3 :                                        {0.95, 0.98, 1.02, 1.05}, 1.0e-2);</span></span>
-<span id="L1442"><span class="lineNum">    1442</span> <span class="tlaGNC">           3 :   REQUIRE(reduced.reduced_stats.reduced_solves == 1);</span></span>
-<span id="L1443"><span class="lineNum">    1443</span> <span class="tlaGNC">           3 :   REQUIRE(reduced.kn.size() == num_modes);</span></span>
-<span id="L1444"><span class="lineNum">    1444</span> <span class="tlaGNC">          12 :   for (int i = 0; i &lt; num_modes; i++)</span></span>
-<span id="L1445"><span class="lineNum">    1445</span>              :   {</span>
-<span id="L1446"><span class="lineNum">    1446</span> <span class="tlaGNC">           9 :     CAPTURE(i, reduced.kn[i], exact.kn[i]);</span></span>
-<span id="L1447"><span class="lineNum">    1447</span> <span class="tlaGNC">           9 :     CHECK(std::abs(reduced.kn[i] - exact.kn[i]) &lt;= 1.0e-5 * std::abs(exact.kn[i]));</span></span>
-<span id="L1448"><span class="lineNum">    1448</span> <span class="tlaGNC">           9 :   }</span></span>
-<span id="L1449"><span class="lineNum">    1449</span> <span class="tlaGNC">           3 : }</span></span>
-<span id="L1450"><span class="lineNum">    1450</span>              : </span>
-<span id="L1451"><span class="lineNum">    1451</span>              : }  // namespace palace</span>
+<span id="L1329"><span class="lineNum">    1329</span> <span class="tlaGNC">           1 : TEST_CASE(&quot;Mode target distance&quot;, &quot;[boundarymodeoperator][Serial]&quot;)</span></span>
+<span id="L1330"><span class="lineNum">    1330</span>              : {</span>
+<span id="L1331"><span class="lineNum">    1331</span>              :   using mode_assembly::TargetDistance;</span>
+<span id="L1332"><span class="lineNum">    1332</span>              : </span>
+<span id="L1333"><span class="lineNum">    1333</span>              :   // Reported wave-port selections of a strongly evanescent mode of a lossy cross-section</span>
+<span id="L1334"><span class="lineNum">    1334</span>              :   // whose real part lies closer to the target than that of the guided mode, so ranking by</span>
+<span id="L1335"><span class="lineNum">    1335</span>              :   // |Re{kn} - kn_target| picked it: a CPW with absorbing and conductivity boundaries at</span>
+<span id="L1336"><span class="lineNum">    1336</span>              :   // 1 GHz (awslabs/palace#920, in 1/m) and examples/cpw/cpw_wave_uniform.json at 0.1 GHz</span>
+<span id="L1337"><span class="lineNum">    1337</span>              :   // after a sweep to 50 GHz (awslabs/palace#996, nondimensional).</span>
+<span id="L1338"><span class="lineNum">    1338</span>              :   struct ReportedSelection</span>
+<span id="L1339"><span class="lineNum">    1339</span>              :   {</span>
+<span id="L1340"><span class="lineNum">    1340</span>              :     int issue;</span>
+<span id="L1341"><span class="lineNum">    1341</span>              :     double kn_target;</span>
+<span id="L1342"><span class="lineNum">    1342</span>              :     std::complex&lt;double&gt; kn_guided, kn_evanescent;</span>
+<span id="L1343"><span class="lineNum">    1343</span>              :   };</span>
+<span id="L1344"><span class="lineNum">    1344</span> <span class="tlaGNC">           1 :   const ReportedSelection reported[] = {</span></span>
+<span id="L1345"><span class="lineNum">    1345</span>              :       {920, 60.2, {38.07, -4.445}, {51.03, 5677.0}},</span>
+<span id="L1346"><span class="lineNum">    1346</span>              :       {996, 2.981703e-2, {1.988221e-2, -5.136255e-7}, {3.341085e-2, 1.574046e1}}};</span>
+<span id="L1347"><span class="lineNum">    1347</span> <span class="tlaGNC">           3 :   for (const auto &amp;r : reported)</span></span>
+<span id="L1348"><span class="lineNum">    1348</span>              :   {</span>
+<span id="L1349"><span class="lineNum">    1349</span> <span class="tlaGNC">           2 :     CAPTURE(r.issue);</span></span>
+<span id="L1350"><span class="lineNum">    1350</span> <span class="tlaGNC">           2 :     REQUIRE(std::abs(r.kn_evanescent.real() - r.kn_target) &lt;</span></span>
+<span id="L1351"><span class="lineNum">    1351</span>              :             std::abs(r.kn_guided.real() - r.kn_target));</span>
+<span id="L1352"><span class="lineNum">    1352</span> <span class="tlaGNC">           2 :     CHECK(TargetDistance(r.kn_guided, r.kn_target) &lt;</span></span>
+<span id="L1353"><span class="lineNum">    1353</span>              :           TargetDistance(r.kn_evanescent, r.kn_target));</span>
+<span id="L1354"><span class="lineNum">    1354</span> <span class="tlaGNC">           2 :   }</span></span>
+<span id="L1355"><span class="lineNum">    1355</span>              :   const double kn_target = reported[1].kn_target;</span>
+<span id="L1356"><span class="lineNum">    1356</span>              :   const std::complex&lt;double&gt; kn_cpw = reported[1].kn_guided;</span>
+<span id="L1357"><span class="lineNum">    1357</span> <span class="tlaGNC">           1 :   const std::complex&lt;double&gt; kn_evanescent = reported[1].kn_evanescent;</span></span>
+<span id="L1358"><span class="lineNum">    1358</span>              : </span>
+<span id="L1359"><span class="lineNum">    1359</span>              :   // Lossless propagating modes below the target rank by descending kn, ahead of all</span>
+<span id="L1360"><span class="lineNum">    1360</span>              :   // lossless evanescent modes, which rank by ascending attenuation.</span>
+<span id="L1361"><span class="lineNum">    1361</span>              :   const double kt = 1.0;</span>
+<span id="L1362"><span class="lineNum">    1362</span> <span class="tlaGNC">           1 :   CHECK(TargetDistance(0.9 * kt, kt) &lt; TargetDistance(0.5 * kt, kt));</span></span>
+<span id="L1363"><span class="lineNum">    1363</span> <span class="tlaGNC">           1 :   CHECK(TargetDistance(0.5 * kt, kt) &lt; TargetDistance(1.0e-3 * kt, kt));</span></span>
+<span id="L1364"><span class="lineNum">    1364</span> <span class="tlaGNC">           1 :   CHECK(TargetDistance(1.0e-3 * kt, kt) &lt;</span></span>
+<span id="L1365"><span class="lineNum">    1365</span>              :         TargetDistance(std::complex&lt;double&gt;(0.0, 1.0e-3 * kt), kt));</span>
+<span id="L1366"><span class="lineNum">    1366</span> <span class="tlaGNC">           1 :   CHECK(TargetDistance(std::complex&lt;double&gt;(0.0, 1.0e-3 * kt), kt) &lt;</span></span>
+<span id="L1367"><span class="lineNum">    1367</span>              :         TargetDistance(std::complex&lt;double&gt;(0.0, 10.0 * kt), kt));</span>
+<span id="L1368"><span class="lineNum">    1368</span>              : </span>
+<span id="L1369"><span class="lineNum">    1369</span>              :   // Invariant under conjugation: a near-cutoff mode may land on either side of the branch</span>
+<span id="L1370"><span class="lineNum">    1370</span>              :   // cut of the principal square root.</span>
+<span id="L1371"><span class="lineNum">    1371</span> <span class="tlaGNC">           4 :   for (const auto kn : {kn_cpw, kn_evanescent, std::complex&lt;double&gt;(0.3, -0.7)})</span></span>
+<span id="L1372"><span class="lineNum">    1372</span>              :   {</span>
+<span id="L1373"><span class="lineNum">    1373</span> <span class="tlaGNC">           3 :     CHECK(TargetDistance(std::conj(kn), kn_target) == TargetDistance(kn, kn_target));</span></span>
+<span id="L1374"><span class="lineNum">    1374</span>              :   }</span>
+<span id="L1375"><span class="lineNum">    1375</span>              : </span>
+<span id="L1376"><span class="lineNum">    1376</span>              :   // Non-finite values rank last, after any finite candidate.</span>
+<span id="L1377"><span class="lineNum">    1377</span>              :   const double inf = std::numeric_limits&lt;double&gt;::infinity();</span>
+<span id="L1378"><span class="lineNum">    1378</span>              :   const double nan = std::numeric_limits&lt;double&gt;::quiet_NaN();</span>
+<span id="L1379"><span class="lineNum">    1379</span> <span class="tlaGNC">           1 :   CHECK(TargetDistance(std::complex&lt;double&gt;(nan, 0.0), kt) == inf);</span></span>
+<span id="L1380"><span class="lineNum">    1380</span> <span class="tlaGNC">           1 :   CHECK(TargetDistance(std::complex&lt;double&gt;(0.0, nan), kt) == inf);</span></span>
+<span id="L1381"><span class="lineNum">    1381</span> <span class="tlaGNC">           1 :   CHECK(TargetDistance(std::complex&lt;double&gt;(nan, inf), kt) == inf);</span></span>
+<span id="L1382"><span class="lineNum">    1382</span> <span class="tlaGNC">           1 :   CHECK(TargetDistance(std::complex&lt;double&gt;(inf, 0.0), kt) == inf);</span></span>
+<span id="L1383"><span class="lineNum">    1383</span> <span class="tlaGNC">           1 :   CHECK(TargetDistance(kn_evanescent, kt) &lt; inf);</span></span>
+<span id="L1384"><span class="lineNum">    1384</span> <span class="tlaGNC">           1 : }</span></span>
+<span id="L1385"><span class="lineNum">    1385</span>              : </span>
+<span id="L1386"><span class="lineNum">    1386</span> <span class="tlaGNC">           3 : TEST_CASE(&quot;ModeEigenSolver ranks evanescent modes below cutoff by attenuation&quot;,</span></span>
+<span id="L1387"><span class="lineNum">    1387</span>              :           &quot;[boundarymodeoperator][Serial][Parallel]&quot;)</span>
+<span id="L1388"><span class="lineNum">    1388</span>              : {</span>
+<span id="L1389"><span class="lineNum">    1389</span>              :   // Below the TE10 cutoff (75 GHz for this 1000 x 500 um guide with eps = 4) every mode of</span>
+<span id="L1390"><span class="lineNum">    1390</span>              :   // a lossless guide is evanescent: the real parts of the computed kn are round-off and</span>
+<span id="L1391"><span class="lineNum">    1391</span>              :   // carry no ranking information, and ranking on them returned an arbitrary evanescent mode</span>
+<span id="L1392"><span class="lineNum">    1392</span>              :   // as mode 1 (e.g. |S11| &gt; 0 dB for a lossless shorted guide driven below cutoff). Both</span>
+<span id="L1393"><span class="lineNum">    1393</span>              :   // the exact and the reduced solve must rank the modes least-attenuated first, so mode 1</span>
+<span id="L1394"><span class="lineNum">    1394</span>              :   // is the continuation of TE10 through cutoff.</span>
+<span id="L1395"><span class="lineNum">    1395</span>              :   constexpr int num_modes = 3;</span>
+<span id="L1396"><span class="lineNum">    1396</span>              :   constexpr double freq_ghz = 60.0, epsilon_r = 4.0;</span>
+<span id="L1397"><span class="lineNum">    1397</span> <span class="tlaGNC">           6 :   auto exact = SolveRectangularModes(1000.0, 500.0, freq_ghz, epsilon_r, 2, num_modes,</span></span>
+<span id="L1398"><span class="lineNum">    1398</span> <span class="tlaGNC">           3 :                                      [](IoData &amp;) {});</span></span>
+<span id="L1399"><span class="lineNum">    1399</span> <span class="tlaGNC">           3 :   REQUIRE(exact.num_converged &gt;= num_modes);</span></span>
+<span id="L1400"><span class="lineNum">    1400</span> <span class="tlaGNC">          18 :   for (int i = 0; i &lt; exact.num_converged; i++)</span></span>
+<span id="L1401"><span class="lineNum">    1401</span>              :   {</span>
+<span id="L1402"><span class="lineNum">    1402</span> <span class="tlaGNC">          15 :     CAPTURE(i, exact.kn[i]);</span></span>
+<span id="L1403"><span class="lineNum">    1403</span> <span class="tlaGNC">          15 :     REQUIRE(std::abs(exact.kn[i].real()) &lt;= 1.0e-6 * std::abs(exact.kn[i].imag()));</span></span>
+<span id="L1404"><span class="lineNum">    1404</span> <span class="tlaGNC">          15 :     if (i &gt; 0)</span></span>
+<span id="L1405"><span class="lineNum">    1405</span>              :     {</span>
+<span id="L1406"><span class="lineNum">    1406</span> <span class="tlaGNC">          12 :       CHECK(std::abs(exact.kn[i - 1].imag()) &lt;=</span></span>
+<span id="L1407"><span class="lineNum">    1407</span>              :             (1.0 + 1.0e-6) * std::abs(exact.kn[i].imag()));</span>
+<span id="L1408"><span class="lineNum">    1408</span>              :     }</span>
+<span id="L1409"><span class="lineNum">    1409</span> <span class="tlaGNC">          15 :   }</span></span>
+<span id="L1410"><span class="lineNum">    1410</span>              : </span>
+<span id="L1411"><span class="lineNum">    1411</span>              :   // TE10 attenuation constant sqrt((pi/a)^2 - eps k0^2), nondimensionalized by 1 um.</span>
+<span id="L1412"><span class="lineNum">    1412</span>              :   const double kc = std::numbers::pi / 1000.0;</span>
+<span id="L1413"><span class="lineNum">    1413</span>              :   const double k = std::sqrt(epsilon_r) * 2.0 * std::numbers::pi * freq_ghz * 1.0e9 /</span>
+<span id="L1414"><span class="lineNum">    1414</span>              :                    electromagnetics::c0_ * 1.0e-6;</span>
+<span id="L1415"><span class="lineNum">    1415</span> <span class="tlaGNC">           3 :   CHECK_THAT(std::abs(exact.kn[0].imag()), WithinRel(std::sqrt(kc * kc - k * k), 1.0e-3));</span></span>
+<span id="L1416"><span class="lineNum">    1416</span>              : </span>
+<span id="L1417"><span class="lineNum">    1417</span>              :   // Train the reduced model below cutoff as well (0.9 and 1.1 times the frequency). Compare</span>
+<span id="L1418"><span class="lineNum">    1418</span>              :   // kn^2, which does not depend on the sign of i|kn| returned for an evanescent mode.</span>
+<span id="L1419"><span class="lineNum">    1419</span> <span class="tlaGNC">           6 :   auto reduced = SolveRectangularModes(</span></span>
+<span id="L1420"><span class="lineNum">    1420</span> <span class="tlaGNC">           3 :       1000.0, 500.0, freq_ghz, epsilon_r, 2, num_modes, [](IoData &amp;) {}, true);</span></span>
+<span id="L1421"><span class="lineNum">    1421</span> <span class="tlaGNC">           3 :   REQUIRE(reduced.reduced_stats.reduced_solves == 1);</span></span>
+<span id="L1422"><span class="lineNum">    1422</span> <span class="tlaGNC">           3 :   REQUIRE(reduced.kn.size() == num_modes);</span></span>
+<span id="L1423"><span class="lineNum">    1423</span> <span class="tlaGNC">          12 :   for (int i = 0; i &lt; num_modes; i++)</span></span>
+<span id="L1424"><span class="lineNum">    1424</span>              :   {</span>
+<span id="L1425"><span class="lineNum">    1425</span> <span class="tlaGNC">           9 :     CAPTURE(i, reduced.kn[i], exact.kn[i]);</span></span>
+<span id="L1426"><span class="lineNum">    1426</span> <span class="tlaGNC">           9 :     CHECK(std::abs(reduced.kn[i] * reduced.kn[i] - exact.kn[i] * exact.kn[i]) &lt;=</span></span>
+<span id="L1427"><span class="lineNum">    1427</span>              :           1.0e-6 * std::norm(exact.kn[i]));</span>
+<span id="L1428"><span class="lineNum">    1428</span> <span class="tlaGNC">           9 :   }</span></span>
+<span id="L1429"><span class="lineNum">    1429</span> <span class="tlaGNC">           3 : }</span></span>
+<span id="L1430"><span class="lineNum">    1430</span>              : </span>
+<span id="L1431"><span class="lineNum">    1431</span> <span class="tlaGNC">           3 : TEST_CASE(&quot;ModeEigenSolver ranks lossy modes by complex target distance&quot;,</span></span>
+<span id="L1432"><span class="lineNum">    1432</span>              :           &quot;[boundarymodeoperator][Serial][Parallel]&quot;)</span>
+<span id="L1433"><span class="lineNum">    1433</span>              : {</span>
+<span id="L1434"><span class="lineNum">    1434</span>              :   // A resistive top wall gives the modes attenuation comparable to the spacing of their</span>
+<span id="L1435"><span class="lineNum">    1435</span>              :   // phase constants, so ranking by |Re{kn} - kn_target| and by |kn - kn_target| disagree.</span>
+<span id="L1436"><span class="lineNum">    1436</span>              :   // Exact and reduced solves must both return the modes in ascending complex distance.</span>
+<span id="L1437"><span class="lineNum">    1437</span> <span class="tlaGNC">           6 :   auto configure_resistive_wall = [](IoData &amp;iodata)</span></span>
+<span id="L1438"><span class="lineNum">    1438</span>              :   {</span>
+<span id="L1439"><span class="lineNum">    1439</span> <span class="tlaGNC">           6 :     iodata.boundaries.pec.attributes = {1, 2, 4};</span></span>
+<span id="L1440"><span class="lineNum">    1440</span> <span class="tlaGNC">           6 :     auto &amp;imp = iodata.boundaries.impedance.emplace_back();</span></span>
+<span id="L1441"><span class="lineNum">    1441</span> <span class="tlaGNC">           6 :     imp.attributes = {3};</span></span>
+<span id="L1442"><span class="lineNum">    1442</span> <span class="tlaGNC">           6 :     imp.Rs = 377.0;</span></span>
+<span id="L1443"><span class="lineNum">    1443</span> <span class="tlaGNC">           6 :   };</span></span>
+<span id="L1444"><span class="lineNum">    1444</span>              :   constexpr int num_modes = 3;</span>
+<span id="L1445"><span class="lineNum">    1445</span> <span class="tlaGNC">           6 :   auto exact = SolveRectangularModes(1000.0, 500.0, 200.0, 4.0, 2, num_modes,</span></span>
+<span id="L1446"><span class="lineNum">    1446</span> <span class="tlaGNC">           3 :                                      configure_resistive_wall);</span></span>
+<span id="L1447"><span class="lineNum">    1447</span> <span class="tlaGNC">           3 :   REQUIRE(exact.num_converged &gt;= num_modes);</span></span>
+<span id="L1448"><span class="lineNum">    1448</span> <span class="tlaGNC">           3 :   const double kn_target = exact.kn_target;</span></span>
+<span id="L1449"><span class="lineNum">    1449</span> <span class="tlaGNC">           9 :   for (int i = 1; i &lt; exact.num_converged; i++)</span></span>
+<span id="L1450"><span class="lineNum">    1450</span>              :   {</span>
+<span id="L1451"><span class="lineNum">    1451</span> <span class="tlaGNC">           6 :     CAPTURE(i, exact.kn[i - 1], exact.kn[i]);</span></span>
+<span id="L1452"><span class="lineNum">    1452</span> <span class="tlaGNC">           6 :     CHECK(mode_assembly::TargetDistance(exact.kn[i - 1], kn_target) &lt;=</span></span>
+<span id="L1453"><span class="lineNum">    1453</span>              :           mode_assembly::TargetDistance(exact.kn[i], kn_target));</span>
+<span id="L1454"><span class="lineNum">    1454</span> <span class="tlaGNC">           6 :   }</span></span>
+<span id="L1455"><span class="lineNum">    1455</span>              : </span>
+<span id="L1456"><span class="lineNum">    1456</span>              :   // Guard the premise: some returned mode has a real part closer to the target than the</span>
+<span id="L1457"><span class="lineNum">    1457</span>              :   // first-ranked mode, so a real-part ranking would select differently.</span>
+<span id="L1458"><span class="lineNum">    1458</span>              :   bool real_part_ranking_differs = false;</span>
+<span id="L1459"><span class="lineNum">    1459</span> <span class="tlaGNC">           9 :   for (int i = 1; i &lt; exact.num_converged; i++)</span></span>
+<span id="L1460"><span class="lineNum">    1460</span>              :   {</span>
+<span id="L1461"><span class="lineNum">    1461</span>              :     real_part_ranking_differs =</span>
+<span id="L1462"><span class="lineNum">    1462</span> <span class="tlaGNC">           6 :         real_part_ranking_differs ||</span></span>
+<span id="L1463"><span class="lineNum">    1463</span> <span class="tlaGNC">           3 :         std::abs(exact.kn[i].real() - kn_target) &lt; std::abs(exact.kn[0].real() - kn_target);</span></span>
+<span id="L1464"><span class="lineNum">    1464</span>              :   }</span>
+<span id="L1465"><span class="lineNum">    1465</span> <span class="tlaGNC">           6 :   REQUIRE(real_part_ranking_differs);</span></span>
+<span id="L1466"><span class="lineNum">    1466</span>              : </span>
+<span id="L1467"><span class="lineNum">    1467</span>              :   // The reduced wave-port solve, trained with all ranked modes around the target, must</span>
+<span id="L1468"><span class="lineNum">    1468</span>              :   // select the same modes in the same order.</span>
+<span id="L1469"><span class="lineNum">    1469</span> <span class="tlaGNC">           6 :   auto reduced = SolveRectangularModes(1000.0, 500.0, 200.0, 4.0, 2, num_modes,</span></span>
+<span id="L1470"><span class="lineNum">    1470</span>              :                                        configure_resistive_wall, true, 1, 16,</span>
+<span id="L1471"><span class="lineNum">    1471</span> <span class="tlaGNC">           3 :                                        {0.95, 0.98, 1.02, 1.05}, 1.0e-2);</span></span>
+<span id="L1472"><span class="lineNum">    1472</span> <span class="tlaGNC">           3 :   REQUIRE(reduced.reduced_stats.reduced_solves == 1);</span></span>
+<span id="L1473"><span class="lineNum">    1473</span> <span class="tlaGNC">           3 :   REQUIRE(reduced.kn.size() == num_modes);</span></span>
+<span id="L1474"><span class="lineNum">    1474</span> <span class="tlaGNC">          12 :   for (int i = 0; i &lt; num_modes; i++)</span></span>
+<span id="L1475"><span class="lineNum">    1475</span>              :   {</span>
+<span id="L1476"><span class="lineNum">    1476</span> <span class="tlaGNC">           9 :     CAPTURE(i, reduced.kn[i], exact.kn[i]);</span></span>
+<span id="L1477"><span class="lineNum">    1477</span> <span class="tlaGNC">           9 :     CHECK(std::abs(reduced.kn[i] - exact.kn[i]) &lt;= 1.0e-5 * std::abs(exact.kn[i]));</span></span>
+<span id="L1478"><span class="lineNum">    1478</span> <span class="tlaGNC">           9 :   }</span></span>
+<span id="L1479"><span class="lineNum">    1479</span> <span class="tlaGNC">           3 : }</span></span>
+<span id="L1480"><span class="lineNum">    1480</span>              : </span>
+<span id="L1481"><span class="lineNum">    1481</span>              : }  // namespace palace</span>
         </pre>
               </td>
             </tr>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-10-23 01:41:56</td>
+            <td class="headerValue">2026-11-05 18:04:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">28.2&nbsp;%</td>
@@ -110,18 +110,18 @@
 <span id="L40"><span class="lineNum">      40</span>              : namespace</span>
 <span id="L41"><span class="lineNum">      41</span>              : {</span>
 <span id="L42"><span class="lineNum">      42</span>              : </span>
-<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC tlaBgGNC">       13959 : inline PetscErrorCode FromPetscVec(Vec x, palace::ComplexVector &amp;y, int block = 0,</span></span>
+<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC tlaBgGNC">       16806 : inline PetscErrorCode FromPetscVec(Vec x, palace::ComplexVector &amp;y, int block = 0,</span></span>
 <span id="L44"><span class="lineNum">      44</span>              :                                    int nblocks = 1)</span>
 <span id="L45"><span class="lineNum">      45</span>              : {</span>
 <span id="L46"><span class="lineNum">      46</span>              :   PetscInt n;</span>
 <span id="L47"><span class="lineNum">      47</span>              :   const PetscScalar *px;</span>
 <span id="L48"><span class="lineNum">      48</span>              :   PetscMemType mtype;</span>
-<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">       13959 :   PetscCall(VecGetLocalSize(x, &amp;n));</span></span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">       16806 :   PetscCall(VecGetLocalSize(x, &amp;n));</span></span>
 <span id="L50"><span class="lineNum">      50</span>              :   MFEM_ASSERT(y.Size() * nblocks == n,</span>
 <span id="L51"><span class="lineNum">      51</span>              :               &quot;Invalid size mismatch for PETSc vector conversion!&quot;);</span>
-<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">       13959 :   PetscCall(VecGetArrayReadAndMemType(x, &amp;px, &amp;mtype));</span></span>
-<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">       13959 :   y.Set(px + block * n / nblocks, n / nblocks, PetscMemTypeDevice(mtype));</span></span>
-<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">       13959 :   PetscCall(VecRestoreArrayReadAndMemType(x, &amp;px));</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">       16806 :   PetscCall(VecGetArrayReadAndMemType(x, &amp;px, &amp;mtype));</span></span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">       16806 :   y.Set(px + block * n / nblocks, n / nblocks, PetscMemTypeDevice(mtype));</span></span>
+<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">       16806 :   PetscCall(VecRestoreArrayReadAndMemType(x, &amp;px));</span></span>
 <span id="L55"><span class="lineNum">      55</span>              :   return PETSC_SUCCESS;</span>
 <span id="L56"><span class="lineNum">      56</span>              : }</span>
 <span id="L57"><span class="lineNum">      57</span>              : </span>
@@ -141,18 +141,18 @@
 <span id="L71"><span class="lineNum">      71</span>              :   return PETSC_SUCCESS;</span>
 <span id="L72"><span class="lineNum">      72</span>              : }</span>
 <span id="L73"><span class="lineNum">      73</span>              : </span>
-<span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC tlaBgGNC">       12880 : inline PetscErrorCode ToPetscVec(const palace::ComplexVector &amp;x, Vec y, int block = 0,</span></span>
+<span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC tlaBgGNC">       15624 : inline PetscErrorCode ToPetscVec(const palace::ComplexVector &amp;x, Vec y, int block = 0,</span></span>
 <span id="L75"><span class="lineNum">      75</span>              :                                  int nblocks = 1)</span>
 <span id="L76"><span class="lineNum">      76</span>              : {</span>
 <span id="L77"><span class="lineNum">      77</span>              :   PetscInt n;</span>
 <span id="L78"><span class="lineNum">      78</span>              :   PetscScalar *py;</span>
 <span id="L79"><span class="lineNum">      79</span>              :   PetscMemType mtype;</span>
-<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">       12880 :   PetscCall(VecGetLocalSize(y, &amp;n));</span></span>
+<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">       15624 :   PetscCall(VecGetLocalSize(y, &amp;n));</span></span>
 <span id="L81"><span class="lineNum">      81</span>              :   MFEM_ASSERT(x.Size() * nblocks == n,</span>
 <span id="L82"><span class="lineNum">      82</span>              :               &quot;Invalid size mismatch for PETSc vector conversion!&quot;);</span>
-<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">       12880 :   PetscCall(VecGetArrayWriteAndMemType(y, &amp;py, &amp;mtype));</span></span>
-<span id="L84"><span class="lineNum">      84</span> <span class="tlaGNC">       12880 :   x.Get(py + block * n / nblocks, n / nblocks, PetscMemTypeDevice(mtype));</span></span>
-<span id="L85"><span class="lineNum">      85</span> <span class="tlaGNC">       12880 :   PetscCall(VecRestoreArrayWriteAndMemType(y, &amp;py));</span></span>
+<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">       15624 :   PetscCall(VecGetArrayWriteAndMemType(y, &amp;py, &amp;mtype));</span></span>
+<span id="L84"><span class="lineNum">      84</span> <span class="tlaGNC">       15624 :   x.Get(py + block * n / nblocks, n / nblocks, PetscMemTypeDevice(mtype));</span></span>
+<span id="L85"><span class="lineNum">      85</span> <span class="tlaGNC">       15624 :   PetscCall(VecRestoreArrayWriteAndMemType(y, &amp;py));</span></span>
 <span id="L86"><span class="lineNum">      86</span>              :   return PETSC_SUCCESS;</span>
 <span id="L87"><span class="lineNum">      87</span>              : }</span>
 <span id="L88"><span class="lineNum">      88</span>              : </span>
@@ -180,10 +180,10 @@
 <span id="L110"><span class="lineNum">     110</span>              : namespace</span>
 <span id="L111"><span class="lineNum">     111</span>              : {</span>
 <span id="L112"><span class="lineNum">     112</span>              : </span>
-<span id="L113"><span class="lineNum">     113</span> <span class="tlaGNC tlaBgGNC">         465 : inline PetscErrorCode ConfigurePetscDevice()</span></span>
+<span id="L113"><span class="lineNum">     113</span> <span class="tlaGNC tlaBgGNC">         579 : inline PetscErrorCode ConfigurePetscDevice()</span></span>
 <span id="L114"><span class="lineNum">     114</span>              : {</span>
 <span id="L115"><span class="lineNum">     115</span>              :   // Tell PETSc to use the same CUDA or HIP device as MFEM.</span>
-<span id="L116"><span class="lineNum">     116</span> <span class="tlaGNC">         465 :   if (mfem::Device::Allows(mfem::Backend::CUDA_MASK))</span></span>
+<span id="L116"><span class="lineNum">     116</span> <span class="tlaGNC">         579 :   if (mfem::Device::Allows(mfem::Backend::CUDA_MASK))</span></span>
 <span id="L117"><span class="lineNum">     117</span>              :   {</span>
 <span id="L118"><span class="lineNum">     118</span> <span class="tlaUNC tlaBgUNC">           0 :     PetscCall(PetscOptionsSetValue(NULL, &quot;-use_gpu_aware_mpi&quot;,</span></span>
 <span id="L119"><span class="lineNum">     119</span>              :                                    mfem::Device::GetGPUAwareMPI() ? &quot;1&quot; : &quot;0&quot;));</span>
@@ -192,7 +192,7 @@
 <span id="L122"><span class="lineNum">     122</span>              :     // PetscCall(PetscOptionsSetValue(NULL, &quot;-bv_type&quot;, &quot;svec&quot;));</span>
 <span id="L123"><span class="lineNum">     123</span>              :     // PetscCall(PetscOptionsSetValue(NULL, &quot;-vec_type&quot;, &quot;cuda&quot;));</span>
 <span id="L124"><span class="lineNum">     124</span>              :   }</span>
-<span id="L125"><span class="lineNum">     125</span> <span class="tlaGNC tlaBgGNC">         465 :   if (mfem::Device::Allows(mfem::Backend::HIP_MASK))</span></span>
+<span id="L125"><span class="lineNum">     125</span> <span class="tlaGNC tlaBgGNC">         579 :   if (mfem::Device::Allows(mfem::Backend::HIP_MASK))</span></span>
 <span id="L126"><span class="lineNum">     126</span>              :   {</span>
 <span id="L127"><span class="lineNum">     127</span> <span class="tlaUNC tlaBgUNC">           0 :     PetscCall(PetscOptionsSetValue(NULL, &quot;-use_gpu_aware_mpi&quot;,</span></span>
 <span id="L128"><span class="lineNum">     128</span>              :                                    mfem::Device::GetGPUAwareMPI() ? &quot;1&quot; : &quot;0&quot;));</span>
@@ -206,11 +206,11 @@
 <span id="L136"><span class="lineNum">     136</span>              : </span>
 <span id="L137"><span class="lineNum">     137</span>              : inline VecType PetscVecType()</span>
 <span id="L138"><span class="lineNum">     138</span>              : {</span>
-<span id="L139"><span class="lineNum">     139</span> <span class="tlaGNC tlaBgGNC">         391 :   if (mfem::Device::Allows(mfem::Backend::CUDA_MASK))</span></span>
+<span id="L139"><span class="lineNum">     139</span> <span class="tlaGNC tlaBgGNC">         444 :   if (mfem::Device::Allows(mfem::Backend::CUDA_MASK))</span></span>
 <span id="L140"><span class="lineNum">     140</span>              :   {</span>
 <span id="L141"><span class="lineNum">     141</span>              :     return VECCUDA;</span>
 <span id="L142"><span class="lineNum">     142</span>              :   }</span>
-<span id="L143"><span class="lineNum">     143</span> <span class="tlaGNC">         391 :   if (mfem::Device::Allows(mfem::Backend::HIP_MASK))</span></span>
+<span id="L143"><span class="lineNum">     143</span> <span class="tlaGNC">         444 :   if (mfem::Device::Allows(mfem::Backend::HIP_MASK))</span></span>
 <span id="L144"><span class="lineNum">     144</span>              :   {</span>
 <span id="L145"><span class="lineNum">     145</span> <span class="tlaUNC tlaBgUNC">           0 :     return VECHIP;</span></span>
 <span id="L146"><span class="lineNum">     146</span>              :   }</span>
@@ -223,16 +223,16 @@
 <span id="L153"><span class="lineNum">     153</span>              :   ComplexVector &amp;x, &amp;y;</span>
 <span id="L154"><span class="lineNum">     154</span>              : };</span>
 <span id="L155"><span class="lineNum">     155</span>              : </span>
-<span id="L156"><span class="lineNum">     156</span> <span class="tlaGNC tlaBgGNC">        2970 : PetscErrorCode __mat_apply_shell(Mat A, Vec x, Vec y)</span></span>
+<span id="L156"><span class="lineNum">     156</span> <span class="tlaGNC tlaBgGNC">        5162 : PetscErrorCode __mat_apply_shell(Mat A, Vec x, Vec y)</span></span>
 <span id="L157"><span class="lineNum">     157</span>              : {</span>
 <span id="L158"><span class="lineNum">     158</span>              :   PetscFunctionBeginUser;</span>
 <span id="L159"><span class="lineNum">     159</span>              :   MatShellContext *ctx;</span>
-<span id="L160"><span class="lineNum">     160</span> <span class="tlaGNC">        2970 :   PetscCall(MatShellGetContext(A, (void **)&amp;ctx));</span></span>
-<span id="L161"><span class="lineNum">     161</span> <span class="tlaGNC">        2970 :   MFEM_VERIFY(ctx, &quot;Invalid PETSc shell matrix context for SLEPc!&quot;);</span></span>
+<span id="L160"><span class="lineNum">     160</span> <span class="tlaGNC">        5162 :   PetscCall(MatShellGetContext(A, (void **)&amp;ctx));</span></span>
+<span id="L161"><span class="lineNum">     161</span> <span class="tlaGNC">        5162 :   MFEM_VERIFY(ctx, &quot;Invalid PETSc shell matrix context for SLEPc!&quot;);</span></span>
 <span id="L162"><span class="lineNum">     162</span>              : </span>
-<span id="L163"><span class="lineNum">     163</span> <span class="tlaGNC">        2970 :   PetscCall(FromPetscVec(x, ctx-&gt;x));</span></span>
-<span id="L164"><span class="lineNum">     164</span> <span class="tlaGNC">        2970 :   ctx-&gt;A.Mult(ctx-&gt;x, ctx-&gt;y);</span></span>
-<span id="L165"><span class="lineNum">     165</span> <span class="tlaGNC">        2970 :   PetscCall(ToPetscVec(ctx-&gt;y, y));</span></span>
+<span id="L163"><span class="lineNum">     163</span> <span class="tlaGNC">        5162 :   PetscCall(FromPetscVec(x, ctx-&gt;x));</span></span>
+<span id="L164"><span class="lineNum">     164</span> <span class="tlaGNC">        5162 :   ctx-&gt;A.Mult(ctx-&gt;x, ctx-&gt;y);</span></span>
+<span id="L165"><span class="lineNum">     165</span> <span class="tlaGNC">        5162 :   PetscCall(ToPetscVec(ctx-&gt;y, y));</span></span>
 <span id="L166"><span class="lineNum">     166</span>              : </span>
 <span id="L167"><span class="lineNum">     167</span>              :   PetscFunctionReturn(PETSC_SUCCESS);</span>
 <span id="L168"><span class="lineNum">     168</span>              : }</span>
@@ -265,16 +265,16 @@
 <span id="L195"><span class="lineNum">     195</span>              :   PetscFunctionReturn(PETSC_SUCCESS);</span>
 <span id="L196"><span class="lineNum">     196</span>              : };</span>
 <span id="L197"><span class="lineNum">     197</span>              : </span>
-<span id="L198"><span class="lineNum">     198</span> <span class="tlaGNC">         132 : inline void ConfigurePCShell(ST st, void *ctx, PetscErrorCode (*__pc_apply)(PC, Vec, Vec))</span></span>
+<span id="L198"><span class="lineNum">     198</span> <span class="tlaGNC">         156 : inline void ConfigurePCShell(ST st, void *ctx, PetscErrorCode (*__pc_apply)(PC, Vec, Vec))</span></span>
 <span id="L199"><span class="lineNum">     199</span>              : {</span>
 <span id="L200"><span class="lineNum">     200</span>              :   KSP ksp;</span>
 <span id="L201"><span class="lineNum">     201</span>              :   PC pc;</span>
-<span id="L202"><span class="lineNum">     202</span> <span class="tlaGNC">         132 :   PalacePetscCall(STGetKSP(st, &amp;ksp));</span></span>
-<span id="L203"><span class="lineNum">     203</span> <span class="tlaGNC">         132 :   PalacePetscCall(KSPGetPC(ksp, &amp;pc));</span></span>
-<span id="L204"><span class="lineNum">     204</span> <span class="tlaGNC">         132 :   PalacePetscCall(PCSetType(pc, PCSHELL));</span></span>
-<span id="L205"><span class="lineNum">     205</span> <span class="tlaGNC">         132 :   PalacePetscCall(PCShellSetContext(pc, ctx));</span></span>
-<span id="L206"><span class="lineNum">     206</span> <span class="tlaGNC">         132 :   PalacePetscCall(PCShellSetApply(pc, __pc_apply));</span></span>
-<span id="L207"><span class="lineNum">     207</span> <span class="tlaGNC">         132 : }</span></span>
+<span id="L202"><span class="lineNum">     202</span> <span class="tlaGNC">         156 :   PalacePetscCall(STGetKSP(st, &amp;ksp));</span></span>
+<span id="L203"><span class="lineNum">     203</span> <span class="tlaGNC">         156 :   PalacePetscCall(KSPGetPC(ksp, &amp;pc));</span></span>
+<span id="L204"><span class="lineNum">     204</span> <span class="tlaGNC">         156 :   PalacePetscCall(PCSetType(pc, PCSHELL));</span></span>
+<span id="L205"><span class="lineNum">     205</span> <span class="tlaGNC">         156 :   PalacePetscCall(PCShellSetContext(pc, ctx));</span></span>
+<span id="L206"><span class="lineNum">     206</span> <span class="tlaGNC">         156 :   PalacePetscCall(PCShellSetApply(pc, __pc_apply));</span></span>
+<span id="L207"><span class="lineNum">     207</span> <span class="tlaGNC">         156 : }</span></span>
 <span id="L208"><span class="lineNum">     208</span>              : </span>
 <span id="L209"><span class="lineNum">     209</span> <span class="tlaUNC tlaBgUNC">           0 : inline void ConfigureRG(RG rg, PetscReal lr, PetscReal ur, PetscReal li, PetscReal ui,</span></span>
 <span id="L210"><span class="lineNum">     210</span>              :                         bool complement = false)</span>
@@ -299,66 +299,66 @@
 <span id="L229"><span class="lineNum">     229</span> <span class="tlaUNC">           0 :   PalacePetscCall(PetscPopSignalHandler());</span></span>
 <span id="L230"><span class="lineNum">     230</span> <span class="tlaUNC">           0 : }</span></span>
 <span id="L231"><span class="lineNum">     231</span>              : </span>
-<span id="L232"><span class="lineNum">     232</span> <span class="tlaGNC tlaBgGNC">         465 : void Initialize()</span></span>
+<span id="L232"><span class="lineNum">     232</span> <span class="tlaGNC tlaBgGNC">         579 : void Initialize()</span></span>
 <span id="L233"><span class="lineNum">     233</span>              : {</span>
-<span id="L234"><span class="lineNum">     234</span> <span class="tlaGNC">         465 :   ConfigurePetscDevice();</span></span>
-<span id="L235"><span class="lineNum">     235</span> <span class="tlaGNC">         465 :   PalacePetscCall(SlepcInitializeNoArguments());</span></span>
+<span id="L234"><span class="lineNum">     234</span> <span class="tlaGNC">         579 :   ConfigurePetscDevice();</span></span>
+<span id="L235"><span class="lineNum">     235</span> <span class="tlaGNC">         579 :   PalacePetscCall(SlepcInitializeNoArguments());</span></span>
 <span id="L236"><span class="lineNum">     236</span>              : </span>
 <span id="L237"><span class="lineNum">     237</span>              :   // Remove default PETSc signal handling, since it can be confusing when the errors occur</span>
 <span id="L238"><span class="lineNum">     238</span>              :   // not from within SLEPc/PETSc.</span>
-<span id="L239"><span class="lineNum">     239</span> <span class="tlaGNC">         465 :   PalacePetscCall(PetscPopSignalHandler());</span></span>
-<span id="L240"><span class="lineNum">     240</span> <span class="tlaGNC">         465 : }</span></span>
+<span id="L239"><span class="lineNum">     239</span> <span class="tlaGNC">         579 :   PalacePetscCall(PetscPopSignalHandler());</span></span>
+<span id="L240"><span class="lineNum">     240</span> <span class="tlaGNC">         579 : }</span></span>
 <span id="L241"><span class="lineNum">     241</span>              : </span>
-<span id="L242"><span class="lineNum">     242</span> <span class="tlaGNC">         465 : void Finalize()</span></span>
+<span id="L242"><span class="lineNum">     242</span> <span class="tlaGNC">         579 : void Finalize()</span></span>
 <span id="L243"><span class="lineNum">     243</span>              : {</span>
-<span id="L244"><span class="lineNum">     244</span> <span class="tlaGNC">         465 :   PalacePetscCall(SlepcFinalize());</span></span>
-<span id="L245"><span class="lineNum">     245</span> <span class="tlaGNC">         465 : }</span></span>
+<span id="L244"><span class="lineNum">     244</span> <span class="tlaGNC">         579 :   PalacePetscCall(SlepcFinalize());</span></span>
+<span id="L245"><span class="lineNum">     245</span> <span class="tlaGNC">         579 : }</span></span>
 <span id="L246"><span class="lineNum">     246</span>              : </span>
-<span id="L247"><span class="lineNum">     247</span> <span class="tlaGNC">         127 : PetscReal GetMaxSingularValue(MPI_Comm comm, const ComplexOperator &amp;A, bool herm,</span></span>
+<span id="L247"><span class="lineNum">     247</span> <span class="tlaGNC">         132 : PetscReal GetMaxSingularValue(MPI_Comm comm, const ComplexOperator &amp;A, bool herm,</span></span>
 <span id="L248"><span class="lineNum">     248</span>              :                               PetscReal tol, PetscInt max_it)</span>
 <span id="L249"><span class="lineNum">     249</span>              : {</span>
 <span id="L250"><span class="lineNum">     250</span>              :   // This method assumes the provided operator has the required operations for SLEPc's EPS</span>
 <span id="L251"><span class="lineNum">     251</span>              :   // or SVD solvers, namely MATOP_MULT and MATOP_MULT_HERMITIAN_TRANSPOSE (if the matrix</span>
 <span id="L252"><span class="lineNum">     252</span>              :   // is not Hermitian).</span>
-<span id="L253"><span class="lineNum">     253</span> <span class="tlaGNC">         127 :   MFEM_VERIFY(A.Height() == A.Width(), &quot;Spectral norm requires a square matrix!&quot;);</span></span>
-<span id="L254"><span class="lineNum">     254</span> <span class="tlaGNC">         127 :   const PetscInt n = A.Height();</span></span>
-<span id="L255"><span class="lineNum">     255</span> <span class="tlaGNC">         127 :   ComplexVector x(n), y(n);</span></span>
-<span id="L256"><span class="lineNum">     256</span> <span class="tlaGNC">         127 :   x.UseDevice(true);</span></span>
-<span id="L257"><span class="lineNum">     257</span> <span class="tlaGNC">         127 :   y.UseDevice(true);</span></span>
-<span id="L258"><span class="lineNum">     258</span> <span class="tlaGNC">         127 :   MatShellContext ctx = {A, x, y};</span></span>
+<span id="L253"><span class="lineNum">     253</span> <span class="tlaGNC">         132 :   MFEM_VERIFY(A.Height() == A.Width(), &quot;Spectral norm requires a square matrix!&quot;);</span></span>
+<span id="L254"><span class="lineNum">     254</span> <span class="tlaGNC">         132 :   const PetscInt n = A.Height();</span></span>
+<span id="L255"><span class="lineNum">     255</span> <span class="tlaGNC">         132 :   ComplexVector x(n), y(n);</span></span>
+<span id="L256"><span class="lineNum">     256</span> <span class="tlaGNC">         132 :   x.UseDevice(true);</span></span>
+<span id="L257"><span class="lineNum">     257</span> <span class="tlaGNC">         132 :   y.UseDevice(true);</span></span>
+<span id="L258"><span class="lineNum">     258</span> <span class="tlaGNC">         132 :   MatShellContext ctx = {A, x, y};</span></span>
 <span id="L259"><span class="lineNum">     259</span>              :   Mat A0;</span>
-<span id="L260"><span class="lineNum">     260</span> <span class="tlaGNC">         127 :   PalacePetscCall(</span></span>
+<span id="L260"><span class="lineNum">     260</span> <span class="tlaGNC">         132 :   PalacePetscCall(</span></span>
 <span id="L261"><span class="lineNum">     261</span>              :       MatCreateShell(comm, n, n, PETSC_DECIDE, PETSC_DECIDE, (void *)&amp;ctx, &amp;A0));</span>
-<span id="L262"><span class="lineNum">     262</span> <span class="tlaGNC">         127 :   PalacePetscCall(MatShellSetOperation(A0, MATOP_MULT, (void (*)(void))__mat_apply_shell));</span></span>
-<span id="L263"><span class="lineNum">     263</span> <span class="tlaGNC">         127 :   PalacePetscCall(MatShellSetVecType(A0, PetscVecType()));</span></span>
-<span id="L264"><span class="lineNum">     264</span> <span class="tlaGNC">         127 :   if (herm)</span></span>
+<span id="L262"><span class="lineNum">     262</span> <span class="tlaGNC">         132 :   PalacePetscCall(MatShellSetOperation(A0, MATOP_MULT, (void (*)(void))__mat_apply_shell));</span></span>
+<span id="L263"><span class="lineNum">     263</span> <span class="tlaGNC">         132 :   PalacePetscCall(MatShellSetVecType(A0, PetscVecType()));</span></span>
+<span id="L264"><span class="lineNum">     264</span> <span class="tlaGNC">         132 :   if (herm)</span></span>
 <span id="L265"><span class="lineNum">     265</span>              :   {</span>
 <span id="L266"><span class="lineNum">     266</span>              :     EPS eps;</span>
 <span id="L267"><span class="lineNum">     267</span>              :     PetscInt num_conv;</span>
-<span id="L268"><span class="lineNum">     268</span> <span class="tlaGNC">         100 :     PetscScalar eig;</span></span>
-<span id="L269"><span class="lineNum">     269</span> <span class="tlaGNC">         100 :     PalacePetscCall(EPSCreate(comm, &amp;eps));</span></span>
-<span id="L270"><span class="lineNum">     270</span> <span class="tlaGNC">         100 :     PalacePetscCall(EPSSetOperators(eps, A0, nullptr));</span></span>
-<span id="L271"><span class="lineNum">     271</span> <span class="tlaGNC">         100 :     PalacePetscCall(EPSSetProblemType(eps, EPS_HEP));</span></span>
-<span id="L272"><span class="lineNum">     272</span> <span class="tlaGNC">         100 :     PalacePetscCall(EPSSetWhichEigenpairs(eps, EPS_LARGEST_MAGNITUDE));</span></span>
-<span id="L273"><span class="lineNum">     273</span> <span class="tlaGNC">         100 :     PalacePetscCall(EPSSetDimensions(eps, 1, PETSC_DEFAULT, PETSC_DEFAULT));</span></span>
-<span id="L274"><span class="lineNum">     274</span> <span class="tlaGNC">         100 :     PalacePetscCall(EPSSetTolerances(eps, tol, max_it));</span></span>
-<span id="L275"><span class="lineNum">     275</span> <span class="tlaGNC">         100 :     PalacePetscCall(EPSSolve(eps));</span></span>
-<span id="L276"><span class="lineNum">     276</span> <span class="tlaGNC">         100 :     PalacePetscCall(EPSGetConverged(eps, &amp;num_conv));</span></span>
-<span id="L277"><span class="lineNum">     277</span> <span class="tlaGNC">         100 :     if (num_conv &lt; 1)</span></span>
+<span id="L268"><span class="lineNum">     268</span> <span class="tlaGNC">         105 :     PetscScalar eig;</span></span>
+<span id="L269"><span class="lineNum">     269</span> <span class="tlaGNC">         105 :     PalacePetscCall(EPSCreate(comm, &amp;eps));</span></span>
+<span id="L270"><span class="lineNum">     270</span> <span class="tlaGNC">         105 :     PalacePetscCall(EPSSetOperators(eps, A0, nullptr));</span></span>
+<span id="L271"><span class="lineNum">     271</span> <span class="tlaGNC">         105 :     PalacePetscCall(EPSSetProblemType(eps, EPS_HEP));</span></span>
+<span id="L272"><span class="lineNum">     272</span> <span class="tlaGNC">         105 :     PalacePetscCall(EPSSetWhichEigenpairs(eps, EPS_LARGEST_MAGNITUDE));</span></span>
+<span id="L273"><span class="lineNum">     273</span> <span class="tlaGNC">         105 :     PalacePetscCall(EPSSetDimensions(eps, 1, PETSC_DEFAULT, PETSC_DEFAULT));</span></span>
+<span id="L274"><span class="lineNum">     274</span> <span class="tlaGNC">         105 :     PalacePetscCall(EPSSetTolerances(eps, tol, max_it));</span></span>
+<span id="L275"><span class="lineNum">     275</span> <span class="tlaGNC">         105 :     PalacePetscCall(EPSSolve(eps));</span></span>
+<span id="L276"><span class="lineNum">     276</span> <span class="tlaGNC">         105 :     PalacePetscCall(EPSGetConverged(eps, &amp;num_conv));</span></span>
+<span id="L277"><span class="lineNum">     277</span> <span class="tlaGNC">         105 :     if (num_conv &lt; 1)</span></span>
 <span id="L278"><span class="lineNum">     278</span>              :     {</span>
 <span id="L279"><span class="lineNum">     279</span> <span class="tlaUNC tlaBgUNC">           0 :       Mpi::Warning(comm, &quot;SLEPc EPS solve did not converge for maximum singular value!\n&quot;);</span></span>
 <span id="L280"><span class="lineNum">     280</span>              :       eig = 0.0;</span>
 <span id="L281"><span class="lineNum">     281</span>              :     }</span>
 <span id="L282"><span class="lineNum">     282</span>              :     else</span>
 <span id="L283"><span class="lineNum">     283</span>              :     {</span>
-<span id="L284"><span class="lineNum">     284</span> <span class="tlaGNC tlaBgGNC">         100 :       PalacePetscCall(EPSGetEigenvalue(eps, 0, &amp;eig, nullptr));</span></span>
-<span id="L285"><span class="lineNum">     285</span> <span class="tlaGNC">         100 :       MFEM_VERIFY(PetscImaginaryPart(eig) == 0.0,</span></span>
+<span id="L284"><span class="lineNum">     284</span> <span class="tlaGNC tlaBgGNC">         105 :       PalacePetscCall(EPSGetEigenvalue(eps, 0, &amp;eig, nullptr));</span></span>
+<span id="L285"><span class="lineNum">     285</span> <span class="tlaGNC">         105 :       MFEM_VERIFY(PetscImaginaryPart(eig) == 0.0,</span></span>
 <span id="L286"><span class="lineNum">     286</span>              :                   &quot;Unexpected complex eigenvalue for Hermitian matrix (λ = &quot; &lt;&lt; eig</span>
 <span id="L287"><span class="lineNum">     287</span>              :                                                                              &lt;&lt; &quot;)!&quot;);</span>
 <span id="L288"><span class="lineNum">     288</span>              :     }</span>
-<span id="L289"><span class="lineNum">     289</span> <span class="tlaGNC">         100 :     PalacePetscCall(EPSDestroy(&amp;eps));</span></span>
-<span id="L290"><span class="lineNum">     290</span> <span class="tlaGNC">         100 :     PalacePetscCall(MatDestroy(&amp;A0));</span></span>
-<span id="L291"><span class="lineNum">     291</span> <span class="tlaGNC">         100 :     return PetscAbsScalar(eig);</span></span>
+<span id="L289"><span class="lineNum">     289</span> <span class="tlaGNC">         105 :     PalacePetscCall(EPSDestroy(&amp;eps));</span></span>
+<span id="L290"><span class="lineNum">     290</span> <span class="tlaGNC">         105 :     PalacePetscCall(MatDestroy(&amp;A0));</span></span>
+<span id="L291"><span class="lineNum">     291</span> <span class="tlaGNC">         105 :     return PetscAbsScalar(eig);</span></span>
 <span id="L292"><span class="lineNum">     292</span>              :   }</span>
 <span id="L293"><span class="lineNum">     293</span>              :   else</span>
 <span id="L294"><span class="lineNum">     294</span>              :   {</span>
@@ -395,28 +395,28 @@
 <span id="L325"><span class="lineNum">     325</span>              : </span>
 <span id="L326"><span class="lineNum">     326</span>              : // Eigensolver base class methods.</span>
 <span id="L327"><span class="lineNum">     327</span>              : </span>
-<span id="L328"><span class="lineNum">     328</span> <span class="tlaGNC">         141 : SlepcEigenvalueSolver::SlepcEigenvalueSolver(int print) : print(print)</span></span>
+<span id="L328"><span class="lineNum">     328</span> <span class="tlaGNC">         165 : SlepcEigenvalueSolver::SlepcEigenvalueSolver(int print) : print(print)</span></span>
 <span id="L329"><span class="lineNum">     329</span>              : {</span>
-<span id="L330"><span class="lineNum">     330</span> <span class="tlaGNC">         141 :   sinvert = false;</span></span>
-<span id="L331"><span class="lineNum">     331</span> <span class="tlaGNC">         141 :   region = true;</span></span>
+<span id="L330"><span class="lineNum">     330</span> <span class="tlaGNC">         165 :   sinvert = false;</span></span>
+<span id="L331"><span class="lineNum">     331</span> <span class="tlaGNC">         165 :   region = true;</span></span>
 <span id="L332"><span class="lineNum">     332</span>              :   sigma = 0.0;</span>
-<span id="L333"><span class="lineNum">     333</span> <span class="tlaGNC">         141 :   gamma = delta = 1.0;</span></span>
+<span id="L333"><span class="lineNum">     333</span> <span class="tlaGNC">         165 :   gamma = delta = 1.0;</span></span>
 <span id="L334"><span class="lineNum">     334</span>              : </span>
-<span id="L335"><span class="lineNum">     335</span> <span class="tlaGNC">         141 :   opInv = nullptr;</span></span>
-<span id="L336"><span class="lineNum">     336</span> <span class="tlaGNC">         141 :   opProj = nullptr;</span></span>
-<span id="L337"><span class="lineNum">     337</span> <span class="tlaGNC">         141 :   opB = nullptr;</span></span>
+<span id="L335"><span class="lineNum">     335</span> <span class="tlaGNC">         165 :   opInv = nullptr;</span></span>
+<span id="L336"><span class="lineNum">     336</span> <span class="tlaGNC">         165 :   opProj = nullptr;</span></span>
+<span id="L337"><span class="lineNum">     337</span> <span class="tlaGNC">         165 :   opB = nullptr;</span></span>
 <span id="L338"><span class="lineNum">     338</span>              : </span>
-<span id="L339"><span class="lineNum">     339</span> <span class="tlaGNC">         141 :   B0 = nullptr;</span></span>
-<span id="L340"><span class="lineNum">     340</span> <span class="tlaGNC">         141 :   v0 = nullptr;</span></span>
+<span id="L339"><span class="lineNum">     339</span> <span class="tlaGNC">         165 :   B0 = nullptr;</span></span>
+<span id="L340"><span class="lineNum">     340</span> <span class="tlaGNC">         165 :   v0 = nullptr;</span></span>
 <span id="L341"><span class="lineNum">     341</span>              : </span>
-<span id="L342"><span class="lineNum">     342</span> <span class="tlaGNC">         141 :   cl_custom = false;</span></span>
-<span id="L343"><span class="lineNum">     343</span> <span class="tlaGNC">         141 : }</span></span>
+<span id="L342"><span class="lineNum">     342</span> <span class="tlaGNC">         165 :   cl_custom = false;</span></span>
+<span id="L343"><span class="lineNum">     343</span> <span class="tlaGNC">         165 : }</span></span>
 <span id="L344"><span class="lineNum">     344</span>              : </span>
-<span id="L345"><span class="lineNum">     345</span> <span class="tlaGNC">         141 : SlepcEigenvalueSolver::~SlepcEigenvalueSolver()</span></span>
+<span id="L345"><span class="lineNum">     345</span> <span class="tlaGNC">         165 : SlepcEigenvalueSolver::~SlepcEigenvalueSolver()</span></span>
 <span id="L346"><span class="lineNum">     346</span>              : {</span>
-<span id="L347"><span class="lineNum">     347</span> <span class="tlaGNC">         141 :   PalacePetscCall(MatDestroy(&amp;B0));</span></span>
-<span id="L348"><span class="lineNum">     348</span> <span class="tlaGNC">         141 :   PalacePetscCall(VecDestroy(&amp;v0));</span></span>
-<span id="L349"><span class="lineNum">     349</span> <span class="tlaGNC">         141 : }</span></span>
+<span id="L347"><span class="lineNum">     347</span> <span class="tlaGNC">         165 :   PalacePetscCall(MatDestroy(&amp;B0));</span></span>
+<span id="L348"><span class="lineNum">     348</span> <span class="tlaGNC">         165 :   PalacePetscCall(VecDestroy(&amp;v0));</span></span>
+<span id="L349"><span class="lineNum">     349</span> <span class="tlaGNC">         165 : }</span></span>
 <span id="L350"><span class="lineNum">     350</span>              : </span>
 <span id="L351"><span class="lineNum">     351</span> <span class="tlaUNC tlaBgUNC">           0 : void SlepcEigenvalueSolver::SetOperators(const ComplexOperator &amp;K, const ComplexOperator &amp;M,</span></span>
 <span id="L352"><span class="lineNum">     352</span>              :                                          EigenvalueSolver::ScaleType type)</span>
@@ -431,10 +431,10 @@
 <span id="L361"><span class="lineNum">     361</span> <span class="tlaUNC">           0 :   MFEM_ABORT(&quot;SetOperators not defined for base class SlepcEigenvalueSolver!&quot;);</span></span>
 <span id="L362"><span class="lineNum">     362</span>              : }</span>
 <span id="L363"><span class="lineNum">     363</span>              : </span>
-<span id="L364"><span class="lineNum">     364</span> <span class="tlaGNC tlaBgGNC">         141 : void SlepcEigenvalueSolver::SetLinearSolver(ComplexKspSolver &amp;ksp)</span></span>
+<span id="L364"><span class="lineNum">     364</span> <span class="tlaGNC tlaBgGNC">         165 : void SlepcEigenvalueSolver::SetLinearSolver(ComplexKspSolver &amp;ksp)</span></span>
 <span id="L365"><span class="lineNum">     365</span>              : {</span>
-<span id="L366"><span class="lineNum">     366</span> <span class="tlaGNC">         141 :   opInv = &amp;ksp;</span></span>
-<span id="L367"><span class="lineNum">     367</span> <span class="tlaGNC">         141 : }</span></span>
+<span id="L366"><span class="lineNum">     366</span> <span class="tlaGNC">         165 :   opInv = &amp;ksp;</span></span>
+<span id="L367"><span class="lineNum">     367</span> <span class="tlaGNC">         165 : }</span></span>
 <span id="L368"><span class="lineNum">     368</span>              : </span>
 <span id="L369"><span class="lineNum">     369</span> <span class="tlaUNC tlaBgUNC">           0 : void SlepcEigenvalueSolver::SetDivFreeProjector(const DivFreeSolver&lt;ComplexVector&gt; &amp;divfree)</span></span>
 <span id="L370"><span class="lineNum">     370</span>              : {</span>
@@ -485,22 +485,22 @@
 <span id="L415"><span class="lineNum">     415</span>              :   }</span>
 <span id="L416"><span class="lineNum">     416</span> <span class="tlaUNC">           0 : }</span></span>
 <span id="L417"><span class="lineNum">     417</span>              : </span>
-<span id="L418"><span class="lineNum">     418</span> <span class="tlaGNC tlaBgGNC">         236 : void SlepcEigenvalueSolver::Customize()</span></span>
+<span id="L418"><span class="lineNum">     418</span> <span class="tlaGNC tlaBgGNC">         260 : void SlepcEigenvalueSolver::Customize()</span></span>
 <span id="L419"><span class="lineNum">     419</span>              : {</span>
 <span id="L420"><span class="lineNum">     420</span>              :   // Configure the KSP object for non-preconditioned spectral transformations.</span>
 <span id="L421"><span class="lineNum">     421</span>              :   PetscBool precond;</span>
-<span id="L422"><span class="lineNum">     422</span> <span class="tlaGNC">         236 :   ST st = GetST();</span></span>
-<span id="L423"><span class="lineNum">     423</span> <span class="tlaGNC">         236 :   PalacePetscCall(</span></span>
+<span id="L422"><span class="lineNum">     422</span> <span class="tlaGNC">         260 :   ST st = GetST();</span></span>
+<span id="L423"><span class="lineNum">     423</span> <span class="tlaGNC">         260 :   PalacePetscCall(</span></span>
 <span id="L424"><span class="lineNum">     424</span>              :       PetscObjectTypeCompare(reinterpret_cast&lt;PetscObject&gt;(st), STPRECOND, &amp;precond));</span>
-<span id="L425"><span class="lineNum">     425</span> <span class="tlaGNC">         236 :   if (!precond)</span></span>
+<span id="L425"><span class="lineNum">     425</span> <span class="tlaGNC">         260 :   if (!precond)</span></span>
 <span id="L426"><span class="lineNum">     426</span>              :   {</span>
 <span id="L427"><span class="lineNum">     427</span>              :     KSP ksp;</span>
-<span id="L428"><span class="lineNum">     428</span> <span class="tlaGNC">         236 :     PalacePetscCall(STGetKSP(st, &amp;ksp));</span></span>
-<span id="L429"><span class="lineNum">     429</span> <span class="tlaGNC">         236 :     PalacePetscCall(KSPSetType(ksp, KSPPREONLY));</span></span>
+<span id="L428"><span class="lineNum">     428</span> <span class="tlaGNC">         260 :     PalacePetscCall(STGetKSP(st, &amp;ksp));</span></span>
+<span id="L429"><span class="lineNum">     429</span> <span class="tlaGNC">         260 :     PalacePetscCall(KSPSetType(ksp, KSPPREONLY));</span></span>
 <span id="L430"><span class="lineNum">     430</span>              :   }</span>
 <span id="L431"><span class="lineNum">     431</span>              : </span>
 <span id="L432"><span class="lineNum">     432</span>              :   // Configure the region based on the given target if necessary.</span>
-<span id="L433"><span class="lineNum">     433</span> <span class="tlaGNC">         236 :   if (sinvert &amp;&amp; region)</span></span>
+<span id="L433"><span class="lineNum">     433</span> <span class="tlaGNC">         260 :   if (sinvert &amp;&amp; region)</span></span>
 <span id="L434"><span class="lineNum">     434</span>              :   {</span>
 <span id="L435"><span class="lineNum">     435</span> <span class="tlaUNC tlaBgUNC">           0 :     if (PetscImaginaryPart(sigma) == 0.0)</span></span>
 <span id="L436"><span class="lineNum">     436</span>              :     {</span>
@@ -535,18 +535,18 @@
 <span id="L465"><span class="lineNum">     465</span> <span class="tlaUNC">           0 :       MFEM_ABORT(&quot;Shift-and-invert with general complex eigenvalue target is unsupported!&quot;);</span></span>
 <span id="L466"><span class="lineNum">     466</span>              :     }</span>
 <span id="L467"><span class="lineNum">     467</span>              :   }</span>
-<span id="L468"><span class="lineNum">     468</span> <span class="tlaGNC tlaBgGNC">         236 : }</span></span>
+<span id="L468"><span class="lineNum">     468</span> <span class="tlaGNC tlaBgGNC">         260 : }</span></span>
 <span id="L469"><span class="lineNum">     469</span>              : </span>
-<span id="L470"><span class="lineNum">     470</span> <span class="tlaGNC">         799 : PetscReal SlepcEigenvalueSolver::GetEigenvectorNorm(const ComplexVector &amp;x,</span></span>
+<span id="L470"><span class="lineNum">     470</span> <span class="tlaGNC">         878 : PetscReal SlepcEigenvalueSolver::GetEigenvectorNorm(const ComplexVector &amp;x,</span></span>
 <span id="L471"><span class="lineNum">     471</span>              :                                                     ComplexVector &amp;Bx) const</span>
 <span id="L472"><span class="lineNum">     472</span>              : {</span>
-<span id="L473"><span class="lineNum">     473</span> <span class="tlaGNC">         799 :   if (opB)</span></span>
+<span id="L473"><span class="lineNum">     473</span> <span class="tlaGNC">         878 :   if (opB)</span></span>
 <span id="L474"><span class="lineNum">     474</span>              :   {</span>
 <span id="L475"><span class="lineNum">     475</span> <span class="tlaUNC tlaBgUNC">           0 :     return linalg::Norml2(GetComm(), x, *opB, Bx);</span></span>
 <span id="L476"><span class="lineNum">     476</span>              :   }</span>
 <span id="L477"><span class="lineNum">     477</span>              :   else</span>
 <span id="L478"><span class="lineNum">     478</span>              :   {</span>
-<span id="L479"><span class="lineNum">     479</span> <span class="tlaGNC tlaBgGNC">         799 :     return linalg::Norml2(GetComm(), x);</span></span>
+<span id="L479"><span class="lineNum">     479</span> <span class="tlaGNC tlaBgGNC">         878 :     return linalg::Norml2(GetComm(), x);</span></span>
 <span id="L480"><span class="lineNum">     480</span>              :   }</span>
 <span id="L481"><span class="lineNum">     481</span>              : }</span>
 <span id="L482"><span class="lineNum">     482</span>              : </span>
@@ -564,28 +564,28 @@
 <span id="L494"><span class="lineNum">     494</span>              :   return 0.0;</span>
 <span id="L495"><span class="lineNum">     495</span>              : }</span>
 <span id="L496"><span class="lineNum">     496</span>              : </span>
-<span id="L497"><span class="lineNum">     497</span> <span class="tlaGNC">         236 : void SlepcEigenvalueSolver::RescaleEigenvectors(int num_eig)</span></span>
+<span id="L497"><span class="lineNum">     497</span> <span class="tlaGNC">         260 : void SlepcEigenvalueSolver::RescaleEigenvectors(int num_eig)</span></span>
 <span id="L498"><span class="lineNum">     498</span>              : {</span>
-<span id="L499"><span class="lineNum">     499</span> <span class="tlaGNC">         236 :   res = std::make_unique&lt;PetscReal[]&gt;(num_eig);</span></span>
-<span id="L500"><span class="lineNum">     500</span> <span class="tlaGNC">         236 :   xscale = std::make_unique&lt;PetscReal[]&gt;(num_eig);</span></span>
-<span id="L501"><span class="lineNum">     501</span> <span class="tlaGNC">        1035 :   for (int i = 0; i &lt; num_eig; i++)</span></span>
+<span id="L499"><span class="lineNum">     499</span> <span class="tlaGNC">         260 :   res = std::make_unique&lt;PetscReal[]&gt;(num_eig);</span></span>
+<span id="L500"><span class="lineNum">     500</span> <span class="tlaGNC">         260 :   xscale = std::make_unique&lt;PetscReal[]&gt;(num_eig);</span></span>
+<span id="L501"><span class="lineNum">     501</span> <span class="tlaGNC">        1138 :   for (int i = 0; i &lt; num_eig; i++)</span></span>
 <span id="L502"><span class="lineNum">     502</span>              :   {</span>
-<span id="L503"><span class="lineNum">     503</span> <span class="tlaGNC">         799 :     xscale.get()[i] = 0.0;</span></span>
-<span id="L504"><span class="lineNum">     504</span> <span class="tlaGNC">         799 :     GetEigenvector(i, x1);</span></span>
-<span id="L505"><span class="lineNum">     505</span> <span class="tlaGNC">         799 :     xscale.get()[i] = 1.0 / GetEigenvectorNorm(x1, y1);</span></span>
-<span id="L506"><span class="lineNum">     506</span> <span class="tlaGNC">         799 :     res.get()[i] =</span></span>
-<span id="L507"><span class="lineNum">     507</span> <span class="tlaGNC">         799 :         GetResidualNorm(GetEigenvalue(i), x1, y1) / linalg::Norml2(GetComm(), x1);</span></span>
+<span id="L503"><span class="lineNum">     503</span> <span class="tlaGNC">         878 :     xscale.get()[i] = 0.0;</span></span>
+<span id="L504"><span class="lineNum">     504</span> <span class="tlaGNC">         878 :     GetEigenvector(i, x1);</span></span>
+<span id="L505"><span class="lineNum">     505</span> <span class="tlaGNC">         878 :     xscale.get()[i] = 1.0 / GetEigenvectorNorm(x1, y1);</span></span>
+<span id="L506"><span class="lineNum">     506</span> <span class="tlaGNC">         878 :     res.get()[i] =</span></span>
+<span id="L507"><span class="lineNum">     507</span> <span class="tlaGNC">         878 :         GetResidualNorm(GetEigenvalue(i), x1, y1) / linalg::Norml2(GetComm(), x1);</span></span>
 <span id="L508"><span class="lineNum">     508</span>              :   }</span>
-<span id="L509"><span class="lineNum">     509</span> <span class="tlaGNC">         236 : }</span></span>
+<span id="L509"><span class="lineNum">     509</span> <span class="tlaGNC">         260 : }</span></span>
 <span id="L510"><span class="lineNum">     510</span>              : </span>
 <span id="L511"><span class="lineNum">     511</span>              : // EPS specific methods.</span>
 <span id="L512"><span class="lineNum">     512</span>              : </span>
-<span id="L513"><span class="lineNum">     513</span> <span class="tlaGNC">         141 : SlepcEPSSolverBase::SlepcEPSSolverBase(MPI_Comm comm, int print, const std::string &amp;prefix)</span></span>
-<span id="L514"><span class="lineNum">     514</span> <span class="tlaGNC">         141 :   : SlepcEigenvalueSolver(print)</span></span>
+<span id="L513"><span class="lineNum">     513</span> <span class="tlaGNC">         165 : SlepcEPSSolverBase::SlepcEPSSolverBase(MPI_Comm comm, int print, const std::string &amp;prefix)</span></span>
+<span id="L514"><span class="lineNum">     514</span> <span class="tlaGNC">         165 :   : SlepcEigenvalueSolver(print)</span></span>
 <span id="L515"><span class="lineNum">     515</span>              : {</span>
-<span id="L516"><span class="lineNum">     516</span> <span class="tlaGNC">         141 :   PalacePetscCall(EPSCreate(comm, &amp;eps));</span></span>
-<span id="L517"><span class="lineNum">     517</span> <span class="tlaGNC">         141 :   PalacePetscCall(EPSSetOptionsPrefix(eps, prefix.c_str()));</span></span>
-<span id="L518"><span class="lineNum">     518</span> <span class="tlaGNC">         141 :   if (print &gt; 0)</span></span>
+<span id="L516"><span class="lineNum">     516</span> <span class="tlaGNC">         165 :   PalacePetscCall(EPSCreate(comm, &amp;eps));</span></span>
+<span id="L517"><span class="lineNum">     517</span> <span class="tlaGNC">         165 :   PalacePetscCall(EPSSetOptionsPrefix(eps, prefix.c_str()));</span></span>
+<span id="L518"><span class="lineNum">     518</span> <span class="tlaGNC">         165 :   if (print &gt; 0)</span></span>
 <span id="L519"><span class="lineNum">     519</span>              :   {</span>
 <span id="L520"><span class="lineNum">     520</span> <span class="tlaUNC tlaBgUNC">           0 :     std::string opts = &quot;-eps_monitor&quot;;</span></span>
 <span id="L521"><span class="lineNum">     521</span> <span class="tlaUNC">           0 :     if (print &gt; 2)</span></span>
@@ -602,48 +602,48 @@
 <span id="L532"><span class="lineNum">     532</span> <span class="tlaUNC">           0 :       PetscOptionsPrefixPop(nullptr);</span></span>
 <span id="L533"><span class="lineNum">     533</span>              :     }</span>
 <span id="L534"><span class="lineNum">     534</span>              :   }</span>
-<span id="L535"><span class="lineNum">     535</span> <span class="tlaGNC tlaBgGNC">         141 :   A0 = A1 = nullptr;</span></span>
-<span id="L536"><span class="lineNum">     536</span> <span class="tlaGNC">         141 : }</span></span>
+<span id="L535"><span class="lineNum">     535</span> <span class="tlaGNC tlaBgGNC">         165 :   A0 = A1 = nullptr;</span></span>
+<span id="L536"><span class="lineNum">     536</span> <span class="tlaGNC">         165 : }</span></span>
 <span id="L537"><span class="lineNum">     537</span>              : </span>
-<span id="L538"><span class="lineNum">     538</span> <span class="tlaGNC">         141 : SlepcEPSSolverBase::~SlepcEPSSolverBase()</span></span>
+<span id="L538"><span class="lineNum">     538</span> <span class="tlaGNC">         165 : SlepcEPSSolverBase::~SlepcEPSSolverBase()</span></span>
 <span id="L539"><span class="lineNum">     539</span>              : {</span>
-<span id="L540"><span class="lineNum">     540</span> <span class="tlaGNC">         141 :   PalacePetscCall(EPSDestroy(&amp;eps));</span></span>
-<span id="L541"><span class="lineNum">     541</span> <span class="tlaGNC">         141 :   PalacePetscCall(MatDestroy(&amp;A0));</span></span>
-<span id="L542"><span class="lineNum">     542</span> <span class="tlaGNC">         141 :   PalacePetscCall(MatDestroy(&amp;A1));</span></span>
-<span id="L543"><span class="lineNum">     543</span> <span class="tlaGNC">         141 : }</span></span>
+<span id="L540"><span class="lineNum">     540</span> <span class="tlaGNC">         165 :   PalacePetscCall(EPSDestroy(&amp;eps));</span></span>
+<span id="L541"><span class="lineNum">     541</span> <span class="tlaGNC">         165 :   PalacePetscCall(MatDestroy(&amp;A0));</span></span>
+<span id="L542"><span class="lineNum">     542</span> <span class="tlaGNC">         165 :   PalacePetscCall(MatDestroy(&amp;A1));</span></span>
+<span id="L543"><span class="lineNum">     543</span> <span class="tlaGNC">         165 : }</span></span>
 <span id="L544"><span class="lineNum">     544</span>              : </span>
-<span id="L545"><span class="lineNum">     545</span> <span class="tlaGNC">         141 : void SlepcEPSSolverBase::SetNumModes(int num_eig, int num_vec)</span></span>
+<span id="L545"><span class="lineNum">     545</span> <span class="tlaGNC">         165 : void SlepcEPSSolverBase::SetNumModes(int num_eig, int num_vec)</span></span>
 <span id="L546"><span class="lineNum">     546</span>              : {</span>
-<span id="L547"><span class="lineNum">     547</span> <span class="tlaGNC">         141 :   PalacePetscCall(EPSSetDimensions(eps, num_eig, num_vec, PETSC_DEFAULT));</span></span>
-<span id="L548"><span class="lineNum">     548</span> <span class="tlaGNC">         141 : }</span></span>
+<span id="L547"><span class="lineNum">     547</span> <span class="tlaGNC">         165 :   PalacePetscCall(EPSSetDimensions(eps, num_eig, num_vec, PETSC_DEFAULT));</span></span>
+<span id="L548"><span class="lineNum">     548</span> <span class="tlaGNC">         165 : }</span></span>
 <span id="L549"><span class="lineNum">     549</span>              : </span>
-<span id="L550"><span class="lineNum">     550</span> <span class="tlaGNC">         141 : void SlepcEPSSolverBase::SetTol(PetscReal tol)</span></span>
+<span id="L550"><span class="lineNum">     550</span> <span class="tlaGNC">         165 : void SlepcEPSSolverBase::SetTol(PetscReal tol)</span></span>
 <span id="L551"><span class="lineNum">     551</span>              : {</span>
-<span id="L552"><span class="lineNum">     552</span> <span class="tlaGNC">         141 :   PalacePetscCall(EPSSetTolerances(eps, tol, PETSC_DEFAULT));</span></span>
-<span id="L553"><span class="lineNum">     553</span> <span class="tlaGNC">         141 :   PalacePetscCall(EPSSetConvergenceTest(eps, EPS_CONV_REL));</span></span>
+<span id="L552"><span class="lineNum">     552</span> <span class="tlaGNC">         165 :   PalacePetscCall(EPSSetTolerances(eps, tol, PETSC_DEFAULT));</span></span>
+<span id="L553"><span class="lineNum">     553</span> <span class="tlaGNC">         165 :   PalacePetscCall(EPSSetConvergenceTest(eps, EPS_CONV_REL));</span></span>
 <span id="L554"><span class="lineNum">     554</span>              :   // PalacePetscCall(EPSSetTrackAll(eps, PETSC_TRUE));</span>
 <span id="L555"><span class="lineNum">     555</span>              :   // PalacePetscCall(EPSSetTrueResidual(eps, PETSC_TRUE));</span>
-<span id="L556"><span class="lineNum">     556</span> <span class="tlaGNC">         141 : }</span></span>
+<span id="L556"><span class="lineNum">     556</span> <span class="tlaGNC">         165 : }</span></span>
 <span id="L557"><span class="lineNum">     557</span>              : </span>
 <span id="L558"><span class="lineNum">     558</span> <span class="tlaUNC tlaBgUNC">           0 : void SlepcEPSSolverBase::SetMaxIter(int max_it)</span></span>
 <span id="L559"><span class="lineNum">     559</span>              : {</span>
 <span id="L560"><span class="lineNum">     560</span> <span class="tlaUNC">           0 :   PalacePetscCall(EPSSetTolerances(eps, PETSC_DEFAULT, max_it));</span></span>
 <span id="L561"><span class="lineNum">     561</span> <span class="tlaUNC">           0 : }</span></span>
 <span id="L562"><span class="lineNum">     562</span>              : </span>
-<span id="L563"><span class="lineNum">     563</span> <span class="tlaGNC tlaBgGNC">         141 : void SlepcEPSSolverBase::SetWhichEigenpairs(EigenvalueSolver::WhichType type)</span></span>
+<span id="L563"><span class="lineNum">     563</span> <span class="tlaGNC tlaBgGNC">         165 : void SlepcEPSSolverBase::SetWhichEigenpairs(EigenvalueSolver::WhichType type)</span></span>
 <span id="L564"><span class="lineNum">     564</span>              : {</span>
-<span id="L565"><span class="lineNum">     565</span> <span class="tlaGNC">         141 :   switch (type)</span></span>
+<span id="L565"><span class="lineNum">     565</span> <span class="tlaGNC">         165 :   switch (type)</span></span>
 <span id="L566"><span class="lineNum">     566</span>              :   {</span>
-<span id="L567"><span class="lineNum">     567</span> <span class="tlaGNC">          21 :     case WhichType::LARGEST_MAGNITUDE:</span></span>
-<span id="L568"><span class="lineNum">     568</span> <span class="tlaGNC">          21 :       PalacePetscCall(EPSSetWhichEigenpairs(eps, EPS_LARGEST_MAGNITUDE));</span></span>
-<span id="L569"><span class="lineNum">     569</span> <span class="tlaGNC">          21 :       region = false;</span></span>
-<span id="L570"><span class="lineNum">     570</span> <span class="tlaGNC">          21 :       break;</span></span>
+<span id="L567"><span class="lineNum">     567</span> <span class="tlaGNC">         131 :     case WhichType::LARGEST_MAGNITUDE:</span></span>
+<span id="L568"><span class="lineNum">     568</span> <span class="tlaGNC">         131 :       PalacePetscCall(EPSSetWhichEigenpairs(eps, EPS_LARGEST_MAGNITUDE));</span></span>
+<span id="L569"><span class="lineNum">     569</span> <span class="tlaGNC">         131 :       region = false;</span></span>
+<span id="L570"><span class="lineNum">     570</span> <span class="tlaGNC">         131 :       break;</span></span>
 <span id="L571"><span class="lineNum">     571</span> <span class="tlaUNC tlaBgUNC">           0 :     case WhichType::SMALLEST_MAGNITUDE:</span></span>
 <span id="L572"><span class="lineNum">     572</span> <span class="tlaUNC">           0 :       PalacePetscCall(EPSSetWhichEigenpairs(eps, EPS_SMALLEST_MAGNITUDE));</span></span>
 <span id="L573"><span class="lineNum">     573</span> <span class="tlaUNC">           0 :       region = false;</span></span>
 <span id="L574"><span class="lineNum">     574</span> <span class="tlaUNC">           0 :       break;</span></span>
-<span id="L575"><span class="lineNum">     575</span> <span class="tlaGNC tlaBgGNC">         120 :     case WhichType::LARGEST_REAL:</span></span>
-<span id="L576"><span class="lineNum">     576</span> <span class="tlaGNC">         120 :       PalacePetscCall(EPSSetWhichEigenpairs(eps, EPS_LARGEST_REAL));</span></span>
+<span id="L575"><span class="lineNum">     575</span> <span class="tlaGNC tlaBgGNC">          34 :     case WhichType::LARGEST_REAL:</span></span>
+<span id="L576"><span class="lineNum">     576</span> <span class="tlaGNC">          34 :       PalacePetscCall(EPSSetWhichEigenpairs(eps, EPS_LARGEST_REAL));</span></span>
 <span id="L577"><span class="lineNum">     577</span>              :       break;</span>
 <span id="L578"><span class="lineNum">     578</span> <span class="tlaUNC tlaBgUNC">           0 :     case WhichType::SMALLEST_REAL:</span></span>
 <span id="L579"><span class="lineNum">     579</span> <span class="tlaUNC">           0 :       PalacePetscCall(EPSSetWhichEigenpairs(eps, EPS_SMALLEST_REAL));</span></span>
@@ -665,11 +665,11 @@
 <span id="L595"><span class="lineNum">     595</span> <span class="tlaUNC">           0 :       PalacePetscCall(EPSSetWhichEigenpairs(eps, EPS_TARGET_IMAGINARY));</span></span>
 <span id="L596"><span class="lineNum">     596</span>              :       break;</span>
 <span id="L597"><span class="lineNum">     597</span>              :   }</span>
-<span id="L598"><span class="lineNum">     598</span> <span class="tlaGNC tlaBgGNC">         141 : }</span></span>
+<span id="L598"><span class="lineNum">     598</span> <span class="tlaGNC tlaBgGNC">         165 : }</span></span>
 <span id="L599"><span class="lineNum">     599</span>              : </span>
-<span id="L600"><span class="lineNum">     600</span> <span class="tlaGNC">         141 : void SlepcEPSSolverBase::SetProblemType(SlepcEigenvalueSolver::ProblemType type)</span></span>
+<span id="L600"><span class="lineNum">     600</span> <span class="tlaGNC">         165 : void SlepcEPSSolverBase::SetProblemType(SlepcEigenvalueSolver::ProblemType type)</span></span>
 <span id="L601"><span class="lineNum">     601</span>              : {</span>
-<span id="L602"><span class="lineNum">     602</span> <span class="tlaGNC">         141 :   switch (type)</span></span>
+<span id="L602"><span class="lineNum">     602</span> <span class="tlaGNC">         165 :   switch (type)</span></span>
 <span id="L603"><span class="lineNum">     603</span>              :   {</span>
 <span id="L604"><span class="lineNum">     604</span> <span class="tlaUNC tlaBgUNC">           0 :     case ProblemType::HERMITIAN:</span></span>
 <span id="L605"><span class="lineNum">     605</span> <span class="tlaUNC">           0 :       PalacePetscCall(EPSSetProblemType(eps, EPS_HEP));</span></span>
@@ -683,8 +683,8 @@
 <span id="L613"><span class="lineNum">     613</span> <span class="tlaUNC">           0 :     case ProblemType::GEN_INDEFINITE:</span></span>
 <span id="L614"><span class="lineNum">     614</span> <span class="tlaUNC">           0 :       PalacePetscCall(EPSSetProblemType(eps, EPS_GHIEP));</span></span>
 <span id="L615"><span class="lineNum">     615</span>              :       break;</span>
-<span id="L616"><span class="lineNum">     616</span> <span class="tlaGNC tlaBgGNC">         141 :     case ProblemType::GEN_NON_HERMITIAN:</span></span>
-<span id="L617"><span class="lineNum">     617</span> <span class="tlaGNC">         141 :       PalacePetscCall(EPSSetProblemType(eps, EPS_GNHEP));</span></span>
+<span id="L616"><span class="lineNum">     616</span> <span class="tlaGNC tlaBgGNC">         165 :     case ProblemType::GEN_NON_HERMITIAN:</span></span>
+<span id="L617"><span class="lineNum">     617</span> <span class="tlaGNC">         165 :       PalacePetscCall(EPSSetProblemType(eps, EPS_GNHEP));</span></span>
 <span id="L618"><span class="lineNum">     618</span>              :       // PalacePetscCall(EPSSetProblemType(eps, EPS_PGNHEP));  // If B is SPD</span>
 <span id="L619"><span class="lineNum">     619</span>              :       break;</span>
 <span id="L620"><span class="lineNum">     620</span> <span class="tlaUNC tlaBgUNC">           0 :     case ProblemType::HYPERBOLIC:</span></span>
@@ -693,14 +693,14 @@
 <span id="L623"><span class="lineNum">     623</span> <span class="tlaUNC">           0 :       MFEM_ABORT(&quot;Problem type not implemented!&quot;);</span></span>
 <span id="L624"><span class="lineNum">     624</span>              :       break;</span>
 <span id="L625"><span class="lineNum">     625</span>              :   }</span>
-<span id="L626"><span class="lineNum">     626</span> <span class="tlaGNC tlaBgGNC">         141 : }</span></span>
+<span id="L626"><span class="lineNum">     626</span> <span class="tlaGNC tlaBgGNC">         165 : }</span></span>
 <span id="L627"><span class="lineNum">     627</span>              : </span>
-<span id="L628"><span class="lineNum">     628</span> <span class="tlaGNC">         141 : void SlepcEPSSolverBase::SetType(SlepcEigenvalueSolver::Type type)</span></span>
+<span id="L628"><span class="lineNum">     628</span> <span class="tlaGNC">         165 : void SlepcEPSSolverBase::SetType(SlepcEigenvalueSolver::Type type)</span></span>
 <span id="L629"><span class="lineNum">     629</span>              : {</span>
-<span id="L630"><span class="lineNum">     630</span> <span class="tlaGNC">         141 :   switch (type)</span></span>
+<span id="L630"><span class="lineNum">     630</span> <span class="tlaGNC">         165 :   switch (type)</span></span>
 <span id="L631"><span class="lineNum">     631</span>              :   {</span>
-<span id="L632"><span class="lineNum">     632</span> <span class="tlaGNC">         141 :     case Type::KRYLOVSCHUR:</span></span>
-<span id="L633"><span class="lineNum">     633</span> <span class="tlaGNC">         141 :       PalacePetscCall(EPSSetType(eps, EPSKRYLOVSCHUR));</span></span>
+<span id="L632"><span class="lineNum">     632</span> <span class="tlaGNC">         165 :     case Type::KRYLOVSCHUR:</span></span>
+<span id="L633"><span class="lineNum">     633</span> <span class="tlaGNC">         165 :       PalacePetscCall(EPSSetType(eps, EPSKRYLOVSCHUR));</span></span>
 <span id="L634"><span class="lineNum">     634</span>              :       break;</span>
 <span id="L635"><span class="lineNum">     635</span> <span class="tlaUNC tlaBgUNC">           0 :     case Type::POWER:</span></span>
 <span id="L636"><span class="lineNum">     636</span> <span class="tlaUNC">           0 :       PalacePetscCall(EPSSetType(eps, EPSPOWER));</span></span>
@@ -720,48 +720,48 @@
 <span id="L650"><span class="lineNum">     650</span> <span class="tlaUNC">           0 :       MFEM_ABORT(&quot;Eigenvalue solver type not implemented!&quot;);</span></span>
 <span id="L651"><span class="lineNum">     651</span>              :       break;</span>
 <span id="L652"><span class="lineNum">     652</span>              :   }</span>
-<span id="L653"><span class="lineNum">     653</span> <span class="tlaGNC tlaBgGNC">         141 : }</span></span>
+<span id="L653"><span class="lineNum">     653</span> <span class="tlaGNC tlaBgGNC">         165 : }</span></span>
 <span id="L654"><span class="lineNum">     654</span>              : </span>
-<span id="L655"><span class="lineNum">     655</span> <span class="tlaGNC">         166 : void SlepcEPSSolverBase::SetInitialSpace(const ComplexVector &amp;v)</span></span>
+<span id="L655"><span class="lineNum">     655</span> <span class="tlaGNC">         190 : void SlepcEPSSolverBase::SetInitialSpace(const ComplexVector &amp;v)</span></span>
 <span id="L656"><span class="lineNum">     656</span>              : {</span>
-<span id="L657"><span class="lineNum">     657</span> <span class="tlaGNC">         166 :   MFEM_VERIFY(</span></span>
+<span id="L657"><span class="lineNum">     657</span> <span class="tlaGNC">         190 :   MFEM_VERIFY(</span></span>
 <span id="L658"><span class="lineNum">     658</span>              :       A0 &amp;&amp; A1,</span>
 <span id="L659"><span class="lineNum">     659</span>              :       &quot;Must call SetOperators before using SetInitialSpace for SLEPc eigenvalue solver!&quot;);</span>
-<span id="L660"><span class="lineNum">     660</span> <span class="tlaGNC">         166 :   if (!v0)</span></span>
+<span id="L660"><span class="lineNum">     660</span> <span class="tlaGNC">         190 :   if (!v0)</span></span>
 <span id="L661"><span class="lineNum">     661</span>              :   {</span>
 <span id="L662"><span class="lineNum">     662</span> <span class="tlaUNC tlaBgUNC">           0 :     PalacePetscCall(MatCreateVecs(A0, nullptr, &amp;v0));</span></span>
 <span id="L663"><span class="lineNum">     663</span>              :   }</span>
-<span id="L664"><span class="lineNum">     664</span> <span class="tlaGNC tlaBgGNC">         166 :   PalacePetscCall(ToPetscVec(v, v0));</span></span>
-<span id="L665"><span class="lineNum">     665</span> <span class="tlaGNC">         166 :   Vec is[1] = {v0};</span></span>
-<span id="L666"><span class="lineNum">     666</span> <span class="tlaGNC">         166 :   PalacePetscCall(EPSSetInitialSpace(eps, 1, is));</span></span>
-<span id="L667"><span class="lineNum">     667</span> <span class="tlaGNC">         166 : }</span></span>
+<span id="L664"><span class="lineNum">     664</span> <span class="tlaGNC tlaBgGNC">         190 :   PalacePetscCall(ToPetscVec(v, v0));</span></span>
+<span id="L665"><span class="lineNum">     665</span> <span class="tlaGNC">         190 :   Vec is[1] = {v0};</span></span>
+<span id="L666"><span class="lineNum">     666</span> <span class="tlaGNC">         190 :   PalacePetscCall(EPSSetInitialSpace(eps, 1, is));</span></span>
+<span id="L667"><span class="lineNum">     667</span> <span class="tlaGNC">         190 : }</span></span>
 <span id="L668"><span class="lineNum">     668</span>              : </span>
-<span id="L669"><span class="lineNum">     669</span> <span class="tlaGNC">         236 : void SlepcEPSSolverBase::Customize()</span></span>
+<span id="L669"><span class="lineNum">     669</span> <span class="tlaGNC">         260 : void SlepcEPSSolverBase::Customize()</span></span>
 <span id="L670"><span class="lineNum">     670</span>              : {</span>
-<span id="L671"><span class="lineNum">     671</span> <span class="tlaGNC">         236 :   SlepcEigenvalueSolver::Customize();</span></span>
-<span id="L672"><span class="lineNum">     672</span> <span class="tlaGNC">         236 :   PalacePetscCall(EPSSetTarget(eps, sigma / gamma));</span></span>
-<span id="L673"><span class="lineNum">     673</span> <span class="tlaGNC">         236 :   if (!cl_custom)</span></span>
+<span id="L671"><span class="lineNum">     671</span> <span class="tlaGNC">         260 :   SlepcEigenvalueSolver::Customize();</span></span>
+<span id="L672"><span class="lineNum">     672</span> <span class="tlaGNC">         260 :   PalacePetscCall(EPSSetTarget(eps, sigma / gamma));</span></span>
+<span id="L673"><span class="lineNum">     673</span> <span class="tlaGNC">         260 :   if (!cl_custom)</span></span>
 <span id="L674"><span class="lineNum">     674</span>              :   {</span>
-<span id="L675"><span class="lineNum">     675</span> <span class="tlaGNC">         132 :     PalacePetscCall(EPSSetFromOptions(eps));</span></span>
-<span id="L676"><span class="lineNum">     676</span> <span class="tlaGNC">         132 :     if (print &gt; 0)</span></span>
+<span id="L675"><span class="lineNum">     675</span> <span class="tlaGNC">         156 :     PalacePetscCall(EPSSetFromOptions(eps));</span></span>
+<span id="L676"><span class="lineNum">     676</span> <span class="tlaGNC">         156 :     if (print &gt; 0)</span></span>
 <span id="L677"><span class="lineNum">     677</span>              :     {</span>
 <span id="L678"><span class="lineNum">     678</span> <span class="tlaUNC tlaBgUNC">           0 :       PetscOptionsView(nullptr, PETSC_VIEWER_STDOUT_(GetComm()));</span></span>
 <span id="L679"><span class="lineNum">     679</span> <span class="tlaUNC">           0 :       Mpi::Print(GetComm(), &quot;\n&quot;);</span></span>
 <span id="L680"><span class="lineNum">     680</span>              :     }</span>
-<span id="L681"><span class="lineNum">     681</span> <span class="tlaGNC tlaBgGNC">         132 :     cl_custom = true;</span></span>
+<span id="L681"><span class="lineNum">     681</span> <span class="tlaGNC tlaBgGNC">         156 :     cl_custom = true;</span></span>
 <span id="L682"><span class="lineNum">     682</span>              :   }</span>
-<span id="L683"><span class="lineNum">     683</span> <span class="tlaGNC">         236 : }</span></span>
+<span id="L683"><span class="lineNum">     683</span> <span class="tlaGNC">         260 : }</span></span>
 <span id="L684"><span class="lineNum">     684</span>              : </span>
-<span id="L685"><span class="lineNum">     685</span> <span class="tlaGNC">         236 : int SlepcEPSSolverBase::Solve()</span></span>
+<span id="L685"><span class="lineNum">     685</span> <span class="tlaGNC">         260 : int SlepcEPSSolverBase::Solve()</span></span>
 <span id="L686"><span class="lineNum">     686</span>              : {</span>
-<span id="L687"><span class="lineNum">     687</span> <span class="tlaGNC">         236 :   MFEM_VERIFY(A0 &amp;&amp; A1 &amp;&amp; opInv, &quot;Operators are not set for SlepcEPSSolverBase!&quot;);</span></span>
+<span id="L687"><span class="lineNum">     687</span> <span class="tlaGNC">         260 :   MFEM_VERIFY(A0 &amp;&amp; A1 &amp;&amp; opInv, &quot;Operators are not set for SlepcEPSSolverBase!&quot;);</span></span>
 <span id="L688"><span class="lineNum">     688</span>              : </span>
 <span id="L689"><span class="lineNum">     689</span>              :   // Solve the eigenvalue problem.</span>
 <span id="L690"><span class="lineNum">     690</span>              :   PetscInt num_conv;</span>
-<span id="L691"><span class="lineNum">     691</span> <span class="tlaGNC">         236 :   Customize();</span></span>
-<span id="L692"><span class="lineNum">     692</span> <span class="tlaGNC">         236 :   PalacePetscCall(EPSSolve(eps));</span></span>
-<span id="L693"><span class="lineNum">     693</span> <span class="tlaGNC">         236 :   PalacePetscCall(EPSGetConverged(eps, &amp;num_conv));</span></span>
-<span id="L694"><span class="lineNum">     694</span> <span class="tlaGNC">         236 :   if (print &gt; 0)</span></span>
+<span id="L691"><span class="lineNum">     691</span> <span class="tlaGNC">         260 :   Customize();</span></span>
+<span id="L692"><span class="lineNum">     692</span> <span class="tlaGNC">         260 :   PalacePetscCall(EPSSolve(eps));</span></span>
+<span id="L693"><span class="lineNum">     693</span> <span class="tlaGNC">         260 :   PalacePetscCall(EPSGetConverged(eps, &amp;num_conv));</span></span>
+<span id="L694"><span class="lineNum">     694</span> <span class="tlaGNC">         260 :   if (print &gt; 0)</span></span>
 <span id="L695"><span class="lineNum">     695</span>              :   {</span>
 <span id="L696"><span class="lineNum">     696</span> <span class="tlaUNC tlaBgUNC">           0 :     Mpi::Print(GetComm(), &quot;\n&quot;);</span></span>
 <span id="L697"><span class="lineNum">     697</span> <span class="tlaUNC">           0 :     PalacePetscCall(EPSConvergedReasonView(eps, PETSC_VIEWER_STDOUT_(GetComm())));</span></span>
@@ -772,29 +772,29 @@
 <span id="L702"><span class="lineNum">     702</span>              :   }</span>
 <span id="L703"><span class="lineNum">     703</span>              : </span>
 <span id="L704"><span class="lineNum">     704</span>              :   // Compute and store the eigenpair residuals.</span>
-<span id="L705"><span class="lineNum">     705</span> <span class="tlaGNC tlaBgGNC">         236 :   RescaleEigenvectors(num_conv);</span></span>
-<span id="L706"><span class="lineNum">     706</span> <span class="tlaGNC">         236 :   return static_cast&lt;int&gt;(num_conv);</span></span>
+<span id="L705"><span class="lineNum">     705</span> <span class="tlaGNC tlaBgGNC">         260 :   RescaleEigenvectors(num_conv);</span></span>
+<span id="L706"><span class="lineNum">     706</span> <span class="tlaGNC">         260 :   return static_cast&lt;int&gt;(num_conv);</span></span>
 <span id="L707"><span class="lineNum">     707</span>              : }</span>
 <span id="L708"><span class="lineNum">     708</span>              : </span>
-<span id="L709"><span class="lineNum">     709</span> <span class="tlaGNC">        1858 : std::complex&lt;double&gt; SlepcEPSSolverBase::GetEigenvalue(int i) const</span></span>
+<span id="L709"><span class="lineNum">     709</span> <span class="tlaGNC">        2040 : std::complex&lt;double&gt; SlepcEPSSolverBase::GetEigenvalue(int i) const</span></span>
 <span id="L710"><span class="lineNum">     710</span>              : {</span>
-<span id="L711"><span class="lineNum">     711</span> <span class="tlaGNC">        1858 :   PetscScalar l;</span></span>
-<span id="L712"><span class="lineNum">     712</span> <span class="tlaGNC">        1858 :   PalacePetscCall(EPSGetEigenvalue(eps, i, &amp;l, nullptr));</span></span>
-<span id="L713"><span class="lineNum">     713</span> <span class="tlaGNC">        1858 :   return l * gamma;</span></span>
+<span id="L711"><span class="lineNum">     711</span> <span class="tlaGNC">        2040 :   PetscScalar l;</span></span>
+<span id="L712"><span class="lineNum">     712</span> <span class="tlaGNC">        2040 :   PalacePetscCall(EPSGetEigenvalue(eps, i, &amp;l, nullptr));</span></span>
+<span id="L713"><span class="lineNum">     713</span> <span class="tlaGNC">        2040 :   return l * gamma;</span></span>
 <span id="L714"><span class="lineNum">     714</span>              : }</span>
 <span id="L715"><span class="lineNum">     715</span>              : </span>
-<span id="L716"><span class="lineNum">     716</span> <span class="tlaGNC">        1245 : void SlepcEPSSolverBase::GetEigenvector(int i, ComplexVector &amp;x) const</span></span>
+<span id="L716"><span class="lineNum">     716</span> <span class="tlaGNC">        1372 : void SlepcEPSSolverBase::GetEigenvector(int i, ComplexVector &amp;x) const</span></span>
 <span id="L717"><span class="lineNum">     717</span>              : {</span>
-<span id="L718"><span class="lineNum">     718</span> <span class="tlaGNC">        1245 :   MFEM_VERIFY(</span></span>
+<span id="L718"><span class="lineNum">     718</span> <span class="tlaGNC">        1372 :   MFEM_VERIFY(</span></span>
 <span id="L719"><span class="lineNum">     719</span>              :       v0,</span>
 <span id="L720"><span class="lineNum">     720</span>              :       &quot;Must call SetOperators before using GetEigenvector for SLEPc eigenvalue solver!&quot;);</span>
-<span id="L721"><span class="lineNum">     721</span> <span class="tlaGNC">        1245 :   PalacePetscCall(EPSGetEigenvector(eps, i, v0, nullptr));</span></span>
-<span id="L722"><span class="lineNum">     722</span> <span class="tlaGNC">        1245 :   PalacePetscCall(FromPetscVec(v0, x));</span></span>
-<span id="L723"><span class="lineNum">     723</span> <span class="tlaGNC">        1245 :   if (xscale.get()[i] &gt; 0.0)</span></span>
+<span id="L721"><span class="lineNum">     721</span> <span class="tlaGNC">        1372 :   PalacePetscCall(EPSGetEigenvector(eps, i, v0, nullptr));</span></span>
+<span id="L722"><span class="lineNum">     722</span> <span class="tlaGNC">        1372 :   PalacePetscCall(FromPetscVec(v0, x));</span></span>
+<span id="L723"><span class="lineNum">     723</span> <span class="tlaGNC">        1372 :   if (xscale.get()[i] &gt; 0.0)</span></span>
 <span id="L724"><span class="lineNum">     724</span>              :   {</span>
-<span id="L725"><span class="lineNum">     725</span> <span class="tlaGNC">         446 :     x *= xscale.get()[i];</span></span>
+<span id="L725"><span class="lineNum">     725</span> <span class="tlaGNC">         494 :     x *= xscale.get()[i];</span></span>
 <span id="L726"><span class="lineNum">     726</span>              :   }</span>
-<span id="L727"><span class="lineNum">     727</span> <span class="tlaGNC">        1245 : }</span></span>
+<span id="L727"><span class="lineNum">     727</span> <span class="tlaGNC">        1372 : }</span></span>
 <span id="L728"><span class="lineNum">     728</span>              : </span>
 <span id="L729"><span class="lineNum">     729</span> <span class="tlaUNC tlaBgUNC">           0 : BV SlepcEPSSolverBase::GetBV() const</span></span>
 <span id="L730"><span class="lineNum">     730</span>              : {</span>
@@ -803,11 +803,11 @@
 <span id="L733"><span class="lineNum">     733</span> <span class="tlaUNC">           0 :   return bv;</span></span>
 <span id="L734"><span class="lineNum">     734</span>              : }</span>
 <span id="L735"><span class="lineNum">     735</span>              : </span>
-<span id="L736"><span class="lineNum">     736</span> <span class="tlaGNC tlaBgGNC">         368 : ST SlepcEPSSolverBase::GetST() const</span></span>
+<span id="L736"><span class="lineNum">     736</span> <span class="tlaGNC tlaBgGNC">         416 : ST SlepcEPSSolverBase::GetST() const</span></span>
 <span id="L737"><span class="lineNum">     737</span>              : {</span>
 <span id="L738"><span class="lineNum">     738</span>              :   ST st;</span>
-<span id="L739"><span class="lineNum">     739</span> <span class="tlaGNC">         368 :   PalacePetscCall(EPSGetST(eps, &amp;st));</span></span>
-<span id="L740"><span class="lineNum">     740</span> <span class="tlaGNC">         368 :   return st;</span></span>
+<span id="L739"><span class="lineNum">     739</span> <span class="tlaGNC">         416 :   PalacePetscCall(EPSGetST(eps, &amp;st));</span></span>
+<span id="L740"><span class="lineNum">     740</span> <span class="tlaGNC">         416 :   return st;</span></span>
 <span id="L741"><span class="lineNum">     741</span>              : }</span>
 <span id="L742"><span class="lineNum">     742</span>              : </span>
 <span id="L743"><span class="lineNum">     743</span> <span class="tlaUNC tlaBgUNC">           0 : RG SlepcEPSSolverBase::GetRG() const</span></span>
@@ -817,39 +817,39 @@
 <span id="L747"><span class="lineNum">     747</span> <span class="tlaUNC">           0 :   return rg;</span></span>
 <span id="L748"><span class="lineNum">     748</span>              : }</span>
 <span id="L749"><span class="lineNum">     749</span>              : </span>
-<span id="L750"><span class="lineNum">     750</span> <span class="tlaGNC tlaBgGNC">         141 : SlepcEPSSolver::SlepcEPSSolver(MPI_Comm comm, int print, const std::string &amp;prefix)</span></span>
-<span id="L751"><span class="lineNum">     751</span> <span class="tlaGNC">         141 :   : SlepcEPSSolverBase(comm, print, prefix)</span></span>
+<span id="L750"><span class="lineNum">     750</span> <span class="tlaGNC tlaBgGNC">         165 : SlepcEPSSolver::SlepcEPSSolver(MPI_Comm comm, int print, const std::string &amp;prefix)</span></span>
+<span id="L751"><span class="lineNum">     751</span> <span class="tlaGNC">         165 :   : SlepcEPSSolverBase(comm, print, prefix)</span></span>
 <span id="L752"><span class="lineNum">     752</span>              : {</span>
-<span id="L753"><span class="lineNum">     753</span> <span class="tlaGNC">         141 :   opK = opM = nullptr;</span></span>
-<span id="L754"><span class="lineNum">     754</span> <span class="tlaGNC">         141 :   normK = normM = 0.0;</span></span>
-<span id="L755"><span class="lineNum">     755</span> <span class="tlaGNC">         141 : }</span></span>
+<span id="L753"><span class="lineNum">     753</span> <span class="tlaGNC">         165 :   opK = opM = nullptr;</span></span>
+<span id="L754"><span class="lineNum">     754</span> <span class="tlaGNC">         165 :   normK = normM = 0.0;</span></span>
+<span id="L755"><span class="lineNum">     755</span> <span class="tlaGNC">         165 : }</span></span>
 <span id="L756"><span class="lineNum">     756</span>              : </span>
-<span id="L757"><span class="lineNum">     757</span> <span class="tlaGNC">         236 : void SlepcEPSSolver::SetOperators(const ComplexOperator &amp;K, const ComplexOperator &amp;M,</span></span>
+<span id="L757"><span class="lineNum">     757</span> <span class="tlaGNC">         260 : void SlepcEPSSolver::SetOperators(const ComplexOperator &amp;K, const ComplexOperator &amp;M,</span></span>
 <span id="L758"><span class="lineNum">     758</span>              :                                   EigenvalueSolver::ScaleType type)</span>
 <span id="L759"><span class="lineNum">     759</span>              : {</span>
 <span id="L760"><span class="lineNum">     760</span>              :   // Construct shell matrices for the scaled operators which define the generalized</span>
 <span id="L761"><span class="lineNum">     761</span>              :   // eigenvalue problem.</span>
-<span id="L762"><span class="lineNum">     762</span> <span class="tlaGNC">         236 :   const bool first = (opK == nullptr);</span></span>
-<span id="L763"><span class="lineNum">     763</span> <span class="tlaGNC">         236 :   opK = &amp;K;</span></span>
-<span id="L764"><span class="lineNum">     764</span> <span class="tlaGNC">         236 :   opM = &amp;M;</span></span>
+<span id="L762"><span class="lineNum">     762</span> <span class="tlaGNC">         260 :   const bool first = (opK == nullptr);</span></span>
+<span id="L763"><span class="lineNum">     763</span> <span class="tlaGNC">         260 :   opK = &amp;K;</span></span>
+<span id="L764"><span class="lineNum">     764</span> <span class="tlaGNC">         260 :   opM = &amp;M;</span></span>
 <span id="L765"><span class="lineNum">     765</span>              : </span>
-<span id="L766"><span class="lineNum">     766</span> <span class="tlaGNC">         236 :   if (first)</span></span>
+<span id="L766"><span class="lineNum">     766</span> <span class="tlaGNC">         260 :   if (first)</span></span>
 <span id="L767"><span class="lineNum">     767</span>              :   {</span>
-<span id="L768"><span class="lineNum">     768</span> <span class="tlaGNC">         132 :     const PetscInt n = opK-&gt;Height();</span></span>
-<span id="L769"><span class="lineNum">     769</span> <span class="tlaGNC">         132 :     PalacePetscCall(</span></span>
+<span id="L768"><span class="lineNum">     768</span> <span class="tlaGNC">         156 :     const PetscInt n = opK-&gt;Height();</span></span>
+<span id="L769"><span class="lineNum">     769</span> <span class="tlaGNC">         156 :     PalacePetscCall(</span></span>
 <span id="L770"><span class="lineNum">     770</span>              :         MatCreateShell(GetComm(), n, n, PETSC_DECIDE, PETSC_DECIDE, (void *)this, &amp;A0));</span>
-<span id="L771"><span class="lineNum">     771</span> <span class="tlaGNC">         132 :     PalacePetscCall(</span></span>
+<span id="L771"><span class="lineNum">     771</span> <span class="tlaGNC">         156 :     PalacePetscCall(</span></span>
 <span id="L772"><span class="lineNum">     772</span>              :         MatCreateShell(GetComm(), n, n, PETSC_DECIDE, PETSC_DECIDE, (void *)this, &amp;A1));</span>
-<span id="L773"><span class="lineNum">     773</span> <span class="tlaGNC">         132 :     PalacePetscCall(</span></span>
+<span id="L773"><span class="lineNum">     773</span> <span class="tlaGNC">         156 :     PalacePetscCall(</span></span>
 <span id="L774"><span class="lineNum">     774</span>              :         MatShellSetOperation(A0, MATOP_MULT, (void (*)(void))__mat_apply_EPS_A0));</span>
-<span id="L775"><span class="lineNum">     775</span> <span class="tlaGNC">         132 :     PalacePetscCall(</span></span>
+<span id="L775"><span class="lineNum">     775</span> <span class="tlaGNC">         156 :     PalacePetscCall(</span></span>
 <span id="L776"><span class="lineNum">     776</span>              :         MatShellSetOperation(A1, MATOP_MULT, (void (*)(void))__mat_apply_EPS_A1));</span>
-<span id="L777"><span class="lineNum">     777</span> <span class="tlaGNC">         132 :     PalacePetscCall(MatShellSetVecType(A0, PetscVecType()));</span></span>
-<span id="L778"><span class="lineNum">     778</span> <span class="tlaGNC">         132 :     PalacePetscCall(MatShellSetVecType(A1, PetscVecType()));</span></span>
-<span id="L779"><span class="lineNum">     779</span> <span class="tlaGNC">         132 :     PalacePetscCall(EPSSetOperators(eps, A0, A1));</span></span>
+<span id="L777"><span class="lineNum">     777</span> <span class="tlaGNC">         156 :     PalacePetscCall(MatShellSetVecType(A0, PetscVecType()));</span></span>
+<span id="L778"><span class="lineNum">     778</span> <span class="tlaGNC">         156 :     PalacePetscCall(MatShellSetVecType(A1, PetscVecType()));</span></span>
+<span id="L779"><span class="lineNum">     779</span> <span class="tlaGNC">         156 :     PalacePetscCall(EPSSetOperators(eps, A0, A1));</span></span>
 <span id="L780"><span class="lineNum">     780</span>              :   }</span>
 <span id="L781"><span class="lineNum">     781</span>              : </span>
-<span id="L782"><span class="lineNum">     782</span> <span class="tlaGNC">         236 :   if (first &amp;&amp; type != ScaleType::NONE)</span></span>
+<span id="L782"><span class="lineNum">     782</span> <span class="tlaGNC">         260 :   if (first &amp;&amp; type != ScaleType::NONE)</span></span>
 <span id="L783"><span class="lineNum">     783</span>              :   {</span>
 <span id="L784"><span class="lineNum">     784</span> <span class="tlaUNC tlaBgUNC">           0 :     normK = linalg::SpectralNorm(GetComm(), *opK, opK-&gt;IsReal());</span></span>
 <span id="L785"><span class="lineNum">     785</span> <span class="tlaUNC">           0 :     normM = linalg::SpectralNorm(GetComm(), *opM, opM-&gt;IsReal());</span></span>
@@ -862,22 +862,22 @@
 <span id="L792"><span class="lineNum">     792</span>              :   }</span>
 <span id="L793"><span class="lineNum">     793</span>              : </span>
 <span id="L794"><span class="lineNum">     794</span>              :   // Set up workspace.</span>
-<span id="L795"><span class="lineNum">     795</span> <span class="tlaGNC tlaBgGNC">         236 :   if (!v0)</span></span>
+<span id="L795"><span class="lineNum">     795</span> <span class="tlaGNC tlaBgGNC">         260 :   if (!v0)</span></span>
 <span id="L796"><span class="lineNum">     796</span>              :   {</span>
-<span id="L797"><span class="lineNum">     797</span> <span class="tlaGNC">         132 :     PalacePetscCall(MatCreateVecs(A0, nullptr, &amp;v0));</span></span>
+<span id="L797"><span class="lineNum">     797</span> <span class="tlaGNC">         156 :     PalacePetscCall(MatCreateVecs(A0, nullptr, &amp;v0));</span></span>
 <span id="L798"><span class="lineNum">     798</span>              :   }</span>
-<span id="L799"><span class="lineNum">     799</span> <span class="tlaGNC">         236 :   x1.SetSize(opK-&gt;Height());</span></span>
-<span id="L800"><span class="lineNum">     800</span> <span class="tlaGNC">         236 :   y1.SetSize(opK-&gt;Height());</span></span>
-<span id="L801"><span class="lineNum">     801</span> <span class="tlaGNC">         236 :   x1.UseDevice(true);</span></span>
-<span id="L802"><span class="lineNum">     802</span> <span class="tlaGNC">         236 :   y1.UseDevice(true);</span></span>
+<span id="L799"><span class="lineNum">     799</span> <span class="tlaGNC">         260 :   x1.SetSize(opK-&gt;Height());</span></span>
+<span id="L800"><span class="lineNum">     800</span> <span class="tlaGNC">         260 :   y1.SetSize(opK-&gt;Height());</span></span>
+<span id="L801"><span class="lineNum">     801</span> <span class="tlaGNC">         260 :   x1.UseDevice(true);</span></span>
+<span id="L802"><span class="lineNum">     802</span> <span class="tlaGNC">         260 :   y1.UseDevice(true);</span></span>
 <span id="L803"><span class="lineNum">     803</span>              : </span>
 <span id="L804"><span class="lineNum">     804</span>              :   // Configure linear solver for generalized problem or spectral transformation. This also</span>
 <span id="L805"><span class="lineNum">     805</span>              :   // allows use of the divergence-free projector as a linear solve side-effect.</span>
-<span id="L806"><span class="lineNum">     806</span> <span class="tlaGNC">         236 :   if (first)</span></span>
+<span id="L806"><span class="lineNum">     806</span> <span class="tlaGNC">         260 :   if (first)</span></span>
 <span id="L807"><span class="lineNum">     807</span>              :   {</span>
-<span id="L808"><span class="lineNum">     808</span> <span class="tlaGNC">         132 :     ConfigurePCShell(GetST(), (void *)this, __pc_apply_EPS);</span></span>
+<span id="L808"><span class="lineNum">     808</span> <span class="tlaGNC">         156 :     ConfigurePCShell(GetST(), (void *)this, __pc_apply_EPS);</span></span>
 <span id="L809"><span class="lineNum">     809</span>              :   }</span>
-<span id="L810"><span class="lineNum">     810</span> <span class="tlaGNC">         236 : }</span></span>
+<span id="L810"><span class="lineNum">     810</span> <span class="tlaGNC">         260 : }</span></span>
 <span id="L811"><span class="lineNum">     811</span>              : </span>
 <span id="L812"><span class="lineNum">     812</span> <span class="tlaUNC tlaBgUNC">           0 : void SlepcEPSSolver::SetBMat(const Operator &amp;B)</span></span>
 <span id="L813"><span class="lineNum">     813</span>              : {</span>
@@ -893,13 +893,13 @@
 <span id="L823"><span class="lineNum">     823</span> <span class="tlaUNC">           0 :   PalacePetscCall(BVSetMatrix(bv, B0, PETSC_FALSE));</span></span>
 <span id="L824"><span class="lineNum">     824</span> <span class="tlaUNC">           0 : }</span></span>
 <span id="L825"><span class="lineNum">     825</span>              : </span>
-<span id="L826"><span class="lineNum">     826</span> <span class="tlaGNC tlaBgGNC">         799 : PetscReal SlepcEPSSolver::GetResidualNorm(PetscScalar l, const ComplexVector &amp;x,</span></span>
+<span id="L826"><span class="lineNum">     826</span> <span class="tlaGNC tlaBgGNC">         878 : PetscReal SlepcEPSSolver::GetResidualNorm(PetscScalar l, const ComplexVector &amp;x,</span></span>
 <span id="L827"><span class="lineNum">     827</span>              :                                           ComplexVector &amp;r) const</span>
 <span id="L828"><span class="lineNum">     828</span>              : {</span>
 <span id="L829"><span class="lineNum">     829</span>              :   // Compute the i-th eigenpair residual: || (K - λ M) x ||₂ for eigenvalue λ.</span>
-<span id="L830"><span class="lineNum">     830</span> <span class="tlaGNC">         799 :   opK-&gt;Mult(x, r);</span></span>
-<span id="L831"><span class="lineNum">     831</span> <span class="tlaGNC">         799 :   opM-&gt;AddMult(x, r, -l);</span></span>
-<span id="L832"><span class="lineNum">     832</span> <span class="tlaGNC">         799 :   return linalg::Norml2(GetComm(), r);</span></span>
+<span id="L830"><span class="lineNum">     830</span> <span class="tlaGNC">         878 :   opK-&gt;Mult(x, r);</span></span>
+<span id="L831"><span class="lineNum">     831</span> <span class="tlaGNC">         878 :   opM-&gt;AddMult(x, r, -l);</span></span>
+<span id="L832"><span class="lineNum">     832</span> <span class="tlaGNC">         878 :   return linalg::Norml2(GetComm(), r);</span></span>
 <span id="L833"><span class="lineNum">     833</span>              : }</span>
 <span id="L834"><span class="lineNum">     834</span>              : </span>
 <span id="L835"><span class="lineNum">     835</span> <span class="tlaGNC">           3 : PetscReal SlepcEPSSolver::GetBackwardScaling(PetscScalar l) const</span></span>
@@ -1863,17 +1863,17 @@
 <span id="L1793"><span class="lineNum">    1793</span>              : </span>
 <span id="L1794"><span class="lineNum">    1794</span>              : }  // namespace palace::slepc</span>
 <span id="L1795"><span class="lineNum">    1795</span>              : </span>
-<span id="L1796"><span class="lineNum">    1796</span> <span class="tlaGNC tlaBgGNC">        4128 : PetscErrorCode __mat_apply_EPS_A0(Mat A, Vec x, Vec y)</span></span>
+<span id="L1796"><span class="lineNum">    1796</span> <span class="tlaGNC tlaBgGNC">        4392 : PetscErrorCode __mat_apply_EPS_A0(Mat A, Vec x, Vec y)</span></span>
 <span id="L1797"><span class="lineNum">    1797</span>              : {</span>
 <span id="L1798"><span class="lineNum">    1798</span>              :   PetscFunctionBeginUser;</span>
 <span id="L1799"><span class="lineNum">    1799</span>              :   palace::slepc::SlepcEPSSolver *ctx;</span>
-<span id="L1800"><span class="lineNum">    1800</span> <span class="tlaGNC">        4128 :   PetscCall(MatShellGetContext(A, (void **)&amp;ctx));</span></span>
-<span id="L1801"><span class="lineNum">    1801</span> <span class="tlaGNC">        4128 :   MFEM_VERIFY(ctx, &quot;Invalid PETSc shell matrix context for SLEPc!&quot;);</span></span>
+<span id="L1800"><span class="lineNum">    1800</span> <span class="tlaGNC">        4392 :   PetscCall(MatShellGetContext(A, (void **)&amp;ctx));</span></span>
+<span id="L1801"><span class="lineNum">    1801</span> <span class="tlaGNC">        4392 :   MFEM_VERIFY(ctx, &quot;Invalid PETSc shell matrix context for SLEPc!&quot;);</span></span>
 <span id="L1802"><span class="lineNum">    1802</span>              : </span>
-<span id="L1803"><span class="lineNum">    1803</span> <span class="tlaGNC">        4128 :   PetscCall(FromPetscVec(x, ctx-&gt;x1));</span></span>
-<span id="L1804"><span class="lineNum">    1804</span> <span class="tlaGNC">        4128 :   ctx-&gt;opK-&gt;Mult(ctx-&gt;x1, ctx-&gt;y1);</span></span>
-<span id="L1805"><span class="lineNum">    1805</span> <span class="tlaGNC">        4128 :   ctx-&gt;y1 *= ctx-&gt;delta;</span></span>
-<span id="L1806"><span class="lineNum">    1806</span> <span class="tlaGNC">        4128 :   PetscCall(ToPetscVec(ctx-&gt;y1, y));</span></span>
+<span id="L1803"><span class="lineNum">    1803</span> <span class="tlaGNC">        4392 :   PetscCall(FromPetscVec(x, ctx-&gt;x1));</span></span>
+<span id="L1804"><span class="lineNum">    1804</span> <span class="tlaGNC">        4392 :   ctx-&gt;opK-&gt;Mult(ctx-&gt;x1, ctx-&gt;y1);</span></span>
+<span id="L1805"><span class="lineNum">    1805</span> <span class="tlaGNC">        4392 :   ctx-&gt;y1 *= ctx-&gt;delta;</span></span>
+<span id="L1806"><span class="lineNum">    1806</span> <span class="tlaGNC">        4392 :   PetscCall(ToPetscVec(ctx-&gt;y1, y));</span></span>
 <span id="L1807"><span class="lineNum">    1807</span>              : </span>
 <span id="L1808"><span class="lineNum">    1808</span>              :   PetscFunctionReturn(PETSC_SUCCESS);</span>
 <span id="L1809"><span class="lineNum">    1809</span>              : }</span>
@@ -1909,33 +1909,33 @@
 <span id="L1839"><span class="lineNum">    1839</span>              :   PetscFunctionReturn(PETSC_SUCCESS);</span>
 <span id="L1840"><span class="lineNum">    1840</span>              : }</span>
 <span id="L1841"><span class="lineNum">    1841</span>              : </span>
-<span id="L1842"><span class="lineNum">    1842</span> <span class="tlaGNC tlaBgGNC">        4128 : PetscErrorCode __pc_apply_EPS(PC pc, Vec x, Vec y)</span></span>
+<span id="L1842"><span class="lineNum">    1842</span> <span class="tlaGNC tlaBgGNC">        4392 : PetscErrorCode __pc_apply_EPS(PC pc, Vec x, Vec y)</span></span>
 <span id="L1843"><span class="lineNum">    1843</span>              : {</span>
 <span id="L1844"><span class="lineNum">    1844</span>              :   // Solve the linear system associated with the generalized eigenvalue problem: y =</span>
 <span id="L1845"><span class="lineNum">    1845</span>              :   // M⁻¹ x, or shift-and-invert spectral transformation: y = (K - σ M)⁻¹ x . Enforces the</span>
 <span id="L1846"><span class="lineNum">    1846</span>              :   // divergence-free constraint using the supplied projector.</span>
 <span id="L1847"><span class="lineNum">    1847</span>              :   PetscFunctionBeginUser;</span>
 <span id="L1848"><span class="lineNum">    1848</span>              :   palace::slepc::SlepcEPSSolver *ctx;</span>
-<span id="L1849"><span class="lineNum">    1849</span> <span class="tlaGNC">        4128 :   PetscCall(PCShellGetContext(pc, (void **)&amp;ctx));</span></span>
-<span id="L1850"><span class="lineNum">    1850</span> <span class="tlaGNC">        4128 :   MFEM_VERIFY(ctx, &quot;Invalid PETSc shell PC context for SLEPc!&quot;);</span></span>
+<span id="L1849"><span class="lineNum">    1849</span> <span class="tlaGNC">        4392 :   PetscCall(PCShellGetContext(pc, (void **)&amp;ctx));</span></span>
+<span id="L1850"><span class="lineNum">    1850</span> <span class="tlaGNC">        4392 :   MFEM_VERIFY(ctx, &quot;Invalid PETSc shell PC context for SLEPc!&quot;);</span></span>
 <span id="L1851"><span class="lineNum">    1851</span>              : </span>
-<span id="L1852"><span class="lineNum">    1852</span> <span class="tlaGNC">        4128 :   PetscCall(FromPetscVec(x, ctx-&gt;x1));</span></span>
-<span id="L1853"><span class="lineNum">    1853</span> <span class="tlaGNC">        4128 :   ctx-&gt;opInv-&gt;Mult(ctx-&gt;x1, ctx-&gt;y1);</span></span>
-<span id="L1854"><span class="lineNum">    1854</span> <span class="tlaGNC">        4128 :   if (!ctx-&gt;sinvert)</span></span>
+<span id="L1852"><span class="lineNum">    1852</span> <span class="tlaGNC">        4392 :   PetscCall(FromPetscVec(x, ctx-&gt;x1));</span></span>
+<span id="L1853"><span class="lineNum">    1853</span> <span class="tlaGNC">        4392 :   ctx-&gt;opInv-&gt;Mult(ctx-&gt;x1, ctx-&gt;y1);</span></span>
+<span id="L1854"><span class="lineNum">    1854</span> <span class="tlaGNC">        4392 :   if (!ctx-&gt;sinvert)</span></span>
 <span id="L1855"><span class="lineNum">    1855</span>              :   {</span>
-<span id="L1856"><span class="lineNum">    1856</span> <span class="tlaGNC">        4128 :     ctx-&gt;y1 *= 1.0 / (ctx-&gt;delta * ctx-&gt;gamma);</span></span>
+<span id="L1856"><span class="lineNum">    1856</span> <span class="tlaGNC">        4392 :     ctx-&gt;y1 *= 1.0 / (ctx-&gt;delta * ctx-&gt;gamma);</span></span>
 <span id="L1857"><span class="lineNum">    1857</span>              :   }</span>
 <span id="L1858"><span class="lineNum">    1858</span>              :   else</span>
 <span id="L1859"><span class="lineNum">    1859</span>              :   {</span>
 <span id="L1860"><span class="lineNum">    1860</span> <span class="tlaUNC tlaBgUNC">           0 :     ctx-&gt;y1 *= 1.0 / ctx-&gt;delta;</span></span>
 <span id="L1861"><span class="lineNum">    1861</span>              :   }</span>
-<span id="L1862"><span class="lineNum">    1862</span> <span class="tlaGNC tlaBgGNC">        4128 :   if (ctx-&gt;opProj)</span></span>
+<span id="L1862"><span class="lineNum">    1862</span> <span class="tlaGNC tlaBgGNC">        4392 :   if (ctx-&gt;opProj)</span></span>
 <span id="L1863"><span class="lineNum">    1863</span>              :   {</span>
 <span id="L1864"><span class="lineNum">    1864</span>              :     // Mpi::Print(&quot; Before projection: {:e}\n&quot;, linalg::Norml2(ctx-&gt;GetComm(), ctx-&gt;y1));</span>
 <span id="L1865"><span class="lineNum">    1865</span> <span class="tlaUNC tlaBgUNC">           0 :     ctx-&gt;opProj-&gt;Mult(ctx-&gt;y1);</span></span>
 <span id="L1866"><span class="lineNum">    1866</span>              :     // Mpi::Print(&quot; After projection: {:e}\n&quot;, linalg::Norml2(ctx-&gt;GetComm(), ctx-&gt;y1));</span>
 <span id="L1867"><span class="lineNum">    1867</span>              :   }</span>
-<span id="L1868"><span class="lineNum">    1868</span> <span class="tlaGNC tlaBgGNC">        4128 :   PetscCall(ToPetscVec(ctx-&gt;y1, y));</span></span>
+<span id="L1868"><span class="lineNum">    1868</span> <span class="tlaGNC tlaBgGNC">        4392 :   PetscCall(ToPetscVec(ctx-&gt;y1, y));</span></span>
 <span id="L1869"><span class="lineNum">    1869</span>              : </span>
 <span id="L1870"><span class="lineNum">    1870</span>              :   PetscFunctionReturn(PETSC_SUCCESS);</span>
 <span id="L1871"><span class="lineNum">    1871</span>              : }</span>

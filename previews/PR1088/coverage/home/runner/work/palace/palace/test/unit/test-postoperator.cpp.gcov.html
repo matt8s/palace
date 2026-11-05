@@ -31,18 +31,18 @@
             <td class="headerValue">Palace Coverage Report</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryHi">99.6&nbsp;%</td>
-            <td class="headerCovTableEntry">459</td>
-            <td class="headerCovTableEntry">457</td>
+            <td class="headerCovTableEntryHi">99.4&nbsp;%</td>
+            <td class="headerCovTableEntry">530</td>
+            <td class="headerCovTableEntry">527</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-10-23 01:41:56</td>
+            <td class="headerValue">2026-11-05 18:04:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryHi">91.7&nbsp;%</td>
-            <td class="headerCovTableEntry">12</td>
-            <td class="headerCovTableEntry">11</td>
+            <td class="headerCovTableEntryHi">94.1&nbsp;%</td>
+            <td class="headerCovTableEntry">17</td>
+            <td class="headerCovTableEntry">16</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -602,7 +602,7 @@
 <span id="L532"><span class="lineNum">     532</span>              : </span>
 <span id="L533"><span class="lineNum">     533</span>              :     // Write fields.</span>
 <span id="L534"><span class="lineNum">     534</span>              :     const int pad_digits = post_op.GetPadDigitsDefault();</span>
-<span id="L535"><span class="lineNum">     535</span>              :     const auto &amp;Curl = curlcurl_op.GetCurlMatrix();</span>
+<span id="L535"><span class="lineNum">     535</span> <span class="tlaGNC">           3 :     const auto &amp;Curl = curlcurl_op.GetCurlMatrix();</span></span>
 <span id="L536"><span class="lineNum">     536</span>              :     Vector A(Curl.Width()), B(Curl.Height());</span>
 <span id="L537"><span class="lineNum">     537</span> <span class="tlaGNC">           3 :     A = 0.0;</span></span>
 <span id="L538"><span class="lineNum">     538</span> <span class="tlaGNC">           3 :     B = 0.0;</span></span>
@@ -780,185 +780,341 @@
 <span id="L710"><span class="lineNum">     710</span> <span class="tlaGNC">          27 :   }</span></span>
 <span id="L711"><span class="lineNum">     711</span> <span class="tlaGNC">         804 : }</span></span>
 <span id="L712"><span class="lineNum">     712</span>              : </span>
-<span id="L713"><span class="lineNum">     713</span> <span class="tlaGNC">           6 : auto CompareGridFunctions(std::vector&lt;mfem::ParGridFunction&gt; &amp;gf1,</span></span>
-<span id="L714"><span class="lineNum">     714</span>              :                           std::vector&lt;mfem::ParGridFunction&gt; &amp;gf2,</span>
-<span id="L715"><span class="lineNum">     715</span>              :                           const std::vector&lt;double&gt; &amp;expected_ratios, double rtol)</span>
-<span id="L716"><span class="lineNum">     716</span>              : {</span>
-<span id="L717"><span class="lineNum">     717</span> <span class="tlaGNC">           6 :   CHECK(gf1.size() == gf2.size());</span></span>
-<span id="L718"><span class="lineNum">     718</span> <span class="tlaGNC">           6 :   CHECK(gf1.size() == expected_ratios.size());</span></span>
-<span id="L719"><span class="lineNum">     719</span> <span class="tlaGNC">          60 :   for (auto i = 0; i &lt; gf1.size(); i++)</span></span>
-<span id="L720"><span class="lineNum">     720</span>              :   {</span>
-<span id="L721"><span class="lineNum">     721</span>              :     // Get the gridfunction data.</span>
-<span id="L722"><span class="lineNum">     722</span> <span class="tlaGNC">          81 :     Vector v1 = gf1[i].GetTrueVector();</span></span>
-<span id="L723"><span class="lineNum">     723</span> <span class="tlaGNC">         108 :     Vector v2 = gf2[i].GetTrueVector();</span></span>
-<span id="L724"><span class="lineNum">     724</span> <span class="tlaGNC">          54 :     v2 /= v1;</span></span>
-<span id="L725"><span class="lineNum">     725</span>              :     // Get the min/max of the ratio.</span>
-<span id="L726"><span class="lineNum">     726</span> <span class="tlaGNC">          54 :     double min = v2.Min();</span></span>
-<span id="L727"><span class="lineNum">     727</span> <span class="tlaGNC">          54 :     double max = v2.Max();</span></span>
-<span id="L728"><span class="lineNum">     728</span>              :     // Check that min == max == expected_ratio.</span>
-<span id="L729"><span class="lineNum">     729</span> <span class="tlaGNC">         162 :     CHECK_THAT(min, Catch::Matchers::WithinRel(max, rtol));</span></span>
-<span id="L730"><span class="lineNum">     730</span> <span class="tlaGNC">         162 :     CHECK_THAT(min, Catch::Matchers::WithinRel(expected_ratios[i], rtol));</span></span>
-<span id="L731"><span class="lineNum">     731</span>              :   }</span>
-<span id="L732"><span class="lineNum">     732</span> <span class="tlaGNC">           6 : }</span></span>
-<span id="L733"><span class="lineNum">     733</span>              : </span>
-<span id="L734"><span class="lineNum">     734</span> <span class="tlaGNC">           3 : TEST_CASE(&quot;Dimensional field output&quot;, &quot;[postoperator][Serial][Parallel]&quot;)</span></span>
-<span id="L735"><span class="lineNum">     735</span>              : {</span>
-<span id="L736"><span class="lineNum">     736</span>              :   constexpr double rtol = 1.0e-10;</span>
-<span id="L737"><span class="lineNum">     737</span>              : </span>
-<span id="L738"><span class="lineNum">     738</span>              :   // Create iodata.</span>
-<span id="L739"><span class="lineNum">     739</span>              :   Units units(0.496, 1.453);</span>
-<span id="L740"><span class="lineNum">     740</span> <span class="tlaGNC">           3 :   IoData iodata = IoData(units);</span></span>
-<span id="L741"><span class="lineNum">     741</span> <span class="tlaGNC">           3 :   iodata.domains.materials.emplace_back().attributes = {1};</span></span>
-<span id="L742"><span class="lineNum">     742</span>              : </span>
-<span id="L743"><span class="lineNum">     743</span>              :   // Create serial mesh.</span>
-<span id="L744"><span class="lineNum">     744</span>              :   int resolution = 3;</span>
-<span id="L745"><span class="lineNum">     745</span>              :   double length = 12.2;</span>
-<span id="L746"><span class="lineNum">     746</span>              :   std::unique_ptr&lt;mfem::Mesh&gt; serial_mesh = std::make_unique&lt;mfem::Mesh&gt;(</span>
-<span id="L747"><span class="lineNum">     747</span> <span class="tlaGNC">           6 :       mfem::Mesh::MakeCartesian3D(resolution, resolution, resolution,</span></span>
-<span id="L748"><span class="lineNum">     748</span> <span class="tlaGNC">           3 :                                   mfem::Element::TETRAHEDRON, length, length, length));</span></span>
-<span id="L749"><span class="lineNum">     749</span>              : </span>
-<span id="L750"><span class="lineNum">     750</span>              :   // Create parallel mesh.</span>
-<span id="L751"><span class="lineNum">     751</span> <span class="tlaGNC">           3 :   auto comm = Mpi::World();</span></span>
-<span id="L752"><span class="lineNum">     752</span>              :   int size = Mpi::Size(comm);</span>
-<span id="L753"><span class="lineNum">     753</span> <span class="tlaGNC">           3 :   iodata.model.Lc = mesh::ComputeReferenceLength(serial_mesh, comm);</span></span>
-<span id="L754"><span class="lineNum">     754</span> <span class="tlaGNC">           3 :   iodata.NondimensionalizeInputs(serial_mesh);</span></span>
-<span id="L755"><span class="lineNum">     755</span> <span class="tlaGNC">           3 :   auto par_mesh = std::make_unique&lt;mfem::ParMesh&gt;(comm, *serial_mesh);</span></span>
-<span id="L756"><span class="lineNum">     756</span> <span class="tlaGNC">           3 :   Mesh mesh(std::move(par_mesh));</span></span>
-<span id="L757"><span class="lineNum">     757</span>              : </span>
-<span id="L758"><span class="lineNum">     758</span>              :   // Create gridfunctions.</span>
-<span id="L759"><span class="lineNum">     759</span>              :   int order = 1;</span>
-<span id="L760"><span class="lineNum">     760</span> <span class="tlaGNC">           3 :   mfem::H1_FECollection h1_fec(order, mesh.Dimension());</span></span>
-<span id="L761"><span class="lineNum">     761</span> <span class="tlaGNC">           3 :   mfem::ParFiniteElementSpace h1_fespace(&amp;mesh.Get(), &amp;h1_fec);</span></span>
-<span id="L762"><span class="lineNum">     762</span> <span class="tlaGNC">           3 :   mfem::ParGridFunction Ue_gf(&amp;h1_fespace), Um_gf(&amp;h1_fespace);</span></span>
-<span id="L763"><span class="lineNum">     763</span>              : </span>
-<span id="L764"><span class="lineNum">     764</span> <span class="tlaGNC">           3 :   mfem::ND_FECollection nd_fec(order, mesh.Dimension());</span></span>
-<span id="L765"><span class="lineNum">     765</span> <span class="tlaGNC">           3 :   mfem::ParFiniteElementSpace nd_fespace(&amp;mesh.Get(), &amp;nd_fec);</span></span>
-<span id="L766"><span class="lineNum">     766</span>              : </span>
-<span id="L767"><span class="lineNum">     767</span> <span class="tlaGNC">           3 :   mfem::RT_FECollection rt_fec(order, mesh.Dimension());</span></span>
-<span id="L768"><span class="lineNum">     768</span> <span class="tlaGNC">           3 :   mfem::ParFiniteElementSpace rt_fespace(&amp;mesh.Get(), &amp;rt_fec);</span></span>
-<span id="L769"><span class="lineNum">     769</span> <span class="tlaGNC">           3 :   mfem::ParGridFunction S_gf(&amp;rt_fespace);</span></span>
-<span id="L770"><span class="lineNum">     770</span>              : </span>
-<span id="L771"><span class="lineNum">     771</span> <span class="tlaGNC">           3 :   std::unique_ptr&lt;GridFunction&gt; E, B, V, A;</span></span>
-<span id="L772"><span class="lineNum">     772</span> <span class="tlaGNC">           3 :   E = std::make_unique&lt;GridFunction&gt;(nd_fespace, true);</span></span>
-<span id="L773"><span class="lineNum">     773</span> <span class="tlaGNC">           3 :   B = std::make_unique&lt;GridFunction&gt;(rt_fespace, true);</span></span>
-<span id="L774"><span class="lineNum">     774</span> <span class="tlaGNC">           3 :   A = std::make_unique&lt;GridFunction&gt;(nd_fespace);</span></span>
-<span id="L775"><span class="lineNum">     775</span> <span class="tlaGNC">           6 :   V = std::make_unique&lt;GridFunction&gt;(h1_fespace);</span></span>
-<span id="L776"><span class="lineNum">     776</span>              : </span>
-<span id="L777"><span class="lineNum">     777</span>              :   // Create fields, initialize them to random values, and set the corresponding</span>
-<span id="L778"><span class="lineNum">     778</span>              :   // gridfunctions.</span>
-<span id="L779"><span class="lineNum">     779</span> <span class="tlaGNC">           3 :   ComplexVector e(nd_fespace.GetTrueVSize()), b(rt_fespace.GetTrueVSize());</span></span>
-<span id="L780"><span class="lineNum">     780</span>              :   Vector a(nd_fespace.GetTrueVSize()), v(h1_fespace.GetTrueVSize());</span>
-<span id="L781"><span class="lineNum">     781</span> <span class="tlaGNC">           3 :   linalg::SetRandom(comm, e);</span></span>
-<span id="L782"><span class="lineNum">     782</span> <span class="tlaGNC">           3 :   linalg::SetRandom(comm, b);</span></span>
-<span id="L783"><span class="lineNum">     783</span> <span class="tlaGNC">           3 :   linalg::SetRandom(comm, a);</span></span>
-<span id="L784"><span class="lineNum">     784</span> <span class="tlaGNC">           3 :   linalg::SetRandom(comm, v);</span></span>
-<span id="L785"><span class="lineNum">     785</span>              : </span>
-<span id="L786"><span class="lineNum">     786</span> <span class="tlaGNC">           3 :   E-&gt;Real().SetFromTrueDofs(e.Real());</span></span>
-<span id="L787"><span class="lineNum">     787</span> <span class="tlaGNC">           3 :   E-&gt;Imag().SetFromTrueDofs(e.Imag());</span></span>
-<span id="L788"><span class="lineNum">     788</span> <span class="tlaGNC">           3 :   B-&gt;Real().SetFromTrueDofs(b.Real());</span></span>
-<span id="L789"><span class="lineNum">     789</span> <span class="tlaGNC">           3 :   B-&gt;Imag().SetFromTrueDofs(b.Imag());</span></span>
-<span id="L790"><span class="lineNum">     790</span> <span class="tlaGNC">           3 :   A-&gt;Real().SetFromTrueDofs(a);</span></span>
-<span id="L791"><span class="lineNum">     791</span> <span class="tlaGNC">           3 :   V-&gt;Real().SetFromTrueDofs(v);</span></span>
-<span id="L792"><span class="lineNum">     792</span>              : </span>
-<span id="L793"><span class="lineNum">     793</span>              :   // Create some coefficients.</span>
-<span id="L794"><span class="lineNum">     794</span> <span class="tlaGNC">           3 :   MaterialOperator mat_op(iodata, mesh);</span></span>
-<span id="L795"><span class="lineNum">     795</span> <span class="tlaGNC">           3 :   std::unique_ptr&lt;mfem::VectorCoefficient&gt; S_nondim, S_dim;</span></span>
-<span id="L796"><span class="lineNum">     796</span> <span class="tlaGNC">           3 :   std::unique_ptr&lt;mfem::Coefficient&gt; Ue_nondim, Ue_dim, Um_nondim, Um_dim;</span></span>
-<span id="L797"><span class="lineNum">     797</span>              : </span>
-<span id="L798"><span class="lineNum">     798</span>              :   // Omit scaling argument (e.g. scaling = 1.0) for non-dimensional coefficients.</span>
-<span id="L799"><span class="lineNum">     799</span>              :   Ue_nondim =</span>
-<span id="L800"><span class="lineNum">     800</span> <span class="tlaGNC">           6 :       std::make_unique&lt;EnergyDensityCoefficient&lt;EnergyDensityType::ELECTRIC&gt;&gt;(*E, mat_op);</span></span>
-<span id="L801"><span class="lineNum">     801</span>              :   Um_nondim =</span>
-<span id="L802"><span class="lineNum">     802</span> <span class="tlaGNC">           6 :       std::make_unique&lt;EnergyDensityCoefficient&lt;EnergyDensityType::MAGNETIC&gt;&gt;(*B, mat_op);</span></span>
-<span id="L803"><span class="lineNum">     803</span> <span class="tlaGNC">           6 :   S_nondim = std::make_unique&lt;PoyntingVectorCoefficient&gt;(*E, *B, mat_op);</span></span>
+<span id="L713"><span class="lineNum">     713</span> <span class="tlaGNC">          12 : TEST_CASE(&quot;Dimensional field output&quot;, &quot;[postoperator][Serial][Parallel]&quot;)</span></span>
+<span id="L714"><span class="lineNum">     714</span>              : {</span>
+<span id="L715"><span class="lineNum">     715</span>              :   // The output of the fields redimensionalizes the mesh, undoes the effect of the mesh</span>
+<span id="L716"><span class="lineNum">     716</span>              :   // scaling on the fields mapped from the reference element (ScaleGridFunctions), and</span>
+<span id="L717"><span class="lineNum">     717</span>              :   // scales the fields to SI units (DimensionalizeGridFunctions). The field values at fixed</span>
+<span id="L718"><span class="lineNum">     718</span>              :   // reference points, including in the face-neighbor elements owned by other processes,</span>
+<span id="L719"><span class="lineNum">     719</span>              :   // must then be the nondimensional ones times the unit scale factors, independent of the</span>
+<span id="L720"><span class="lineNum">     720</span>              :   // mesh length unit. The spaces are those of the PostOperator: E and A in H(curl), V in</span>
+<span id="L721"><span class="lineNum">     721</span>              :   // H1, and B in H(div) in 3D or the scalar out-of-plane field in L2 with INTEGRAL map type</span>
+<span id="L722"><span class="lineNum">     722</span>              :   // in 2D. The energy densities and Poynting vector projected from the dimensional</span>
+<span id="L723"><span class="lineNum">     723</span>              :   // coefficients are checked the same way.</span>
+<span id="L724"><span class="lineNum">     724</span>              :   constexpr double rtol = 1.0e-12;</span>
+<span id="L725"><span class="lineNum">     725</span> <span class="tlaGNC">          12 :   constexpr int order = 2;</span></span>
+<span id="L726"><span class="lineNum">     726</span> <span class="tlaGNC">          15 :   const int dim = GENERATE(2, 3);</span></span>
+<span id="L727"><span class="lineNum">     727</span> <span class="tlaGNC">          18 :   const bool simplex = GENERATE(true, false);</span></span>
+<span id="L728"><span class="lineNum">     728</span> <span class="tlaGNC">          12 :   CAPTURE(dim, simplex);</span></span>
+<span id="L729"><span class="lineNum">     729</span>              : </span>
+<span id="L730"><span class="lineNum">     730</span>              :   // Create iodata.</span>
+<span id="L731"><span class="lineNum">     731</span>              :   Units units(0.496, 1.453);</span>
+<span id="L732"><span class="lineNum">     732</span> <span class="tlaGNC">          12 :   IoData iodata = IoData(units);</span></span>
+<span id="L733"><span class="lineNum">     733</span> <span class="tlaGNC">          12 :   iodata.domains.materials.emplace_back().attributes = {1};</span></span>
+<span id="L734"><span class="lineNum">     734</span>              : </span>
+<span id="L735"><span class="lineNum">     735</span>              :   // Create serial mesh.</span>
+<span id="L736"><span class="lineNum">     736</span>              :   constexpr int resolution = 3;</span>
+<span id="L737"><span class="lineNum">     737</span>              :   constexpr double length = 12.2;</span>
+<span id="L738"><span class="lineNum">     738</span>              :   auto serial_mesh = std::make_unique&lt;mfem::Mesh&gt;(</span>
+<span id="L739"><span class="lineNum">     739</span> <span class="tlaGNC">          30 :       (dim == 2) ? mfem::Mesh::MakeCartesian2D(resolution, resolution,</span></span>
+<span id="L740"><span class="lineNum">     740</span>              :                                                simplex ? mfem::Element::TRIANGLE</span>
+<span id="L741"><span class="lineNum">     741</span>              :                                                        : mfem::Element::QUADRILATERAL,</span>
+<span id="L742"><span class="lineNum">     742</span>              :                                                true, length, length)</span>
+<span id="L743"><span class="lineNum">     743</span>              :                  : mfem::Mesh::MakeCartesian3D(resolution, resolution, resolution,</span>
+<span id="L744"><span class="lineNum">     744</span>              :                                                simplex ? mfem::Element::TETRAHEDRON</span>
+<span id="L745"><span class="lineNum">     745</span>              :                                                        : mfem::Element::HEXAHEDRON,</span>
+<span id="L746"><span class="lineNum">     746</span> <span class="tlaGNC">          12 :                                                length, length, length));</span></span>
+<span id="L747"><span class="lineNum">     747</span> <span class="tlaGNC">          12 :   serial_mesh-&gt;EnsureNodes();</span></span>
+<span id="L748"><span class="lineNum">     748</span>              : </span>
+<span id="L749"><span class="lineNum">     749</span>              :   // Create parallel mesh.</span>
+<span id="L750"><span class="lineNum">     750</span> <span class="tlaGNC">          12 :   auto comm = Mpi::World();</span></span>
+<span id="L751"><span class="lineNum">     751</span> <span class="tlaGNC">          12 :   if (Mpi::Size(comm) &gt; serial_mesh-&gt;GetNE())</span></span>
+<span id="L752"><span class="lineNum">     752</span>              :   {</span>
+<span id="L753"><span class="lineNum">     753</span> <span class="tlaUNC tlaBgUNC">           0 :     SKIP(&quot;Mesh has fewer elements than processes&quot;);</span></span>
+<span id="L754"><span class="lineNum">     754</span>              :   }</span>
+<span id="L755"><span class="lineNum">     755</span> <span class="tlaGNC tlaBgGNC">          12 :   iodata.model.Lc = mesh::ComputeReferenceLength(serial_mesh, comm);</span></span>
+<span id="L756"><span class="lineNum">     756</span> <span class="tlaGNC">          12 :   iodata.NondimensionalizeInputs(serial_mesh);</span></span>
+<span id="L757"><span class="lineNum">     757</span> <span class="tlaGNC">          24 :   Mesh mesh(std::make_unique&lt;mfem::ParMesh&gt;(comm, *serial_mesh));</span></span>
+<span id="L758"><span class="lineNum">     758</span>              :   auto &amp;pmesh = mesh.Get();</span>
+<span id="L759"><span class="lineNum">     759</span> <span class="tlaGNC">          12 :   const auto mesh_Lc0 = iodata.units.GetMeshLengthRelativeScale();</span></span>
+<span id="L760"><span class="lineNum">     760</span> <span class="tlaGNC">          12 :   CAPTURE(mesh_Lc0);</span></span>
+<span id="L761"><span class="lineNum">     761</span> <span class="tlaGNC">          12 :   REQUIRE(std::abs(mesh_Lc0 - 1.0) &gt; 0.1);</span></span>
+<span id="L762"><span class="lineNum">     762</span> <span class="tlaGNC">          12 :   if (Mpi::Size(comm) &gt; 1)</span></span>
+<span id="L763"><span class="lineNum">     763</span>              :   {</span>
+<span id="L764"><span class="lineNum">     764</span>              :     // Each process has elements on other processes neighboring its own.</span>
+<span id="L765"><span class="lineNum">     765</span> <span class="tlaGNC">           8 :     int num_face_nbr = pmesh.GetNFaceNeighborElements();</span></span>
+<span id="L766"><span class="lineNum">     766</span> <span class="tlaGNC">           8 :     Mpi::GlobalMin(1, &amp;num_face_nbr, comm);</span></span>
+<span id="L767"><span class="lineNum">     767</span> <span class="tlaGNC">           8 :     REQUIRE(num_face_nbr &gt; 0);</span></span>
+<span id="L768"><span class="lineNum">     768</span>              :   }</span>
+<span id="L769"><span class="lineNum">     769</span>              : </span>
+<span id="L770"><span class="lineNum">     770</span>              :   // Create gridfunctions.</span>
+<span id="L771"><span class="lineNum">     771</span> <span class="tlaGNC">          12 :   mfem::H1_FECollection h1_fec(order, dim);</span></span>
+<span id="L772"><span class="lineNum">     772</span> <span class="tlaGNC">          12 :   mfem::ND_FECollection nd_fec(order, dim);</span></span>
+<span id="L773"><span class="lineNum">     773</span> <span class="tlaGNC">          12 :   mfem::RT_FECollection rt_fec(order - 1, dim);</span></span>
+<span id="L774"><span class="lineNum">     774</span>              :   std::unique_ptr&lt;mfem::FiniteElementCollection&gt; b_fec;</span>
+<span id="L775"><span class="lineNum">     775</span> <span class="tlaGNC">          12 :   if (dim == 2)</span></span>
+<span id="L776"><span class="lineNum">     776</span>              :   {</span>
+<span id="L777"><span class="lineNum">     777</span> <span class="tlaGNC">          12 :     b_fec = std::make_unique&lt;mfem::L2_FECollection&gt;(</span></span>
+<span id="L778"><span class="lineNum">     778</span> <span class="tlaGNC">           6 :         order - 1, dim, mfem::BasisType::GaussLegendre, mfem::FiniteElement::INTEGRAL);</span></span>
+<span id="L779"><span class="lineNum">     779</span>              :   }</span>
+<span id="L780"><span class="lineNum">     780</span>              :   else</span>
+<span id="L781"><span class="lineNum">     781</span>              :   {</span>
+<span id="L782"><span class="lineNum">     782</span> <span class="tlaGNC">           6 :     b_fec = std::make_unique&lt;mfem::RT_FECollection&gt;(order - 1, dim);</span></span>
+<span id="L783"><span class="lineNum">     783</span>              :   }</span>
+<span id="L784"><span class="lineNum">     784</span> <span class="tlaGNC">          12 :   mfem::ParFiniteElementSpace h1_fespace(&amp;pmesh, &amp;h1_fec), nd_fespace(&amp;pmesh, &amp;nd_fec),</span></span>
+<span id="L785"><span class="lineNum">     785</span> <span class="tlaGNC">          12 :       rt_fespace(&amp;pmesh, &amp;rt_fec), b_fespace(&amp;pmesh, b_fec.get());</span></span>
+<span id="L786"><span class="lineNum">     786</span> <span class="tlaGNC">          12 :   mfem::ParGridFunction Ue_gf(&amp;h1_fespace), Um_gf(&amp;h1_fespace), S_gf(&amp;rt_fespace);</span></span>
+<span id="L787"><span class="lineNum">     787</span>              : </span>
+<span id="L788"><span class="lineNum">     788</span> <span class="tlaGNC">          12 :   std::unique_ptr&lt;GridFunction&gt; E, B, V, A;</span></span>
+<span id="L789"><span class="lineNum">     789</span> <span class="tlaGNC">          12 :   E = std::make_unique&lt;GridFunction&gt;(nd_fespace, true);</span></span>
+<span id="L790"><span class="lineNum">     790</span> <span class="tlaGNC">          12 :   B = std::make_unique&lt;GridFunction&gt;(b_fespace, true);</span></span>
+<span id="L791"><span class="lineNum">     791</span> <span class="tlaGNC">          12 :   V = std::make_unique&lt;GridFunction&gt;(h1_fespace);</span></span>
+<span id="L792"><span class="lineNum">     792</span> <span class="tlaGNC">          24 :   A = std::make_unique&lt;GridFunction&gt;(nd_fespace);</span></span>
+<span id="L793"><span class="lineNum">     793</span>              : </span>
+<span id="L794"><span class="lineNum">     794</span>              :   // Initialize the fields to random values, and make them ready for evaluation on shared</span>
+<span id="L795"><span class="lineNum">     795</span>              :   // faces as in PostOperator.</span>
+<span id="L796"><span class="lineNum">     796</span>              :   int seed = 1;</span>
+<span id="L797"><span class="lineNum">     797</span> <span class="tlaGNC">          84 :   for (auto *gf : {&amp;E-&gt;Real(), &amp;E-&gt;Imag(), &amp;B-&gt;Real(), &amp;B-&gt;Imag(), &amp;V-&gt;Real(), &amp;A-&gt;Real()})</span></span>
+<span id="L798"><span class="lineNum">     798</span>              :   {</span>
+<span id="L799"><span class="lineNum">     799</span> <span class="tlaGNC">          72 :     Vector x(gf-&gt;ParFESpace()-&gt;GetTrueVSize());</span></span>
+<span id="L800"><span class="lineNum">     800</span> <span class="tlaGNC">          72 :     linalg::SetRandom(comm, x, seed++);</span></span>
+<span id="L801"><span class="lineNum">     801</span> <span class="tlaGNC">          72 :     gf-&gt;SetFromTrueDofs(x);</span></span>
+<span id="L802"><span class="lineNum">     802</span> <span class="tlaGNC">          72 :     gf-&gt;ExchangeFaceNbrData();</span></span>
+<span id="L803"><span class="lineNum">     803</span>              :   }</span>
 <span id="L804"><span class="lineNum">     804</span>              : </span>
-<span id="L805"><span class="lineNum">     805</span>              :   // Use same scaling as in postoperator.cpp for dimensional coefficients.</span>
-<span id="L806"><span class="lineNum">     806</span> <span class="tlaGNC">           3 :   auto scaling = iodata.units.Dimensionalize&lt;Units::ValueType::FIELD_D&gt;(1.0) /</span></span>
-<span id="L807"><span class="lineNum">     807</span> <span class="tlaGNC">           3 :                  iodata.units.Dimensionalize&lt;Units::ValueType::FIELD_E&gt;(1.0);</span></span>
-<span id="L808"><span class="lineNum">     808</span> <span class="tlaGNC">           6 :   Ue_dim = std::make_unique&lt;EnergyDensityCoefficient&lt;EnergyDensityType::ELECTRIC&gt;&gt;(</span></span>
-<span id="L809"><span class="lineNum">     809</span>              :       *E, mat_op, scaling);</span>
-<span id="L810"><span class="lineNum">     810</span> <span class="tlaGNC">           3 :   scaling = iodata.units.Dimensionalize&lt;Units::ValueType::FIELD_H&gt;(1.0) /</span></span>
-<span id="L811"><span class="lineNum">     811</span>              :             iodata.units.Dimensionalize&lt;Units::ValueType::FIELD_B&gt;(1.0);</span>
-<span id="L812"><span class="lineNum">     812</span> <span class="tlaGNC">           6 :   Um_dim = std::make_unique&lt;EnergyDensityCoefficient&lt;EnergyDensityType::MAGNETIC&gt;&gt;(</span></span>
-<span id="L813"><span class="lineNum">     813</span>              :       *B, mat_op, scaling);</span>
-<span id="L814"><span class="lineNum">     814</span> <span class="tlaGNC">           6 :   S_dim = std::make_unique&lt;PoyntingVectorCoefficient&gt;(*E, *B, mat_op, scaling);</span></span>
-<span id="L815"><span class="lineNum">     815</span>              : </span>
-<span id="L816"><span class="lineNum">     816</span>              :   // Expected scalings (including both units dimensionalization and mesh scaling Lc0 =</span>
-<span id="L817"><span class="lineNum">     817</span>              :   // Lc/L0). See comment in ScaleGridFunctions() in postoperator.cpp for mesh scaling</span>
-<span id="L818"><span class="lineNum">     818</span>              :   // factor.</span>
-<span id="L819"><span class="lineNum">     819</span>              :   auto mesh_Lc0 = iodata.units.GetMeshLengthRelativeScale();</span>
-<span id="L820"><span class="lineNum">     820</span>              :   // E [V/m], H(curl) requires * L.</span>
-<span id="L821"><span class="lineNum">     821</span> <span class="tlaGNC">           3 :   auto scaling_E = iodata.units.Dimensionalize&lt;Units::ValueType::FIELD_E&gt;(1.0) * mesh_Lc0;</span></span>
-<span id="L822"><span class="lineNum">     822</span>              :   // B [Wb/m²], H(div) requires * L^2.</span>
-<span id="L823"><span class="lineNum">     823</span>              :   auto scaling_B =</span>
-<span id="L824"><span class="lineNum">     824</span> <span class="tlaGNC">           3 :       iodata.units.Dimensionalize&lt;Units::ValueType::FIELD_B&gt;(1.0) * mesh_Lc0 * mesh_Lc0;</span></span>
-<span id="L825"><span class="lineNum">     825</span>              :   // V [V], H1 requires no mesh scaling.</span>
-<span id="L826"><span class="lineNum">     826</span>              :   auto scaling_V = iodata.units.Dimensionalize&lt;Units::ValueType::VOLTAGE&gt;(1.0);</span>
-<span id="L827"><span class="lineNum">     827</span>              :   // A [A/m], H(curl) requires * L.</span>
-<span id="L828"><span class="lineNum">     828</span> <span class="tlaGNC">           3 :   auto scaling_A = iodata.units.Dimensionalize&lt;Units::ValueType::CURRENT&gt;(1.0) * mesh_Lc0;</span></span>
-<span id="L829"><span class="lineNum">     829</span>              :   // U_e = 1/2 Dᴴ E, H1 requires no mesh scaling.</span>
-<span id="L830"><span class="lineNum">     830</span>              :   auto scaling_Ue = iodata.units.Dimensionalize&lt;Units::ValueType::FIELD_D&gt;(1.0) *</span>
-<span id="L831"><span class="lineNum">     831</span> <span class="tlaGNC">           3 :                     iodata.units.Dimensionalize&lt;Units::ValueType::FIELD_E&gt;(1.0);</span></span>
-<span id="L832"><span class="lineNum">     832</span>              :   // U_m = 1/2 Hᴴ B, H1 requires no mesh scaling.</span>
-<span id="L833"><span class="lineNum">     833</span>              :   auto scaling_Um = iodata.units.Dimensionalize&lt;Units::ValueType::FIELD_H&gt;(1.0) *</span>
-<span id="L834"><span class="lineNum">     834</span> <span class="tlaGNC">           3 :                     iodata.units.Dimensionalize&lt;Units::ValueType::FIELD_B&gt;(1.0);</span></span>
-<span id="L835"><span class="lineNum">     835</span>              :   // S = Re{E x H⋆}, H(div) requires * L^2.</span>
-<span id="L836"><span class="lineNum">     836</span> <span class="tlaGNC">           3 :   auto scaling_S = iodata.units.Dimensionalize&lt;Units::ValueType::FIELD_E&gt;(1.0) *</span></span>
-<span id="L837"><span class="lineNum">     837</span> <span class="tlaGNC">           3 :                    iodata.units.Dimensionalize&lt;Units::ValueType::FIELD_H&gt;(1.0) * mesh_Lc0 *</span></span>
-<span id="L838"><span class="lineNum">     838</span> <span class="tlaGNC">           3 :                    mesh_Lc0;</span></span>
-<span id="L839"><span class="lineNum">     839</span>              :   std::vector&lt;double&gt; expected_scaling = {scaling_E,  scaling_E,  scaling_B,</span>
-<span id="L840"><span class="lineNum">     840</span>              :                                           scaling_B,  scaling_V,  scaling_A,</span>
-<span id="L841"><span class="lineNum">     841</span> <span class="tlaGNC">           3 :                                           scaling_Ue, scaling_Um, scaling_S};</span></span>
-<span id="L842"><span class="lineNum">     842</span>              : </span>
-<span id="L843"><span class="lineNum">     843</span> <span class="tlaGNC">           9 :   auto update_coeff_gridfunctions = [&amp;](bool dimensional)</span></span>
-<span id="L844"><span class="lineNum">     844</span>              :   {</span>
-<span id="L845"><span class="lineNum">     845</span> <span class="tlaGNC">           9 :     Ue_gf = 0.0;</span></span>
-<span id="L846"><span class="lineNum">     846</span> <span class="tlaGNC">           9 :     Um_gf = 0.0;</span></span>
-<span id="L847"><span class="lineNum">     847</span> <span class="tlaGNC">           9 :     S_gf = 0.0;</span></span>
-<span id="L848"><span class="lineNum">     848</span> <span class="tlaGNC">           9 :     if (dimensional)</span></span>
-<span id="L849"><span class="lineNum">     849</span>              :     {</span>
-<span id="L850"><span class="lineNum">     850</span> <span class="tlaGNC">           3 :       Ue_gf.ProjectCoefficient(*Ue_dim.get());</span></span>
-<span id="L851"><span class="lineNum">     851</span> <span class="tlaGNC">           3 :       Um_gf.ProjectCoefficient(*Um_dim.get());</span></span>
-<span id="L852"><span class="lineNum">     852</span> <span class="tlaGNC">           3 :       S_gf.ProjectCoefficient(*S_dim.get());</span></span>
-<span id="L853"><span class="lineNum">     853</span>              :     }</span>
-<span id="L854"><span class="lineNum">     854</span>              :     else</span>
-<span id="L855"><span class="lineNum">     855</span>              :     {</span>
-<span id="L856"><span class="lineNum">     856</span> <span class="tlaGNC">           6 :       Ue_gf.ProjectCoefficient(*Ue_nondim.get());</span></span>
-<span id="L857"><span class="lineNum">     857</span> <span class="tlaGNC">           6 :       Um_gf.ProjectCoefficient(*Um_nondim.get());</span></span>
-<span id="L858"><span class="lineNum">     858</span> <span class="tlaGNC">           6 :       S_gf.ProjectCoefficient(*S_nondim.get());</span></span>
-<span id="L859"><span class="lineNum">     859</span>              :     }</span>
-<span id="L860"><span class="lineNum">     860</span> <span class="tlaGNC">          12 :   };</span></span>
-<span id="L861"><span class="lineNum">     861</span>              : </span>
-<span id="L862"><span class="lineNum">     862</span> <span class="tlaGNC">           9 :   auto copy_gridfunctions = [&amp;]()</span></span>
-<span id="L863"><span class="lineNum">     863</span>              :   {</span>
-<span id="L864"><span class="lineNum">     864</span> <span class="tlaGNC">           9 :     mfem::ParGridFunction Er_copy(E-&gt;Real()), Ei_copy(E-&gt;Imag()), Br_copy(B-&gt;Real()),</span></span>
-<span id="L865"><span class="lineNum">     865</span> <span class="tlaGNC">           9 :         Bi_copy(B-&gt;Real()), V_copy(V-&gt;Real()), A_copy(A-&gt;Real()), Ue_copy(Ue_gf),</span></span>
-<span id="L866"><span class="lineNum">     866</span> <span class="tlaGNC">           9 :         Um_copy(Um_gf), S_copy(S_gf);</span></span>
-<span id="L867"><span class="lineNum">     867</span>              :     return std::vector&lt;mfem::ParGridFunction&gt;(</span>
-<span id="L868"><span class="lineNum">     868</span> <span class="tlaGNC">         108 :         {Er_copy, Ei_copy, Br_copy, Bi_copy, V_copy, A_copy, Ue_copy, Um_copy, S_copy});</span></span>
-<span id="L869"><span class="lineNum">     869</span> <span class="tlaGNC">          18 :   };</span></span>
-<span id="L870"><span class="lineNum">     870</span>              : </span>
-<span id="L871"><span class="lineNum">     871</span>              :   // Copy gridfunctions before dimensionalizing.</span>
-<span id="L872"><span class="lineNum">     872</span> <span class="tlaGNC">           3 :   update_coeff_gridfunctions(false);</span></span>
-<span id="L873"><span class="lineNum">     873</span> <span class="tlaGNC">           3 :   std::vector&lt;mfem::ParGridFunction&gt; gf_before = copy_gridfunctions();</span></span>
-<span id="L874"><span class="lineNum">     874</span>              : </span>
-<span id="L875"><span class="lineNum">     875</span>              :   // Dimensionalize.</span>
-<span id="L876"><span class="lineNum">     876</span> <span class="tlaGNC">           3 :   mesh::DimensionalizeMesh(mesh, mesh_Lc0);</span></span>
-<span id="L877"><span class="lineNum">     877</span> <span class="tlaGNC">           3 :   ScaleGridFunctions(mesh_Lc0, mesh.Dimension(), E, B, V, A);</span></span>
-<span id="L878"><span class="lineNum">     878</span> <span class="tlaGNC">           3 :   DimensionalizeGridFunctions(iodata.units, E, B, V, A);</span></span>
-<span id="L879"><span class="lineNum">     879</span> <span class="tlaGNC">           3 :   update_coeff_gridfunctions(true);</span></span>
-<span id="L880"><span class="lineNum">     880</span> <span class="tlaGNC">           3 :   std::vector&lt;mfem::ParGridFunction&gt; gf_dim = copy_gridfunctions();</span></span>
-<span id="L881"><span class="lineNum">     881</span> <span class="tlaGNC">           3 :   CompareGridFunctions(gf_before, gf_dim, expected_scaling, rtol);</span></span>
-<span id="L882"><span class="lineNum">     882</span>              : </span>
-<span id="L883"><span class="lineNum">     883</span>              :   // Nondimensionalize.</span>
-<span id="L884"><span class="lineNum">     884</span> <span class="tlaGNC">           3 :   mesh::NondimensionalizeMesh(mesh, mesh_Lc0);</span></span>
-<span id="L885"><span class="lineNum">     885</span> <span class="tlaGNC">           3 :   ScaleGridFunctions(1.0 / mesh_Lc0, mesh.Dimension(), E, B, V, A);</span></span>
-<span id="L886"><span class="lineNum">     886</span> <span class="tlaGNC">           3 :   NondimensionalizeGridFunctions(iodata.units, E, B, V, A);</span></span>
-<span id="L887"><span class="lineNum">     887</span> <span class="tlaGNC">           3 :   update_coeff_gridfunctions(false);</span></span>
-<span id="L888"><span class="lineNum">     888</span> <span class="tlaGNC">           3 :   std::vector&lt;mfem::ParGridFunction&gt; gf_after = copy_gridfunctions();</span></span>
-<span id="L889"><span class="lineNum">     889</span> <span class="tlaGNC">           3 :   CompareGridFunctions(gf_before, gf_after, std::vector&lt;double&gt;(gf_after.size(), 1.0),</span></span>
-<span id="L890"><span class="lineNum">     890</span>              :                        rtol);</span>
-<span id="L891"><span class="lineNum">     891</span> <span class="tlaGNC">          12 : }</span></span>
+<span id="L805"><span class="lineNum">     805</span>              :   // Create some coefficients.</span>
+<span id="L806"><span class="lineNum">     806</span> <span class="tlaGNC">          12 :   MaterialOperator mat_op(iodata, mesh);</span></span>
+<span id="L807"><span class="lineNum">     807</span> <span class="tlaGNC">          12 :   std::unique_ptr&lt;mfem::VectorCoefficient&gt; S_nondim, S_dim;</span></span>
+<span id="L808"><span class="lineNum">     808</span> <span class="tlaGNC">          12 :   std::unique_ptr&lt;mfem::Coefficient&gt; Ue_nondim, Ue_dim, Um_nondim, Um_dim;</span></span>
+<span id="L809"><span class="lineNum">     809</span>              : </span>
+<span id="L810"><span class="lineNum">     810</span>              :   // Omit scaling argument (e.g. scaling = 1.0) for non-dimensional coefficients.</span>
+<span id="L811"><span class="lineNum">     811</span>              :   Ue_nondim =</span>
+<span id="L812"><span class="lineNum">     812</span> <span class="tlaGNC">          24 :       std::make_unique&lt;EnergyDensityCoefficient&lt;EnergyDensityType::ELECTRIC&gt;&gt;(*E, mat_op);</span></span>
+<span id="L813"><span class="lineNum">     813</span>              :   Um_nondim =</span>
+<span id="L814"><span class="lineNum">     814</span> <span class="tlaGNC">          24 :       std::make_unique&lt;EnergyDensityCoefficient&lt;EnergyDensityType::MAGNETIC&gt;&gt;(*B, mat_op);</span></span>
+<span id="L815"><span class="lineNum">     815</span> <span class="tlaGNC">          24 :   S_nondim = std::make_unique&lt;PoyntingVectorCoefficient&gt;(*E, *B, mat_op);</span></span>
+<span id="L816"><span class="lineNum">     816</span>              : </span>
+<span id="L817"><span class="lineNum">     817</span>              :   // Use same scaling as in postoperator.cpp for dimensional coefficients.</span>
+<span id="L818"><span class="lineNum">     818</span> <span class="tlaGNC">          12 :   auto scaling = iodata.units.Dimensionalize&lt;Units::ValueType::FIELD_D&gt;(1.0) /</span></span>
+<span id="L819"><span class="lineNum">     819</span> <span class="tlaGNC">          12 :                  iodata.units.Dimensionalize&lt;Units::ValueType::FIELD_E&gt;(1.0);</span></span>
+<span id="L820"><span class="lineNum">     820</span> <span class="tlaGNC">          24 :   Ue_dim = std::make_unique&lt;EnergyDensityCoefficient&lt;EnergyDensityType::ELECTRIC&gt;&gt;(</span></span>
+<span id="L821"><span class="lineNum">     821</span>              :       *E, mat_op, scaling);</span>
+<span id="L822"><span class="lineNum">     822</span> <span class="tlaGNC">          12 :   scaling = iodata.units.Dimensionalize&lt;Units::ValueType::FIELD_H&gt;(1.0) /</span></span>
+<span id="L823"><span class="lineNum">     823</span>              :             iodata.units.Dimensionalize&lt;Units::ValueType::FIELD_B&gt;(1.0);</span>
+<span id="L824"><span class="lineNum">     824</span> <span class="tlaGNC">          24 :   Um_dim = std::make_unique&lt;EnergyDensityCoefficient&lt;EnergyDensityType::MAGNETIC&gt;&gt;(</span></span>
+<span id="L825"><span class="lineNum">     825</span>              :       *B, mat_op, scaling);</span>
+<span id="L826"><span class="lineNum">     826</span> <span class="tlaGNC">          12 :   S_dim = std::make_unique&lt;PoyntingVectorCoefficient&gt;(*E, *B, mat_op, scaling);</span></span>
+<span id="L827"><span class="lineNum">     827</span>              : </span>
+<span id="L828"><span class="lineNum">     828</span> <span class="tlaGNC">          36 :   auto update_coeff_gridfunctions = [&amp;](bool dimensional)</span></span>
+<span id="L829"><span class="lineNum">     829</span>              :   {</span>
+<span id="L830"><span class="lineNum">     830</span> <span class="tlaGNC">          36 :     Ue_gf.ProjectCoefficient(dimensional ? *Ue_dim : *Ue_nondim);</span></span>
+<span id="L831"><span class="lineNum">     831</span> <span class="tlaGNC">          36 :     Um_gf.ProjectCoefficient(dimensional ? *Um_dim : *Um_nondim);</span></span>
+<span id="L832"><span class="lineNum">     832</span> <span class="tlaGNC">          36 :     S_gf.ProjectCoefficient(dimensional ? *S_dim : *S_nondim);</span></span>
+<span id="L833"><span class="lineNum">     833</span> <span class="tlaGNC">          12 :   };</span></span>
+<span id="L834"><span class="lineNum">     834</span>              : </span>
+<span id="L835"><span class="lineNum">     835</span>              :   // Fields with their units scale factors. The coefficient grid functions are only</span>
+<span id="L836"><span class="lineNum">     836</span>              :   // evaluated in local elements, since their face-neighbor data is not exchanged.</span>
+<span id="L837"><span class="lineNum">     837</span> <span class="tlaGNC">         216 :   struct Field</span></span>
+<span id="L838"><span class="lineNum">     838</span>              :   {</span>
+<span id="L839"><span class="lineNum">     839</span>              :     std::string name;</span>
+<span id="L840"><span class="lineNum">     840</span>              :     const mfem::ParGridFunction *gf;</span>
+<span id="L841"><span class="lineNum">     841</span>              :     double scale;</span>
+<span id="L842"><span class="lineNum">     842</span>              :     bool face_nbr;</span>
+<span id="L843"><span class="lineNum">     843</span>              :   };</span>
+<span id="L844"><span class="lineNum">     844</span>              :   const auto scale_E = iodata.units.GetScaleFactor&lt;Units::ValueType::FIELD_E&gt;();</span>
+<span id="L845"><span class="lineNum">     845</span>              :   const auto scale_B = iodata.units.GetScaleFactor&lt;Units::ValueType::FIELD_B&gt;();</span>
+<span id="L846"><span class="lineNum">     846</span>              :   const auto scale_D = iodata.units.GetScaleFactor&lt;Units::ValueType::FIELD_D&gt;();</span>
+<span id="L847"><span class="lineNum">     847</span>              :   const auto scale_H = iodata.units.GetScaleFactor&lt;Units::ValueType::FIELD_H&gt;();</span>
+<span id="L848"><span class="lineNum">     848</span>              :   const std::vector&lt;Field&gt; fields = {</span>
+<span id="L849"><span class="lineNum">     849</span> <span class="tlaGNC">          12 :       {&quot;E_real&quot;, &amp;E-&gt;Real(), scale_E, true},</span></span>
+<span id="L850"><span class="lineNum">     850</span>              :       {&quot;E_imag&quot;, &amp;E-&gt;Imag(), scale_E, true},</span>
+<span id="L851"><span class="lineNum">     851</span>              :       {&quot;B_real&quot;, &amp;B-&gt;Real(), scale_B, true},</span>
+<span id="L852"><span class="lineNum">     852</span>              :       {&quot;B_imag&quot;, &amp;B-&gt;Imag(), scale_B, true},</span>
+<span id="L853"><span class="lineNum">     853</span>              :       {&quot;V&quot;, &amp;V-&gt;Real(), iodata.units.GetScaleFactor&lt;Units::ValueType::VOLTAGE&gt;(), true},</span>
+<span id="L854"><span class="lineNum">     854</span>              :       {&quot;A&quot;, &amp;A-&gt;Real(), iodata.units.GetScaleFactor&lt;Units::ValueType::CURRENT&gt;(), true},</span>
+<span id="L855"><span class="lineNum">     855</span> <span class="tlaGNC">          12 :       {&quot;U_e&quot;, &amp;Ue_gf, scale_D * scale_E, false},</span></span>
+<span id="L856"><span class="lineNum">     856</span> <span class="tlaGNC">          12 :       {&quot;U_m&quot;, &amp;Um_gf, scale_H * scale_B, false},</span></span>
+<span id="L857"><span class="lineNum">     857</span> <span class="tlaGNC">         120 :       {&quot;S&quot;, &amp;S_gf, scale_E * scale_H, false}};</span></span>
+<span id="L858"><span class="lineNum">     858</span>              : </span>
+<span id="L859"><span class="lineNum">     859</span>              :   // Evaluate the fields at a set of reference points in every local and face-neighbor</span>
+<span id="L860"><span class="lineNum">     860</span>              :   // element.</span>
+<span id="L861"><span class="lineNum">     861</span> <span class="tlaGNC">          36 :   auto Sample = [&amp;]()</span></span>
+<span id="L862"><span class="lineNum">     862</span>              :   {</span>
+<span id="L863"><span class="lineNum">     863</span> <span class="tlaGNC">          36 :     std::vector&lt;std::vector&lt;double&gt;&gt; values(fields.size());</span></span>
+<span id="L864"><span class="lineNum">     864</span> <span class="tlaGNC">          36 :     mfem::IsoparametricTransformation T_nbr;</span></span>
+<span id="L865"><span class="lineNum">     865</span>              :     mfem::Vector val;</span>
+<span id="L866"><span class="lineNum">     866</span>              :     auto SampleElement =</span>
+<span id="L867"><span class="lineNum">     867</span> <span class="tlaGNC">        1518 :         [&amp;](mfem::ElementTransformation &amp;T, mfem::Geometry::Type geom, bool face_nbr)</span></span>
+<span id="L868"><span class="lineNum">     868</span>              :     {</span>
+<span id="L869"><span class="lineNum">     869</span> <span class="tlaGNC">        1518 :       const auto &amp;ir = mfem::IntRules.Get(geom, 2 * order);</span></span>
+<span id="L870"><span class="lineNum">     870</span> <span class="tlaGNC">       24429 :       for (int q = 0; q &lt; ir.GetNPoints(); q++)</span></span>
+<span id="L871"><span class="lineNum">     871</span>              :       {</span>
+<span id="L872"><span class="lineNum">     872</span>              :         const auto &amp;ip = ir.IntPoint(q);</span>
+<span id="L873"><span class="lineNum">     873</span>              :         T.SetIntPoint(&amp;ip);</span>
+<span id="L874"><span class="lineNum">     874</span> <span class="tlaGNC">      229110 :         for (std::size_t i = 0; i &lt; fields.size(); i++)</span></span>
+<span id="L875"><span class="lineNum">     875</span>              :         {</span>
+<span id="L876"><span class="lineNum">     876</span> <span class="tlaGNC">      206199 :           if (face_nbr &amp;&amp; !fields[i].face_nbr)</span></span>
+<span id="L877"><span class="lineNum">     877</span>              :           {</span>
+<span id="L878"><span class="lineNum">     878</span> <span class="tlaGNC">       11385 :             continue;</span></span>
+<span id="L879"><span class="lineNum">     879</span>              :           }</span>
+<span id="L880"><span class="lineNum">     880</span> <span class="tlaGNC">      194814 :           fields[i].gf-&gt;GetVectorValue(T, ip, val);</span></span>
+<span id="L881"><span class="lineNum">     881</span> <span class="tlaGNC">      194814 :           values[i].insert(values[i].end(), val.begin(), val.end());</span></span>
+<span id="L882"><span class="lineNum">     882</span>              :         }</span>
+<span id="L883"><span class="lineNum">     883</span>              :       }</span>
+<span id="L884"><span class="lineNum">     884</span> <span class="tlaGNC">        1554 :     };</span></span>
+<span id="L885"><span class="lineNum">     885</span> <span class="tlaGNC">        1332 :     for (int e = 0; e &lt; pmesh.GetNE(); e++)</span></span>
+<span id="L886"><span class="lineNum">     886</span>              :     {</span>
+<span id="L887"><span class="lineNum">     887</span> <span class="tlaGNC">        1296 :       SampleElement(*pmesh.GetElementTransformation(e), pmesh.GetElementGeometry(e), false);</span></span>
+<span id="L888"><span class="lineNum">     888</span>              :     }</span>
+<span id="L889"><span class="lineNum">     889</span> <span class="tlaGNC">         258 :     for (int e = 0; e &lt; pmesh.GetNFaceNeighborElements(); e++)</span></span>
+<span id="L890"><span class="lineNum">     890</span>              :     {</span>
+<span id="L891"><span class="lineNum">     891</span> <span class="tlaGNC">         222 :       pmesh.GetFaceNbrElementTransformation(e, T_nbr);</span></span>
+<span id="L892"><span class="lineNum">     892</span> <span class="tlaGNC">         222 :       SampleElement(T_nbr, pmesh.face_nbr_elements[e]-&gt;GetGeometryType(), true);</span></span>
+<span id="L893"><span class="lineNum">     893</span>              :     }</span>
+<span id="L894"><span class="lineNum">     894</span> <span class="tlaGNC">          36 :     return values;</span></span>
+<span id="L895"><span class="lineNum">     895</span> <span class="tlaGNC">          36 :   };</span></span>
+<span id="L896"><span class="lineNum">     896</span>              : </span>
+<span id="L897"><span class="lineNum">     897</span>              :   // Check that values = scale * ref for each field, with scale its units scale factor if</span>
+<span id="L898"><span class="lineNum">     898</span>              :   // dimensional and one otherwise.</span>
+<span id="L899"><span class="lineNum">     899</span> <span class="tlaGNC">          24 :   auto Compare = [&amp;](const std::vector&lt;std::vector&lt;double&gt;&gt; &amp;ref,</span></span>
+<span id="L900"><span class="lineNum">     900</span>              :                      const std::vector&lt;std::vector&lt;double&gt;&gt; &amp;values, bool dimensional)</span>
+<span id="L901"><span class="lineNum">     901</span>              :   {</span>
+<span id="L902"><span class="lineNum">     902</span> <span class="tlaGNC">         240 :     for (std::size_t i = 0; i &lt; fields.size(); i++)</span></span>
+<span id="L903"><span class="lineNum">     903</span>              :     {</span>
+<span id="L904"><span class="lineNum">     904</span> <span class="tlaGNC">         216 :       REQUIRE(ref[i].size() == values[i].size());</span></span>
+<span id="L905"><span class="lineNum">     905</span> <span class="tlaGNC">         216 :       const double scale = dimensional ? fields[i].scale : 1.0;</span></span>
+<span id="L906"><span class="lineNum">     906</span> <span class="tlaGNC">         216 :       double max_ref = 0.0, max_diff = 0.0;</span></span>
+<span id="L907"><span class="lineNum">     907</span> <span class="tlaGNC">      300886 :       for (std::size_t j = 0; j &lt; ref[i].size(); j++)</span></span>
+<span id="L908"><span class="lineNum">     908</span>              :       {</span>
+<span id="L909"><span class="lineNum">     909</span> <span class="tlaGNC">      300670 :         max_ref = std::max(max_ref, std::abs(scale * ref[i][j]));</span></span>
+<span id="L910"><span class="lineNum">     910</span> <span class="tlaGNC">      300670 :         max_diff = std::max(max_diff, std::abs(values[i][j] - scale * ref[i][j]));</span></span>
+<span id="L911"><span class="lineNum">     911</span>              :       }</span>
+<span id="L912"><span class="lineNum">     912</span> <span class="tlaGNC">         216 :       Mpi::GlobalMax(1, &amp;max_ref, comm);</span></span>
+<span id="L913"><span class="lineNum">     913</span> <span class="tlaGNC">         216 :       Mpi::GlobalMax(1, &amp;max_diff, comm);</span></span>
+<span id="L914"><span class="lineNum">     914</span> <span class="tlaGNC">         216 :       CAPTURE(fields[i].name, dimensional, max_ref, max_diff);</span></span>
+<span id="L915"><span class="lineNum">     915</span> <span class="tlaGNC">         216 :       CHECK(max_ref &gt; 0.0);</span></span>
+<span id="L916"><span class="lineNum">     916</span> <span class="tlaGNC">         216 :       CHECK(max_diff &lt;= rtol * max_ref);</span></span>
+<span id="L917"><span class="lineNum">     917</span> <span class="tlaGNC">         216 :     }</span></span>
+<span id="L918"><span class="lineNum">     918</span> <span class="tlaGNC">          24 :   };</span></span>
+<span id="L919"><span class="lineNum">     919</span>              : </span>
+<span id="L920"><span class="lineNum">     920</span>              :   // Sample the fields before dimensionalizing.</span>
+<span id="L921"><span class="lineNum">     921</span> <span class="tlaGNC">          12 :   update_coeff_gridfunctions(false);</span></span>
+<span id="L922"><span class="lineNum">     922</span> <span class="tlaGNC">          12 :   const auto values_before = Sample();</span></span>
+<span id="L923"><span class="lineNum">     923</span>              : </span>
+<span id="L924"><span class="lineNum">     924</span>              :   // Dimensionalize.</span>
+<span id="L925"><span class="lineNum">     925</span> <span class="tlaGNC">          12 :   mesh::DimensionalizeMesh(pmesh, mesh_Lc0);</span></span>
+<span id="L926"><span class="lineNum">     926</span> <span class="tlaGNC">          12 :   ScaleGridFunctions(mesh_Lc0, {E.get(), B.get(), V.get(), A.get()});</span></span>
+<span id="L927"><span class="lineNum">     927</span> <span class="tlaGNC">          12 :   DimensionalizeGridFunctions(iodata.units, E, B, V, A);</span></span>
+<span id="L928"><span class="lineNum">     928</span> <span class="tlaGNC">          12 :   update_coeff_gridfunctions(true);</span></span>
+<span id="L929"><span class="lineNum">     929</span> <span class="tlaGNC">          12 :   Compare(values_before, Sample(), true);</span></span>
+<span id="L930"><span class="lineNum">     930</span>              : </span>
+<span id="L931"><span class="lineNum">     931</span>              :   // Nondimensionalize.</span>
+<span id="L932"><span class="lineNum">     932</span> <span class="tlaGNC">          12 :   mesh::NondimensionalizeMesh(pmesh, mesh_Lc0);</span></span>
+<span id="L933"><span class="lineNum">     933</span> <span class="tlaGNC">          12 :   ScaleGridFunctions(1.0 / mesh_Lc0, {E.get(), B.get(), V.get(), A.get()});</span></span>
+<span id="L934"><span class="lineNum">     934</span> <span class="tlaGNC">          12 :   NondimensionalizeGridFunctions(iodata.units, E, B, V, A);</span></span>
+<span id="L935"><span class="lineNum">     935</span> <span class="tlaGNC">          12 :   update_coeff_gridfunctions(false);</span></span>
+<span id="L936"><span class="lineNum">     936</span> <span class="tlaGNC">          12 :   Compare(values_before, Sample(), false);</span></span>
+<span id="L937"><span class="lineNum">     937</span> <span class="tlaGNC">          72 : }</span></span>
+<span id="L938"><span class="lineNum">     938</span>              : </span>
+<span id="L939"><span class="lineNum">     939</span> <span class="tlaGNC">           2 : TEST_CASE(&quot;GridFunction scaling keeps face-neighbor data consistent&quot;,</span></span>
+<span id="L940"><span class="lineNum">     940</span>              :           &quot;[postoperator][Parallel]&quot;)</span>
+<span id="L941"><span class="lineNum">     941</span>              : {</span>
+<span id="L942"><span class="lineNum">     942</span>              :   // In-place scaling of a GridFunction must scale its cached face-neighbor data together</span>
+<span id="L943"><span class="lineNum">     943</span>              :   // with the field, so the cache stays consistent with the field until the next</span>
+<span id="L944"><span class="lineNum">     944</span>              :   // ExchangeFaceNbrData. Check this for a real- and a complex-valued field, and for the</span>
+<span id="L945"><span class="lineNum">     945</span>              :   // Units in-place (non)dimensionalization round trip.</span>
+<span id="L946"><span class="lineNum">     946</span> <span class="tlaGNC">           2 :   auto comm = Mpi::World();</span></span>
+<span id="L947"><span class="lineNum">     947</span>              :   Units units(1.0e-3, 2.0e-3);</span>
+<span id="L948"><span class="lineNum">     948</span>              : </span>
+<span id="L949"><span class="lineNum">     949</span>              :   // Mesh partitioned across ranks, so each rank caches face-neighbor data.</span>
+<span id="L950"><span class="lineNum">     950</span>              :   constexpr int resolution = 3;</span>
+<span id="L951"><span class="lineNum">     951</span> <span class="tlaGNC">           4 :   auto serial_mesh = std::make_unique&lt;mfem::Mesh&gt;(mfem::Mesh::MakeCartesian3D(</span></span>
+<span id="L952"><span class="lineNum">     952</span> <span class="tlaGNC">           2 :       resolution, resolution, resolution, mfem::Element::TETRAHEDRON, 1.0, 1.0, 1.0));</span></span>
+<span id="L953"><span class="lineNum">     953</span> <span class="tlaGNC">           2 :   mfem::ParMesh mesh(comm, *serial_mesh);</span></span>
+<span id="L954"><span class="lineNum">     954</span> <span class="tlaGNC">           2 :   mfem::ND_FECollection nd_fec(1, mesh.Dimension());</span></span>
+<span id="L955"><span class="lineNum">     955</span> <span class="tlaGNC">           2 :   mfem::ParFiniteElementSpace nd_fespace(&amp;mesh, &amp;nd_fec);</span></span>
+<span id="L956"><span class="lineNum">     956</span>              : </span>
+<span id="L957"><span class="lineNum">     957</span>              :   // Check that values = scale * baseline, component-wise within relative tolerance.</span>
+<span id="L958"><span class="lineNum">     958</span>              :   constexpr double rtol = 1.0e-13;</span>
+<span id="L959"><span class="lineNum">     959</span>              :   auto CheckScaled =</span>
+<span id="L960"><span class="lineNum">     960</span> <span class="tlaGNC">          24 :       [](const Vector &amp;baseline, const Vector &amp;values, double scale, double tolerance)</span></span>
+<span id="L961"><span class="lineNum">     961</span>              :   {</span>
+<span id="L962"><span class="lineNum">     962</span> <span class="tlaGNC">          24 :     REQUIRE(baseline.Size() == values.Size());</span></span>
+<span id="L963"><span class="lineNum">     963</span> <span class="tlaGNC">          24 :     double max_diff = 0.0, max_val = 0.0;</span></span>
+<span id="L964"><span class="lineNum">     964</span> <span class="tlaGNC">        2760 :     for (int i = 0; i &lt; baseline.Size(); i++)</span></span>
+<span id="L965"><span class="lineNum">     965</span>              :     {</span>
+<span id="L966"><span class="lineNum">     966</span> <span class="tlaGNC">        2736 :       max_diff = std::max(max_diff, std::abs(scale * baseline(i) - values(i)));</span></span>
+<span id="L967"><span class="lineNum">     967</span> <span class="tlaGNC">        2736 :       max_val = std::max(max_val, std::abs(values(i)));</span></span>
+<span id="L968"><span class="lineNum">     968</span>              :     }</span>
+<span id="L969"><span class="lineNum">     969</span> <span class="tlaGNC">          24 :     CHECK(max_diff &lt;= tolerance * std::max(max_val, 1.0));</span></span>
+<span id="L970"><span class="lineNum">     970</span> <span class="tlaGNC">          24 :   };</span></span>
+<span id="L971"><span class="lineNum">     971</span>              : </span>
+<span id="L972"><span class="lineNum">     972</span>              :   // Check that the cached face-neighbor data equals a fresh exchange of the current</span>
+<span id="L973"><span class="lineNum">     973</span>              :   // field values on the neighboring ranks.</span>
+<span id="L974"><span class="lineNum">     974</span> <span class="tlaGNC">           8 :   auto CheckFaceNbrData = [&amp;](GridFunction &amp;gf)</span></span>
+<span id="L975"><span class="lineNum">     975</span>              :   {</span>
+<span id="L976"><span class="lineNum">     976</span> <span class="tlaGNC">           8 :     Vector nbr_r = gf.Real().FaceNbrData();</span></span>
+<span id="L977"><span class="lineNum">     977</span>              :     Vector nbr_i;</span>
+<span id="L978"><span class="lineNum">     978</span> <span class="tlaGNC">           8 :     if (gf.HasImag())</span></span>
+<span id="L979"><span class="lineNum">     979</span>              :     {</span>
+<span id="L980"><span class="lineNum">     980</span> <span class="tlaGNC">           4 :       nbr_i = gf.Imag().FaceNbrData();</span></span>
+<span id="L981"><span class="lineNum">     981</span>              :     }</span>
+<span id="L982"><span class="lineNum">     982</span> <span class="tlaGNC">           8 :     gf.Real().ExchangeFaceNbrData();</span></span>
+<span id="L983"><span class="lineNum">     983</span> <span class="tlaGNC">           8 :     if (gf.HasImag())</span></span>
+<span id="L984"><span class="lineNum">     984</span>              :     {</span>
+<span id="L985"><span class="lineNum">     985</span> <span class="tlaGNC">           4 :       gf.Imag().ExchangeFaceNbrData();</span></span>
+<span id="L986"><span class="lineNum">     986</span>              :     }</span>
+<span id="L987"><span class="lineNum">     987</span> <span class="tlaGNC">           8 :     CheckScaled(nbr_r, gf.Real().FaceNbrData(), 1.0, rtol);</span></span>
+<span id="L988"><span class="lineNum">     988</span> <span class="tlaGNC">           8 :     if (gf.HasImag())</span></span>
+<span id="L989"><span class="lineNum">     989</span>              :     {</span>
+<span id="L990"><span class="lineNum">     990</span> <span class="tlaGNC">           4 :       CheckScaled(nbr_i, gf.Imag().FaceNbrData(), 1.0, rtol);</span></span>
+<span id="L991"><span class="lineNum">     991</span>              :     }</span>
+<span id="L992"><span class="lineNum">     992</span> <span class="tlaGNC">           8 :   };</span></span>
+<span id="L993"><span class="lineNum">     993</span>              : </span>
+<span id="L994"><span class="lineNum">     994</span> <span class="tlaGNC">           4 :   auto CheckScaling = [&amp;](GridFunction &amp;gf, double scale)</span></span>
+<span id="L995"><span class="lineNum">     995</span>              :   {</span>
+<span id="L996"><span class="lineNum">     996</span>              :     // Populate the field through the true-dof distribution, then cache the face-neighbor</span>
+<span id="L997"><span class="lineNum">     997</span>              :     // data and keep a baseline of the local field values.</span>
+<span id="L998"><span class="lineNum">     998</span> <span class="tlaGNC">           4 :     Vector x(nd_fespace.GetTrueVSize());</span></span>
+<span id="L999"><span class="lineNum">     999</span> <span class="tlaGNC">           4 :     linalg::SetRandom(comm, x, 1);</span></span>
+<span id="L1000"><span class="lineNum">    1000</span> <span class="tlaGNC">           4 :     gf.Real().SetFromTrueDofs(x);</span></span>
+<span id="L1001"><span class="lineNum">    1001</span> <span class="tlaGNC">           4 :     if (gf.HasImag())</span></span>
+<span id="L1002"><span class="lineNum">    1002</span>              :     {</span>
+<span id="L1003"><span class="lineNum">    1003</span> <span class="tlaGNC">           2 :       linalg::SetRandom(comm, x, 2);</span></span>
+<span id="L1004"><span class="lineNum">    1004</span> <span class="tlaGNC">           2 :       gf.Imag().SetFromTrueDofs(x);</span></span>
+<span id="L1005"><span class="lineNum">    1005</span>              :     }</span>
+<span id="L1006"><span class="lineNum">    1006</span> <span class="tlaGNC">           4 :     gf.Real().ExchangeFaceNbrData();</span></span>
+<span id="L1007"><span class="lineNum">    1007</span> <span class="tlaGNC">           4 :     if (gf.HasImag())</span></span>
+<span id="L1008"><span class="lineNum">    1008</span>              :     {</span>
+<span id="L1009"><span class="lineNum">    1009</span> <span class="tlaGNC">           2 :       gf.Imag().ExchangeFaceNbrData();</span></span>
+<span id="L1010"><span class="lineNum">    1010</span>              :     }</span>
+<span id="L1011"><span class="lineNum">    1011</span> <span class="tlaGNC">           4 :     REQUIRE(gf.Real().FaceNbrData().Size() &gt; 0);</span></span>
+<span id="L1012"><span class="lineNum">    1012</span> <span class="tlaGNC">           4 :     Vector base_r = gf.Real();</span></span>
+<span id="L1013"><span class="lineNum">    1013</span>              :     Vector base_i;</span>
+<span id="L1014"><span class="lineNum">    1014</span> <span class="tlaGNC">           4 :     if (gf.HasImag())</span></span>
+<span id="L1015"><span class="lineNum">    1015</span>              :     {</span>
+<span id="L1016"><span class="lineNum">    1016</span> <span class="tlaGNC">           2 :       REQUIRE(gf.Imag().FaceNbrData().Size() &gt; 0);</span></span>
+<span id="L1017"><span class="lineNum">    1017</span> <span class="tlaGNC">           2 :       base_i = gf.Imag();</span></span>
+<span id="L1018"><span class="lineNum">    1018</span>              :     }</span>
+<span id="L1019"><span class="lineNum">    1019</span>              : </span>
+<span id="L1020"><span class="lineNum">    1020</span>              :     // Scaling in place scales the cached face-neighbor data together with the field.</span>
+<span id="L1021"><span class="lineNum">    1021</span> <span class="tlaGNC">           4 :     gf *= scale;</span></span>
+<span id="L1022"><span class="lineNum">    1022</span> <span class="tlaGNC">           4 :     CheckScaled(base_r, gf.Real(), scale, rtol);</span></span>
+<span id="L1023"><span class="lineNum">    1023</span> <span class="tlaGNC">           4 :     if (gf.HasImag())</span></span>
+<span id="L1024"><span class="lineNum">    1024</span>              :     {</span>
+<span id="L1025"><span class="lineNum">    1025</span> <span class="tlaGNC">           2 :       CheckScaled(base_i, gf.Imag(), scale, rtol);</span></span>
+<span id="L1026"><span class="lineNum">    1026</span>              :     }</span>
+<span id="L1027"><span class="lineNum">    1027</span> <span class="tlaGNC">           4 :     CheckFaceNbrData(gf);</span></span>
+<span id="L1028"><span class="lineNum">    1028</span>              : </span>
+<span id="L1029"><span class="lineNum">    1029</span>              :     // The Units in-place scaling round trip returns to the scaled baseline and also</span>
+<span id="L1030"><span class="lineNum">    1030</span>              :     // keeps the cached face-neighbor data consistent.</span>
+<span id="L1031"><span class="lineNum">    1031</span> <span class="tlaGNC">           4 :     units.DimensionalizeInPlace&lt;Units::ValueType::FIELD_E&gt;(gf);</span></span>
+<span id="L1032"><span class="lineNum">    1032</span> <span class="tlaGNC">           4 :     units.NondimensionalizeInPlace&lt;Units::ValueType::FIELD_E&gt;(gf);</span></span>
+<span id="L1033"><span class="lineNum">    1033</span> <span class="tlaGNC">           4 :     CheckScaled(base_r, gf.Real(), scale, rtol);</span></span>
+<span id="L1034"><span class="lineNum">    1034</span> <span class="tlaGNC">           4 :     if (gf.HasImag())</span></span>
+<span id="L1035"><span class="lineNum">    1035</span>              :     {</span>
+<span id="L1036"><span class="lineNum">    1036</span> <span class="tlaGNC">           2 :       CheckScaled(base_i, gf.Imag(), scale, rtol);</span></span>
+<span id="L1037"><span class="lineNum">    1037</span>              :     }</span>
+<span id="L1038"><span class="lineNum">    1038</span> <span class="tlaGNC">           4 :     CheckFaceNbrData(gf);</span></span>
+<span id="L1039"><span class="lineNum">    1039</span> <span class="tlaGNC">           4 :   };</span></span>
+<span id="L1040"><span class="lineNum">    1040</span>              : </span>
+<span id="L1041"><span class="lineNum">    1041</span>              :   constexpr double scale = 2.5;</span>
+<span id="L1042"><span class="lineNum">    1042</span> <span class="tlaGNC">           2 :   GridFunction gf_real(nd_fespace);</span></span>
+<span id="L1043"><span class="lineNum">    1043</span> <span class="tlaGNC">           2 :   CheckScaling(gf_real, scale);</span></span>
+<span id="L1044"><span class="lineNum">    1044</span>              : </span>
+<span id="L1045"><span class="lineNum">    1045</span> <span class="tlaGNC">           2 :   GridFunction gf_complex(nd_fespace, true);</span></span>
+<span id="L1046"><span class="lineNum">    1046</span> <span class="tlaGNC">           2 :   CheckScaling(gf_complex, scale);</span></span>
+<span id="L1047"><span class="lineNum">    1047</span> <span class="tlaGNC">           4 : }</span></span>
         </pre>
               </td>
             </tr>

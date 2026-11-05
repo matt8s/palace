@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-10-23 01:41:56</td>
+            <td class="headerValue">2026-11-05 18:04:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">42.9&nbsp;%</td>
@@ -126,28 +126,28 @@
 <span id="L56"><span class="lineNum">      56</span> <span class="tlaUNC">           0 :   PrintDipoleInfo(iodata.units, mesh);</span></span>
 <span id="L57"><span class="lineNum">      57</span> <span class="tlaUNC">           0 : }</span></span>
 <span id="L58"><span class="lineNum">      58</span>              : </span>
-<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC tlaBgGNC">         241 : CurrentDipoleOperator::CurrentDipoleOperator(</span></span>
+<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC tlaBgGNC">         255 : CurrentDipoleOperator::CurrentDipoleOperator(</span></span>
 <span id="L60"><span class="lineNum">      60</span>              :     const std::map&lt;int, config::CurrentDipoleData&gt; &amp;current_dipole, const Units &amp;units,</span>
 <span id="L61"><span class="lineNum">      61</span>              :     const mfem::ParMesh &amp;mesh)</span>
 <span id="L62"><span class="lineNum">      62</span>              : {</span>
-<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">         241 :   SetUpDipoleProperties(current_dipole, mesh, units);</span></span>
-<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">         241 :   PrintDipoleInfo(units, mesh);</span></span>
-<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">         241 : }</span></span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">         255 :   SetUpDipoleProperties(current_dipole, mesh, units);</span></span>
+<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">         255 :   PrintDipoleInfo(units, mesh);</span></span>
+<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">         255 : }</span></span>
 <span id="L66"><span class="lineNum">      66</span>              : </span>
-<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">         241 : void CurrentDipoleOperator::SetUpDipoleProperties(</span></span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">         255 : void CurrentDipoleOperator::SetUpDipoleProperties(</span></span>
 <span id="L68"><span class="lineNum">      68</span>              :     const std::map&lt;int, config::CurrentDipoleData&gt; &amp;current_dipole,</span>
 <span id="L69"><span class="lineNum">      69</span>              :     const mfem::ParMesh &amp;mesh, const Units &amp;units)</span>
 <span id="L70"><span class="lineNum">      70</span>              : {</span>
 <span id="L71"><span class="lineNum">      71</span>              :   // Set up current dipole data structures.</span>
-<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">         241 :   for (const auto &amp;[idx, data] : current_dipole)</span></span>
+<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">         255 :   for (const auto &amp;[idx, data] : current_dipole)</span></span>
 <span id="L73"><span class="lineNum">      73</span>              :   {</span>
 <span id="L74"><span class="lineNum">      74</span> <span class="tlaUNC tlaBgUNC">           0 :     dipoles.emplace(idx, CurrentDipoleData(data, mesh, units));</span></span>
 <span id="L75"><span class="lineNum">      75</span>              :   }</span>
-<span id="L76"><span class="lineNum">      76</span> <span class="tlaGNC tlaBgGNC">         241 : }</span></span>
+<span id="L76"><span class="lineNum">      76</span> <span class="tlaGNC tlaBgGNC">         255 : }</span></span>
 <span id="L77"><span class="lineNum">      77</span>              : </span>
-<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">         241 : void CurrentDipoleOperator::PrintDipoleInfo(const Units &amp;units, const mfem::ParMesh &amp;mesh)</span></span>
+<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">         255 : void CurrentDipoleOperator::PrintDipoleInfo(const Units &amp;units, const mfem::ParMesh &amp;mesh)</span></span>
 <span id="L79"><span class="lineNum">      79</span>              : {</span>
-<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">         241 :   if (dipoles.empty())</span></span>
+<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">         255 :   if (dipoles.empty())</span></span>
 <span id="L81"><span class="lineNum">      81</span>              :   {</span>
 <span id="L82"><span class="lineNum">      82</span>              :     return;</span>
 <span id="L83"><span class="lineNum">      83</span>              :   }</span>

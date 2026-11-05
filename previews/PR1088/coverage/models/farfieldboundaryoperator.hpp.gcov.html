@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-10-23 01:41:56</td>
+            <td class="headerValue">2026-11-05 18:04:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">-</td>
@@ -96,7 +96,7 @@
 <span id="L26"><span class="lineNum">      26</span>              : //</span>
 <span id="L27"><span class="lineNum">      27</span>              : // A class handling farfield, or absorbing, boundaries.</span>
 <span id="L28"><span class="lineNum">      28</span>              : //</span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC tlaBgGNC">         192 : class FarfieldBoundaryOperator</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC tlaBgGNC">         219 : class FarfieldBoundaryOperator</span></span>
 <span id="L30"><span class="lineNum">      30</span>              : {</span>
 <span id="L31"><span class="lineNum">      31</span>              : private:</span>
 <span id="L32"><span class="lineNum">      32</span>              :   // Reference to material property data (not owned).</span>
@@ -120,7 +120,7 @@
 <span id="L50"><span class="lineNum">      50</span>              :                            const mfem::ParMesh &amp;mesh);</span>
 <span id="L51"><span class="lineNum">      51</span>              : </span>
 <span id="L52"><span class="lineNum">      52</span>              :   // Returns array of farfield BC attributes.</span>
-<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">         304 :   const auto &amp;GetAttrList() const { return farfield_attr; }</span></span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">         573 :   const auto &amp;GetAttrList() const { return farfield_attr; }</span></span>
 <span id="L54"><span class="lineNum">      54</span>              : </span>
 <span id="L55"><span class="lineNum">      55</span>              :   // Returns order of absorbing BC approximation.</span>
 <span id="L56"><span class="lineNum">      56</span>              :   int GetOrder() const { return order; }</span>
@@ -139,18 +139,19 @@
 <span id="L69"><span class="lineNum">      69</span>              :                                      MaterialPropertyCoefficient &amp;dfbr,</span>
 <span id="L70"><span class="lineNum">      70</span>              :                                      MaterialPropertyCoefficient &amp;dfbi);</span>
 <span id="L71"><span class="lineNum">      71</span>              : </span>
-<span id="L72"><span class="lineNum">      72</span>              :   // Add the ω-independent boundary curl-curl coefficient of the second-order absorbing</span>
-<span id="L73"><span class="lineNum">      73</span>              :   // BC (the μ⁻¹·c₀ normal-projected term that the real-ω stamping scales by 0.5/ω),</span>
-<span id="L74"><span class="lineNum">      74</span>              :   // scaled by `coeff`. Pulled out so both the real-ω and complex-ω overloads share the</span>
-<span id="L75"><span class="lineNum">      75</span>              :   // material-coefficient construction. No-op when order &lt; 2 or there are no farfield</span>
-<span id="L76"><span class="lineNum">      76</span>              :   // attributes.</span>
-<span id="L77"><span class="lineNum">      77</span>              :   void AddExtraSystemBoundaryCurlCurlBdrCoefficients(double coeff,</span>
-<span id="L78"><span class="lineNum">      78</span>              :                                                      MaterialPropertyCoefficient &amp;df) const;</span>
-<span id="L79"><span class="lineNum">      79</span>              : };</span>
-<span id="L80"><span class="lineNum">      80</span>              : </span>
-<span id="L81"><span class="lineNum">      81</span>              : }  // namespace palace</span>
-<span id="L82"><span class="lineNum">      82</span>              : </span>
-<span id="L83"><span class="lineNum">      83</span>              : #endif  // PALACE_MODELS_FARFIELD_BOUNDARY_OPERATOR_HPP</span>
+<span id="L72"><span class="lineNum">      72</span>              :   // Add the ω-independent boundary curl-curl coefficient of the second-order absorbing BC</span>
+<span id="L73"><span class="lineNum">      73</span>              :   // (the μ⁻¹·c₀ normal-projected term that the real-ω stamping scales by 0.5/ω), scaled by</span>
+<span id="L74"><span class="lineNum">      74</span>              :   // `-coeff`: the negative sign of β = μ⁻¹c₀/(2iω) is applied here, so callers pass a</span>
+<span id="L75"><span class="lineNum">      75</span>              :   // positive scale. Pulled out so both the real-ω and complex-ω overloads share the</span>
+<span id="L76"><span class="lineNum">      76</span>              :   // material-coefficient construction. No-op when order &lt; 2 or there are no farfield</span>
+<span id="L77"><span class="lineNum">      77</span>              :   // attributes.</span>
+<span id="L78"><span class="lineNum">      78</span>              :   void AddExtraSystemBoundaryCurlCurlBdrCoefficients(double coeff,</span>
+<span id="L79"><span class="lineNum">      79</span>              :                                                      MaterialPropertyCoefficient &amp;df) const;</span>
+<span id="L80"><span class="lineNum">      80</span>              : };</span>
+<span id="L81"><span class="lineNum">      81</span>              : </span>
+<span id="L82"><span class="lineNum">      82</span>              : }  // namespace palace</span>
+<span id="L83"><span class="lineNum">      83</span>              : </span>
+<span id="L84"><span class="lineNum">      84</span>              : #endif  // PALACE_MODELS_FARFIELD_BOUNDARY_OPERATOR_HPP</span>
         </pre>
               </td>
             </tr>

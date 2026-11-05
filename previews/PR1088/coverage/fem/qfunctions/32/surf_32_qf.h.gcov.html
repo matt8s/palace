@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-10-23 01:41:56</td>
+            <td class="headerValue">2026-11-05 18:04:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">65.4&nbsp;%</td>
@@ -99,13 +99,13 @@
 <span id="L29"><span class="lineNum">      29</span>              : // Surface measure qw * detJ_f and unit normal from the raw boundary element Jacobian.</span>
 <span id="L30"><span class="lineNum">      30</span>              : CEED_QFUNCTION_HELPER CeedScalar SurfMeasure32(const CeedScalar J_f[6], CeedScalar n[3])</span>
 <span id="L31"><span class="lineNum">      31</span>              : {</span>
-<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC tlaBgGNC">     2637520 :   n[0] = J_f[1] * J_f[5] - J_f[2] * J_f[4];</span></span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">     2637520 :   n[1] = J_f[2] * J_f[3] - J_f[0] * J_f[5];</span></span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">     2637520 :   n[2] = J_f[0] * J_f[4] - J_f[1] * J_f[3];</span></span>
-<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">     2637520 :   const CeedScalar detJ = sqrt(n[0] * n[0] + n[1] * n[1] + n[2] * n[2]);</span></span>
-<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">     2204072 :   n[0] /= detJ;</span></span>
-<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">     2204072 :   n[1] /= detJ;</span></span>
-<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">     2204072 :   n[2] /= detJ;</span></span>
+<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC tlaBgGNC">     2677200 :   n[0] = J_f[1] * J_f[5] - J_f[2] * J_f[4];</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">     2677200 :   n[1] = J_f[2] * J_f[3] - J_f[0] * J_f[5];</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">     2677200 :   n[2] = J_f[0] * J_f[4] - J_f[1] * J_f[3];</span></span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">     2677200 :   const CeedScalar detJ = sqrt(n[0] * n[0] + n[1] * n[1] + n[2] * n[2]);</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">     2243752 :   n[0] /= detJ;</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">     2243752 :   n[1] /= detJ;</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">     2243752 :   n[2] /= detJ;</span></span>
 <span id="L39"><span class="lineNum">      39</span>              :   return detJ;</span>
 <span id="L40"><span class="lineNum">      40</span>              : }</span>
 <span id="L41"><span class="lineNum">      41</span>              : </span>
@@ -118,8 +118,8 @@
 <span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">     1765688 :   MatUnpack33(J_v + i, Q, J_loc);</span></span>
 <span id="L49"><span class="lineNum">      49</span>              :   const CeedScalar detJ = AdjJt33&lt;true&gt;(J_loc, adjJt_loc);</span>
 <span id="L50"><span class="lineNum">      50</span>              :   MultAx33(adjJt_loc, u_loc, E);</span>
-<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">     4770296 :   E[0] /= detJ;</span></span>
-<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">     4770296 :   E[1] /= detJ;</span></span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">     4809976 :   E[0] /= detJ;</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">     4809976 :   E[1] /= detJ;</span></span>
 <span id="L53"><span class="lineNum">      53</span> <span class="tlaUNC tlaBgUNC">           0 :   E[2] /= detJ;</span></span>
 <span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC tlaBgGNC">     2239448 : }</span></span>
 <span id="L55"><span class="lineNum">      55</span>              : </span>
@@ -145,9 +145,9 @@
 <span id="L75"><span class="lineNum">      75</span>              :   CeedScalar E_2[3];</span>
 <span id="L76"><span class="lineNum">      76</span>              :   SurfHcurlField32(i, Q, J_v1, u_1, E);</span>
 <span id="L77"><span class="lineNum">      77</span>              :   SurfHcurlField32(i, Q, J_v2, u_2, E_2);</span>
-<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">        2864 :   E[0] = 0.5 * (E[0] + E_2[0]);</span></span>
-<span id="L79"><span class="lineNum">      79</span> <span class="tlaGNC">        2864 :   E[1] = 0.5 * (E[1] + E_2[1]);</span></span>
-<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">        2864 :   E[2] = 0.5 * (E[2] + E_2[2]);</span></span>
+<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">       10800 :   E[0] = 0.5 * (E[0] + E_2[0]);</span></span>
+<span id="L79"><span class="lineNum">      79</span> <span class="tlaGNC">       10800 :   E[1] = 0.5 * (E[1] + E_2[1]);</span></span>
+<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">       10800 :   E[2] = 0.5 * (E[2] + E_2[2]);</span></span>
 <span id="L81"><span class="lineNum">      81</span>              : }</span>
 <span id="L82"><span class="lineNum">      82</span>              : </span>
 <span id="L83"><span class="lineNum">      83</span>              : // Surface area: v = qw * detJ_f. Inputs: qw, grad_x_f.</span>
@@ -203,24 +203,24 @@
 <span id="L133"><span class="lineNum">     133</span>              : CEED_QFUNCTION_HELPER CeedScalar SurfEprDefault(const CeedIntScalar *ctx,</span>
 <span id="L134"><span class="lineNum">     134</span>              :                                                 const CeedScalar E[3])</span>
 <span id="L135"><span class="lineNum">     135</span>              : {</span>
-<span id="L136"><span class="lineNum">     136</span> <span class="tlaGNC">        6912 :   return ctx[0].second * (E[0] * E[0] + E[1] * E[1] + E[2] * E[2]);</span></span>
+<span id="L136"><span class="lineNum">     136</span> <span class="tlaGNC">       26752 :   return ctx[0].second * (E[0] * E[0] + E[1] * E[1] + E[2] * E[2]);</span></span>
 <span id="L137"><span class="lineNum">     137</span>              : }</span>
 <span id="L138"><span class="lineNum">     138</span>              : </span>
 <span id="L139"><span class="lineNum">     139</span>              : CEED_QFUNCTION_HELPER CeedScalar SurfEprMA(const CeedIntScalar *ctx, const CeedScalar n[3],</span>
 <span id="L140"><span class="lineNum">     140</span>              :                                            const CeedScalar E[3])</span>
 <span id="L141"><span class="lineNum">     141</span>              : {</span>
-<span id="L142"><span class="lineNum">     142</span> <span class="tlaGNC">       90880 :   const CeedScalar En = n[0] * E[0] + n[1] * E[1] + n[2] * E[2];</span></span>
-<span id="L143"><span class="lineNum">     143</span> <span class="tlaGNC">       90880 :   return ctx[0].second * En * En;</span></span>
+<span id="L142"><span class="lineNum">     142</span> <span class="tlaGNC">      100800 :   const CeedScalar En = n[0] * E[0] + n[1] * E[1] + n[2] * E[2];</span></span>
+<span id="L143"><span class="lineNum">     143</span> <span class="tlaGNC">      100800 :   return ctx[0].second * En * En;</span></span>
 <span id="L144"><span class="lineNum">     144</span>              : }</span>
 <span id="L145"><span class="lineNum">     145</span>              : </span>
 <span id="L146"><span class="lineNum">     146</span>              : CEED_QFUNCTION_HELPER CeedScalar SurfEprMS(const CeedIntScalar *ctx, CeedInt attr,</span>
 <span id="L147"><span class="lineNum">     147</span>              :                                            const CeedScalar n[3], const CeedScalar E[3])</span>
 <span id="L148"><span class="lineNum">     148</span>              : {</span>
 <span id="L149"><span class="lineNum">     149</span>              :   CeedScalar eps[9], D[3];</span>
-<span id="L150"><span class="lineNum">     150</span> <span class="tlaGNC">        3256 :   CoeffUnpack3(ctx + 2, attr, eps);</span></span>
+<span id="L150"><span class="lineNum">     150</span> <span class="tlaGNC">       13176 :   CoeffUnpack3(ctx + 2, attr, eps);</span></span>
 <span id="L151"><span class="lineNum">     151</span>              :   MultAx33(eps, E, D);</span>
-<span id="L152"><span class="lineNum">     152</span> <span class="tlaGNC">        3256 :   const CeedScalar Dn = n[0] * D[0] + n[1] * D[1] + n[2] * D[2];</span></span>
-<span id="L153"><span class="lineNum">     153</span> <span class="tlaGNC">        3256 :   return ctx[0].second * Dn * Dn;</span></span>
+<span id="L152"><span class="lineNum">     152</span> <span class="tlaGNC">       13176 :   const CeedScalar Dn = n[0] * D[0] + n[1] * D[1] + n[2] * D[2];</span></span>
+<span id="L153"><span class="lineNum">     153</span> <span class="tlaGNC">       13176 :   return ctx[0].second * Dn * Dn;</span></span>
 <span id="L154"><span class="lineNum">     154</span>              : }</span>
 <span id="L155"><span class="lineNum">     155</span>              : </span>
 <span id="L156"><span class="lineNum">     156</span>              : CEED_QFUNCTION_HELPER CeedScalar SurfEprSA(const CeedIntScalar *ctx, const CeedScalar n[3],</span>
@@ -241,57 +241,57 @@
 <span id="L171"><span class="lineNum">     171</span>              : CEED_QFUNCTION_HELPER CeedScalar SurfEpr(const CeedIntScalar *ctx, CeedInt attr,</span>
 <span id="L172"><span class="lineNum">     172</span>              :                                          const CeedScalar n[3], const CeedScalar E[3])</span>
 <span id="L173"><span class="lineNum">     173</span>              : {</span>
-<span id="L174"><span class="lineNum">     174</span> <span class="tlaGNC">      104232 :   switch (ctx[0].first)</span></span>
+<span id="L174"><span class="lineNum">     174</span> <span class="tlaGNC">      143912 :   switch (ctx[0].first)</span></span>
 <span id="L175"><span class="lineNum">     175</span>              :   {</span>
-<span id="L176"><span class="lineNum">     176</span> <span class="tlaGNC">        6912 :     case 0:</span></span>
-<span id="L177"><span class="lineNum">     177</span> <span class="tlaGNC">        6912 :       return SurfEprDefault(ctx + 1, E);</span></span>
-<span id="L178"><span class="lineNum">     178</span> <span class="tlaGNC">       90880 :     case 1:</span></span>
-<span id="L179"><span class="lineNum">     179</span> <span class="tlaGNC">       90880 :       return SurfEprMA(ctx + 1, n, E);</span></span>
-<span id="L180"><span class="lineNum">     180</span> <span class="tlaGNC">        3256 :     case 2:</span></span>
-<span id="L181"><span class="lineNum">     181</span> <span class="tlaGNC">        3256 :       return SurfEprMS(ctx + 1, attr, n, E);</span></span>
+<span id="L176"><span class="lineNum">     176</span> <span class="tlaGNC">       26752 :     case 0:</span></span>
+<span id="L177"><span class="lineNum">     177</span> <span class="tlaGNC">       26752 :       return SurfEprDefault(ctx + 1, E);</span></span>
+<span id="L178"><span class="lineNum">     178</span> <span class="tlaGNC">      100800 :     case 1:</span></span>
+<span id="L179"><span class="lineNum">     179</span> <span class="tlaGNC">      100800 :       return SurfEprMA(ctx + 1, n, E);</span></span>
+<span id="L180"><span class="lineNum">     180</span> <span class="tlaGNC">       13176 :     case 2:</span></span>
+<span id="L181"><span class="lineNum">     181</span> <span class="tlaGNC">       13176 :       return SurfEprMS(ctx + 1, attr, n, E);</span></span>
 <span id="L182"><span class="lineNum">     182</span> <span class="tlaGNC">        3184 :     default:  // 3: SA</span></span>
 <span id="L183"><span class="lineNum">     183</span> <span class="tlaGNC">        3184 :       return SurfEprSA(ctx + 1, n, E);</span></span>
 <span id="L184"><span class="lineNum">     184</span>              :   }</span>
 <span id="L185"><span class="lineNum">     185</span>              : }</span>
 <span id="L186"><span class="lineNum">     186</span>              : </span>
 <span id="L187"><span class="lineNum">     187</span>              : // Single-sided interface dielectric. Inputs: qw, grad_x_f, attr_1, grad_x_1, u_1.</span>
-<span id="L188"><span class="lineNum">     188</span> <span class="tlaGNC">        1540 : CEED_QFUNCTION(f_integ_surf_epr_1_32)(void *__restrict__ ctx_, CeedInt Q,</span></span>
+<span id="L188"><span class="lineNum">     188</span> <span class="tlaGNC">        2308 : CEED_QFUNCTION(f_integ_surf_epr_1_32)(void *__restrict__ ctx_, CeedInt Q,</span></span>
 <span id="L189"><span class="lineNum">     189</span>              :                                       const CeedScalar *const *in, CeedScalar *const *out)</span>
 <span id="L190"><span class="lineNum">     190</span>              : {</span>
 <span id="L191"><span class="lineNum">     191</span>              :   const CeedIntScalar *ctx = (const CeedIntScalar *)ctx_;</span>
-<span id="L192"><span class="lineNum">     192</span> <span class="tlaGNC">        1540 :   const CeedScalar *qw = in[0], *J_f = in[1], *attr = in[2], *J_v = in[3], *u = in[4];</span></span>
-<span id="L193"><span class="lineNum">     193</span> <span class="tlaGNC">        1540 :   CeedScalar *v = out[0];</span></span>
+<span id="L192"><span class="lineNum">     192</span> <span class="tlaGNC">        2308 :   const CeedScalar *qw = in[0], *J_f = in[1], *attr = in[2], *J_v = in[3], *u = in[4];</span></span>
+<span id="L193"><span class="lineNum">     193</span> <span class="tlaGNC">        2308 :   CeedScalar *v = out[0];</span></span>
 <span id="L194"><span class="lineNum">     194</span>              : </span>
-<span id="L195"><span class="lineNum">     195</span> <span class="tlaGNC">      102908 :   CeedPragmaSIMD for (CeedInt i = 0; i &lt; Q; i++)</span></span>
+<span id="L195"><span class="lineNum">     195</span> <span class="tlaGNC">      135420 :   CeedPragmaSIMD for (CeedInt i = 0; i &lt; Q; i++)</span></span>
 <span id="L196"><span class="lineNum">     196</span>              :   {</span>
 <span id="L197"><span class="lineNum">     197</span>              :     CeedScalar J_f_loc[6], n[3], E[3];</span>
-<span id="L198"><span class="lineNum">     198</span> <span class="tlaGNC">      101368 :     MatUnpack32(J_f + i, Q, J_f_loc);</span></span>
-<span id="L199"><span class="lineNum">     199</span> <span class="tlaGNC">      101368 :     const CeedScalar wdetJ = qw[i] * SurfMeasure32(J_f_loc, n);</span></span>
+<span id="L198"><span class="lineNum">     198</span> <span class="tlaGNC">      133112 :     MatUnpack32(J_f + i, Q, J_f_loc);</span></span>
+<span id="L199"><span class="lineNum">     199</span> <span class="tlaGNC">      133112 :     const CeedScalar wdetJ = qw[i] * SurfMeasure32(J_f_loc, n);</span></span>
 <span id="L200"><span class="lineNum">     200</span>              :     SurfHcurlField32(i, Q, J_v, u, E);</span>
-<span id="L201"><span class="lineNum">     201</span> <span class="tlaGNC">      202736 :     v[i] = wdetJ * SurfEpr(ctx, (CeedInt)attr[i], n, E);</span></span>
+<span id="L201"><span class="lineNum">     201</span> <span class="tlaGNC">      266224 :     v[i] = wdetJ * SurfEpr(ctx, (CeedInt)attr[i], n, E);</span></span>
 <span id="L202"><span class="lineNum">     202</span>              :   }</span>
-<span id="L203"><span class="lineNum">     203</span> <span class="tlaGNC">        1540 :   return 0;</span></span>
+<span id="L203"><span class="lineNum">     203</span> <span class="tlaGNC">        2308 :   return 0;</span></span>
 <span id="L204"><span class="lineNum">     204</span>              : }</span>
 <span id="L205"><span class="lineNum">     205</span>              : </span>
 <span id="L206"><span class="lineNum">     206</span>              : // Two-sided (averaged) interface dielectric. Inputs: qw, grad_x_f, attr_1, grad_x_1,</span>
 <span id="L207"><span class="lineNum">     207</span>              : // attr_2, grad_x_2, u_1, u_2.</span>
-<span id="L208"><span class="lineNum">     208</span> <span class="tlaGNC">          62 : CEED_QFUNCTION(f_integ_surf_epr_2_32)(void *__restrict__ ctx_, CeedInt Q,</span></span>
+<span id="L208"><span class="lineNum">     208</span> <span class="tlaGNC">         254 : CEED_QFUNCTION(f_integ_surf_epr_2_32)(void *__restrict__ ctx_, CeedInt Q,</span></span>
 <span id="L209"><span class="lineNum">     209</span>              :                                       const CeedScalar *const *in, CeedScalar *const *out)</span>
 <span id="L210"><span class="lineNum">     210</span>              : {</span>
 <span id="L211"><span class="lineNum">     211</span>              :   const CeedIntScalar *ctx = (const CeedIntScalar *)ctx_;</span>
-<span id="L212"><span class="lineNum">     212</span> <span class="tlaGNC">          62 :   const CeedScalar *qw = in[0], *J_f = in[1], *attr = in[2], *J_v1 = in[3], *J_v2 = in[5],</span></span>
-<span id="L213"><span class="lineNum">     213</span> <span class="tlaGNC">          62 :                    *u_1 = in[6], *u_2 = in[7];</span></span>
-<span id="L214"><span class="lineNum">     214</span> <span class="tlaGNC">          62 :   CeedScalar *v = out[0];</span></span>
+<span id="L212"><span class="lineNum">     212</span> <span class="tlaGNC">         254 :   const CeedScalar *qw = in[0], *J_f = in[1], *attr = in[2], *J_v1 = in[3], *J_v2 = in[5],</span></span>
+<span id="L213"><span class="lineNum">     213</span> <span class="tlaGNC">         254 :                    *u_1 = in[6], *u_2 = in[7];</span></span>
+<span id="L214"><span class="lineNum">     214</span> <span class="tlaGNC">         254 :   CeedScalar *v = out[0];</span></span>
 <span id="L215"><span class="lineNum">     215</span>              : </span>
-<span id="L216"><span class="lineNum">     216</span> <span class="tlaGNC">        2926 :   CeedPragmaSIMD for (CeedInt i = 0; i &lt; Q; i++)</span></span>
+<span id="L216"><span class="lineNum">     216</span> <span class="tlaGNC">       11054 :   CeedPragmaSIMD for (CeedInt i = 0; i &lt; Q; i++)</span></span>
 <span id="L217"><span class="lineNum">     217</span>              :   {</span>
 <span id="L218"><span class="lineNum">     218</span>              :     CeedScalar J_f_loc[6], n[3], E[3];</span>
-<span id="L219"><span class="lineNum">     219</span> <span class="tlaGNC">        2864 :     MatUnpack32(J_f + i, Q, J_f_loc);</span></span>
-<span id="L220"><span class="lineNum">     220</span> <span class="tlaGNC">        2864 :     const CeedScalar wdetJ = qw[i] * SurfMeasure32(J_f_loc, n);</span></span>
+<span id="L219"><span class="lineNum">     219</span> <span class="tlaGNC">       10800 :     MatUnpack32(J_f + i, Q, J_f_loc);</span></span>
+<span id="L220"><span class="lineNum">     220</span> <span class="tlaGNC">       10800 :     const CeedScalar wdetJ = qw[i] * SurfMeasure32(J_f_loc, n);</span></span>
 <span id="L221"><span class="lineNum">     221</span>              :     SurfHcurlField2Avg32(i, Q, J_v1, J_v2, u_1, u_2, E);</span>
-<span id="L222"><span class="lineNum">     222</span> <span class="tlaGNC">        5728 :     v[i] = wdetJ * SurfEpr(ctx, (CeedInt)attr[i], n, E);</span></span>
+<span id="L222"><span class="lineNum">     222</span> <span class="tlaGNC">       21600 :     v[i] = wdetJ * SurfEpr(ctx, (CeedInt)attr[i], n, E);</span></span>
 <span id="L223"><span class="lineNum">     223</span>              :   }</span>
-<span id="L224"><span class="lineNum">     224</span> <span class="tlaGNC">          62 :   return 0;</span></span>
+<span id="L224"><span class="lineNum">     224</span> <span class="tlaGNC">         254 :   return 0;</span></span>
 <span id="L225"><span class="lineNum">     225</span>              : }</span>
 <span id="L226"><span class="lineNum">     226</span>              : </span>
 <span id="L227"><span class="lineNum">     227</span>              : // Linear H(curl) mode-overlap integral for lumped-port voltage and S-parameter</span>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-10-23 01:41:56</td>
+            <td class="headerValue">2026-11-05 18:04:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -83,29 +83,29 @@
 <span id="L13"><span class="lineNum">      13</span>              : </span>
 <span id="L14"><span class="lineNum">      14</span>              : using namespace ceed;</span>
 <span id="L15"><span class="lineNum">      15</span>              : </span>
-<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC tlaBgGNC">         546 : void GradientIntegrator::Assemble(Ceed ceed, CeedElemRestriction trial_restr,</span></span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC tlaBgGNC">         545 : void GradientIntegrator::Assemble(Ceed ceed, CeedElemRestriction trial_restr,</span></span>
 <span id="L17"><span class="lineNum">      17</span>              :                                   CeedElemRestriction test_restr, CeedBasis trial_basis,</span>
 <span id="L18"><span class="lineNum">      18</span>              :                                   CeedBasis test_basis, CeedVector geom_data,</span>
 <span id="L19"><span class="lineNum">      19</span>              :                                   CeedElemRestriction geom_data_restr,</span>
 <span id="L20"><span class="lineNum">      20</span>              :                                   CeedOperator *op) const</span>
 <span id="L21"><span class="lineNum">      21</span>              : {</span>
 <span id="L22"><span class="lineNum">      22</span>              :   CeedQFunctionInfo info;</span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">         546 :   info.assemble_q_data = assemble_q_data;</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">         545 :   info.assemble_q_data = assemble_q_data;</span></span>
 <span id="L24"><span class="lineNum">      24</span>              : </span>
 <span id="L25"><span class="lineNum">      25</span>              :   // Set up QFunctions.</span>
 <span id="L26"><span class="lineNum">      26</span>              :   CeedInt dim, space_dim, trial_num_comp, test_num_comp;</span>
-<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">         546 :   PalaceCeedCall(ceed, CeedBasisGetDimension(trial_basis, &amp;dim));</span></span>
-<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">         546 :   PalaceCeedCall(ceed, CeedGeometryDataGetSpaceDimension(geom_data_restr, dim, &amp;space_dim));</span></span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">         546 :   PalaceCeedCall(ceed, CeedBasisGetNumComponents(trial_basis, &amp;trial_num_comp));</span></span>
-<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">         546 :   PalaceCeedCall(ceed, CeedBasisGetNumComponents(test_basis, &amp;test_num_comp));</span></span>
-<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">         546 :   MFEM_VERIFY(trial_num_comp == 1 &amp;&amp; test_num_comp == space_dim,</span></span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">         545 :   PalaceCeedCall(ceed, CeedBasisGetDimension(trial_basis, &amp;dim));</span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">         545 :   PalaceCeedCall(ceed, CeedGeometryDataGetSpaceDimension(geom_data_restr, dim, &amp;space_dim));</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">         545 :   PalaceCeedCall(ceed, CeedBasisGetNumComponents(trial_basis, &amp;trial_num_comp));</span></span>
+<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">         545 :   PalaceCeedCall(ceed, CeedBasisGetNumComponents(test_basis, &amp;test_num_comp));</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">         545 :   MFEM_VERIFY(trial_num_comp == 1 &amp;&amp; test_num_comp == space_dim,</span></span>
 <span id="L32"><span class="lineNum">      32</span>              :               &quot;GradientIntegrator requires trial space with a single component and test &quot;</span>
 <span id="L33"><span class="lineNum">      33</span>              :               &quot;space with space_dim components!&quot;);</span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">         546 :   switch (10 * space_dim + dim)</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">         545 :   switch (10 * space_dim + dim)</span></span>
 <span id="L35"><span class="lineNum">      35</span>              :   {</span>
-<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">         288 :     case 22:</span></span>
-<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">         288 :       info.apply_qf = assemble_q_data ? f_build_hcurlh1d_22 : f_apply_hcurlh1d_22;</span></span>
-<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">         288 :       info.apply_qf_path = PalaceQFunctionRelativePath(</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">         287 :     case 22:</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">         287 :       info.apply_qf = assemble_q_data ? f_build_hcurlh1d_22 : f_apply_hcurlh1d_22;</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">         287 :       info.apply_qf_path = PalaceQFunctionRelativePath(</span></span>
 <span id="L39"><span class="lineNum">      39</span>              :           assemble_q_data ? f_build_hcurlh1d_22_loc : f_apply_hcurlh1d_22_loc);</span>
 <span id="L40"><span class="lineNum">      40</span>              :       break;</span>
 <span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">         258 :     case 33:</span></span>
@@ -132,15 +132,15 @@
 <span id="L62"><span class="lineNum">      62</span> <span class="tlaUNC">           0 :       MFEM_ABORT(&quot;Invalid value of (dim, space_dim) = (&quot; &lt;&lt; dim &lt;&lt; &quot;, &quot; &lt;&lt; space_dim</span></span>
 <span id="L63"><span class="lineNum">      63</span>              :                                                          &lt;&lt; &quot;) for GradientIntegrator!&quot;);</span>
 <span id="L64"><span class="lineNum">      64</span>              :   }</span>
-<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC tlaBgGNC">         546 :   info.trial_ops = EvalMode::Grad;</span></span>
-<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">         546 :   info.test_ops = EvalMode::Interp;</span></span>
+<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC tlaBgGNC">         545 :   info.trial_ops = EvalMode::Grad;</span></span>
+<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">         545 :   info.test_ops = EvalMode::Interp;</span></span>
 <span id="L67"><span class="lineNum">      67</span>              : </span>
 <span id="L68"><span class="lineNum">      68</span>              :   // Set up the coefficient and assemble.</span>
-<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">         546 :   auto ctx = PopulateCoefficientContext(space_dim, Q, transpose);</span></span>
-<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">         546 :   AssembleCeedOperator(info, (void *)ctx.data(), ctx.size() * sizeof(CeedIntScalar), ceed,</span></span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">         545 :   auto ctx = PopulateCoefficientContext(space_dim, Q, transpose);</span></span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">         545 :   AssembleCeedOperator(info, (void *)ctx.data(), ctx.size() * sizeof(CeedIntScalar), ceed,</span></span>
 <span id="L71"><span class="lineNum">      71</span>              :                        trial_restr, test_restr, trial_basis, test_basis, geom_data,</span>
 <span id="L72"><span class="lineNum">      72</span>              :                        geom_data_restr, op);</span>
-<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">         546 : }</span></span>
+<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">         545 : }</span></span>
 <span id="L74"><span class="lineNum">      74</span>              : </span>
 <span id="L75"><span class="lineNum">      75</span>              : }  // namespace palace</span>
         </pre>
