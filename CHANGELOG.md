@@ -25,7 +25,7 @@ See the [developer notes on schema versioning](https://awslabs.github.io/palace/
     BoomerAMG and AMS, and marked the zero initial guess of the BoomerAMG preconditioner as
     zero. This saves one halo exchange per level and V-cycle, which is latency bound on the
     coarse levels at high process counts. Results are unchanged.
-    [PR XXXX](https://github.com/awslabs/palace/pull/XXXX).
+    [PR 1139](https://github.com/awslabs/palace/pull/1139).
   - Skipped the eigenvalue estimate of the Jacobi preconditioner of the error estimator's
     flux recovery, on which the preconditioned conjugate gradient iterates do not depend.
     This speeds up the construction of the error estimator, which is repeated at every
