@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-11-05 17:22:25</td>
+            <td class="headerValue">2026-11-05 18:10:33</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">72.0&nbsp;%</td>
@@ -311,13 +311,13 @@
 <span id="L241"><span class="lineNum">     241</span> <span class="tlaGNC">      119644 : }</span></span>
 <span id="L242"><span class="lineNum">     242</span>              : </span>
 <span id="L243"><span class="lineNum">     243</span>              : template &lt;typename OperType, typename VecType&gt;</span>
-<span id="L244"><span class="lineNum">     244</span> <span class="tlaGNC">       51058 : inline void ApplyB(const Solver&lt;OperType&gt; *B, const VecType &amp;x, VecType &amp;y,</span></span>
+<span id="L244"><span class="lineNum">     244</span> <span class="tlaGNC">       51055 : inline void ApplyB(const Solver&lt;OperType&gt; *B, const VecType &amp;x, VecType &amp;y,</span></span>
 <span id="L245"><span class="lineNum">     245</span>              :                    bool use_timer = true)</span>
 <span id="L246"><span class="lineNum">     246</span>              : {</span>
-<span id="L247"><span class="lineNum">     247</span> <span class="tlaGNC">       51058 :   BlockTimer bt(Timer::KSP_PRECONDITIONER, use_timer);</span></span>
+<span id="L247"><span class="lineNum">     247</span> <span class="tlaGNC">       51055 :   BlockTimer bt(Timer::KSP_PRECONDITIONER, use_timer);</span></span>
 <span id="L248"><span class="lineNum">     248</span>              :   MFEM_ASSERT(B, &quot;Missing preconditioner in ApplyB!&quot;);</span>
-<span id="L249"><span class="lineNum">     249</span> <span class="tlaGNC">       51058 :   B-&gt;Mult(x, y);</span></span>
-<span id="L250"><span class="lineNum">     250</span> <span class="tlaGNC">       51058 : }</span></span>
+<span id="L249"><span class="lineNum">     249</span> <span class="tlaGNC">       51055 :   B-&gt;Mult(x, y);</span></span>
+<span id="L250"><span class="lineNum">     250</span> <span class="tlaGNC">       51055 : }</span></span>
 <span id="L251"><span class="lineNum">     251</span>              : </span>
 <span id="L252"><span class="lineNum">     252</span>              : template &lt;typename OperType, typename VecType&gt;</span>
 <span id="L253"><span class="lineNum">     253</span> <span class="tlaGNC">        4407 : inline void InitialResidual(PreconditionerSide side, const OperType *A,</span></span>
@@ -474,45 +474,45 @@
 <span id="L404"><span class="lineNum">     404</span> <span class="tlaUNC tlaBgUNC">           0 :     Mpi::Print(comm, &quot;{}Residual norms for PCG solve\n&quot;,</span></span>
 <span id="L405"><span class="lineNum">     405</span> <span class="tlaUNC">           0 :                std::string(tab_width + int_width - 1, ' '));</span></span>
 <span id="L406"><span class="lineNum">     406</span>              :   }</span>
-<span id="L407"><span class="lineNum">     407</span> <span class="tlaGNC tlaBgGNC">       31727 :   for (; it &lt; max_it &amp;&amp; !converged; it++)</span></span>
+<span id="L407"><span class="lineNum">     407</span> <span class="tlaGNC tlaBgGNC">       31724 :   for (; it &lt; max_it &amp;&amp; !converged; it++)</span></span>
 <span id="L408"><span class="lineNum">     408</span>              :   {</span>
-<span id="L409"><span class="lineNum">     409</span> <span class="tlaGNC">       30747 :     if (print_opts.iterations)</span></span>
+<span id="L409"><span class="lineNum">     409</span> <span class="tlaGNC">       30744 :     if (print_opts.iterations)</span></span>
 <span id="L410"><span class="lineNum">     410</span>              :     {</span>
 <span id="L411"><span class="lineNum">     411</span> <span class="tlaUNC tlaBgUNC">           0 :       Mpi::Print(comm, &quot;{}{:{}d} KSP residual norm ||r||_B = {:.6e}\n&quot;,</span></span>
 <span id="L412"><span class="lineNum">     412</span> <span class="tlaUNC">           0 :                  std::string(tab_width, ' '), it, int_width, res);</span></span>
 <span id="L413"><span class="lineNum">     413</span>              :     }</span>
-<span id="L414"><span class="lineNum">     414</span> <span class="tlaGNC tlaBgGNC">       30747 :     if (!it)</span></span>
+<span id="L414"><span class="lineNum">     414</span> <span class="tlaGNC tlaBgGNC">       30744 :     if (!it)</span></span>
 <span id="L415"><span class="lineNum">     415</span>              :     {</span>
 <span id="L416"><span class="lineNum">     416</span> <span class="tlaGNC">         965 :       p = z;</span></span>
 <span id="L417"><span class="lineNum">     417</span>              :     }</span>
 <span id="L418"><span class="lineNum">     418</span>              :     else</span>
 <span id="L419"><span class="lineNum">     419</span>              :     {</span>
-<span id="L420"><span class="lineNum">     420</span> <span class="tlaGNC">       29776 :       linalg::AXPBY(ScalarType(1.0), z, beta / beta_prev, p);</span></span>
+<span id="L420"><span class="lineNum">     420</span> <span class="tlaGNC">       29773 :       linalg::AXPBY(ScalarType(1.0), z, beta / beta_prev, p);</span></span>
 <span id="L421"><span class="lineNum">     421</span>              :     }</span>
 <span id="L422"><span class="lineNum">     422</span>              : </span>
-<span id="L423"><span class="lineNum">     423</span> <span class="tlaGNC">       30747 :     A-&gt;Mult(p, z);</span></span>
-<span id="L424"><span class="lineNum">     424</span> <span class="tlaGNC">       30747 :     denom = linalg::Dot(comm, z, p);</span></span>
+<span id="L423"><span class="lineNum">     423</span> <span class="tlaGNC">       30744 :     A-&gt;Mult(p, z);</span></span>
+<span id="L424"><span class="lineNum">     424</span> <span class="tlaGNC">       30744 :     denom = linalg::Dot(comm, z, p);</span></span>
 <span id="L425"><span class="lineNum">     425</span>              :     CheckDot(denom, &quot;PCG operator is not positive definite: (Ap, p) = &quot;);</span>
-<span id="L426"><span class="lineNum">     426</span> <span class="tlaGNC">       30336 :     MFEM_VERIFY(denom != 0.0,</span></span>
+<span id="L426"><span class="lineNum">     426</span> <span class="tlaGNC">       30333 :     MFEM_VERIFY(denom != 0.0,</span></span>
 <span id="L427"><span class="lineNum">     427</span>              :                 &quot;PCG operator is not positive definite: (Ap, p) = &quot; &lt;&lt; denom &lt;&lt; &quot;!&quot;);</span>
-<span id="L428"><span class="lineNum">     428</span> <span class="tlaGNC">       30336 :     alpha = beta / denom;</span></span>
+<span id="L428"><span class="lineNum">     428</span> <span class="tlaGNC">       30333 :     alpha = beta / denom;</span></span>
 <span id="L429"><span class="lineNum">     429</span>              : </span>
-<span id="L430"><span class="lineNum">     430</span> <span class="tlaGNC">       30747 :     x.Add(alpha, p);</span></span>
-<span id="L431"><span class="lineNum">     431</span> <span class="tlaGNC">       30747 :     r.Add(-alpha, z);</span></span>
+<span id="L430"><span class="lineNum">     430</span> <span class="tlaGNC">       30744 :     x.Add(alpha, p);</span></span>
+<span id="L431"><span class="lineNum">     431</span> <span class="tlaGNC">       30744 :     r.Add(-alpha, z);</span></span>
 <span id="L432"><span class="lineNum">     432</span>              : </span>
 <span id="L433"><span class="lineNum">     433</span>              :     beta_prev = beta;</span>
-<span id="L434"><span class="lineNum">     434</span> <span class="tlaGNC">       30747 :     if (B)</span></span>
+<span id="L434"><span class="lineNum">     434</span> <span class="tlaGNC">       30744 :     if (B)</span></span>
 <span id="L435"><span class="lineNum">     435</span>              :     {</span>
-<span id="L436"><span class="lineNum">     436</span> <span class="tlaGNC">       30741 :       ApplyB(B, r, z, this-&gt;use_timer);</span></span>
+<span id="L436"><span class="lineNum">     436</span> <span class="tlaGNC">       30738 :       ApplyB(B, r, z, this-&gt;use_timer);</span></span>
 <span id="L437"><span class="lineNum">     437</span>              :     }</span>
 <span id="L438"><span class="lineNum">     438</span>              :     else</span>
 <span id="L439"><span class="lineNum">     439</span>              :     {</span>
 <span id="L440"><span class="lineNum">     440</span> <span class="tlaGNC">           6 :       z = r;</span></span>
 <span id="L441"><span class="lineNum">     441</span>              :     }</span>
-<span id="L442"><span class="lineNum">     442</span> <span class="tlaGNC">       30747 :     beta = linalg::Dot(comm, z, r);</span></span>
+<span id="L442"><span class="lineNum">     442</span> <span class="tlaGNC">       30744 :     beta = linalg::Dot(comm, z, r);</span></span>
 <span id="L443"><span class="lineNum">     443</span>              :     CheckDot(beta, &quot;PCG preconditioner is not positive definite: (Br, r) = &quot;);</span>
-<span id="L444"><span class="lineNum">     444</span> <span class="tlaGNC">       30747 :     res = std::sqrt(std::abs(beta));</span></span>
-<span id="L445"><span class="lineNum">     445</span> <span class="tlaGNC">       30747 :     converged = (res &lt;= eps);</span></span>
+<span id="L444"><span class="lineNum">     444</span> <span class="tlaGNC">       30744 :     res = std::sqrt(std::abs(beta));</span></span>
+<span id="L445"><span class="lineNum">     445</span> <span class="tlaGNC">       30744 :     converged = (res &lt;= eps);</span></span>
 <span id="L446"><span class="lineNum">     446</span>              :   }</span>
 <span id="L447"><span class="lineNum">     447</span> <span class="tlaGNC">         980 :   if (print_opts.iterations)</span></span>
 <span id="L448"><span class="lineNum">     448</span>              :   {</span>

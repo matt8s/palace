@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-11-05 17:22:25</td>
+            <td class="headerValue">2026-11-05 18:10:33</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">57.1&nbsp;%</td>
@@ -88,10 +88,10 @@
 <span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">        1609 :   hypre_SeqVectorDestroy(vec);</span></span>
 <span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">        1609 : }</span></span>
 <span id="L20"><span class="lineNum">      20</span>              : </span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">     1223616 : void HypreVector::Update(const Vector &amp;x)</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">     1223604 : void HypreVector::Update(const Vector &amp;x)</span></span>
 <span id="L22"><span class="lineNum">      22</span>              : {</span>
 <span id="L23"><span class="lineNum">      23</span>              :   const HYPRE_Int N = x.Size();</span>
-<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">     1223616 :   if (!vec)</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">     1223604 :   if (!vec)</span></span>
 <span id="L25"><span class="lineNum">      25</span>              :   {</span>
 <span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">         457 :     vec = hypre_SeqVectorCreate(N);</span></span>
 <span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">         457 :     hypre_SeqVectorSetDataOwner(vec, 0);</span></span>
@@ -100,10 +100,10 @@
 <span id="L30"><span class="lineNum">      30</span>              :   }</span>
 <span id="L31"><span class="lineNum">      31</span>              :   else</span>
 <span id="L32"><span class="lineNum">      32</span>              :   {</span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">     1223159 :     hypre_SeqVectorSetSize(vec, N);</span></span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">     1223159 :     hypre_VectorData(vec) = const_cast&lt;double *&gt;(x.Read());</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">     1223147 :     hypre_SeqVectorSetSize(vec, N);</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">     1223147 :     hypre_VectorData(vec) = const_cast&lt;double *&gt;(x.Read());</span></span>
 <span id="L35"><span class="lineNum">      35</span>              :   }</span>
-<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">     1223616 : }</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">     1223604 : }</span></span>
 <span id="L37"><span class="lineNum">      37</span>              : </span>
 <span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">       34826 : HypreCSRMatrix::HypreCSRMatrix(int h, int w, int nnz)</span></span>
 <span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">       34826 :   : palace::Operator(h, w), hypre_own_I(true)</span></span>

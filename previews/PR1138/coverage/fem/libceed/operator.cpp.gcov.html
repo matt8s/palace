@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-11-05 17:22:25</td>
+            <td class="headerValue">2026-11-05 18:10:33</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">48.8&nbsp;%</td>
@@ -215,17 +215,17 @@
 <span id="L145"><span class="lineNum">     145</span>              : namespace</span>
 <span id="L146"><span class="lineNum">     146</span>              : {</span>
 <span id="L147"><span class="lineNum">     147</span>              : </span>
-<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">      153028 : inline void CeedAddMult(const std::vector&lt;CeedOperator&gt; &amp;op,</span></span>
+<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">      153025 : inline void CeedAddMult(const std::vector&lt;CeedOperator&gt; &amp;op,</span></span>
 <span id="L149"><span class="lineNum">     149</span>              :                         const std::vector&lt;CeedVector&gt; &amp;u, const std::vector&lt;CeedVector&gt; &amp;v,</span>
 <span id="L150"><span class="lineNum">     150</span>              :                         const Vector &amp;x, Vector &amp;y)</span>
 <span id="L151"><span class="lineNum">     151</span>              : {</span>
 <span id="L152"><span class="lineNum">     152</span>              :   Ceed ceed;</span>
-<span id="L153"><span class="lineNum">     153</span> <span class="tlaGNC">      153028 :   PalaceCeedCallBackend(CeedOperatorGetCeed(op[0], &amp;ceed));</span></span>
-<span id="L154"><span class="lineNum">     154</span> <span class="tlaGNC">      153028 :   const CeedMemType mem = GetUsableMemType(ceed);</span></span>
-<span id="L155"><span class="lineNum">     155</span> <span class="tlaGNC">      153028 :   const auto *x_data = x.Read(mem == CEED_MEM_DEVICE);</span></span>
-<span id="L156"><span class="lineNum">     156</span> <span class="tlaGNC">      153028 :   auto *y_data = y.ReadWrite(mem == CEED_MEM_DEVICE);</span></span>
+<span id="L153"><span class="lineNum">     153</span> <span class="tlaGNC">      153025 :   PalaceCeedCallBackend(CeedOperatorGetCeed(op[0], &amp;ceed));</span></span>
+<span id="L154"><span class="lineNum">     154</span> <span class="tlaGNC">      153025 :   const CeedMemType mem = GetUsableMemType(ceed);</span></span>
+<span id="L155"><span class="lineNum">     155</span> <span class="tlaGNC">      153025 :   const auto *x_data = x.Read(mem == CEED_MEM_DEVICE);</span></span>
+<span id="L156"><span class="lineNum">     156</span> <span class="tlaGNC">      153025 :   auto *y_data = y.ReadWrite(mem == CEED_MEM_DEVICE);</span></span>
 <span id="L157"><span class="lineNum">     157</span>              : </span>
-<span id="L158"><span class="lineNum">     158</span> <span class="tlaGNC">      153028 :   PalacePragmaOmp(parallel if (op.size() &gt; 1))</span></span>
+<span id="L158"><span class="lineNum">     158</span> <span class="tlaGNC">      153025 :   PalacePragmaOmp(parallel if (op.size() &gt; 1))</span></span>
 <span id="L159"><span class="lineNum">     159</span>              :   {</span>
 <span id="L160"><span class="lineNum">     160</span>              :     const int id = utils::GetThreadNum();</span>
 <span id="L161"><span class="lineNum">     161</span>              :     MFEM_ASSERT(static_cast&lt;std::size_t&gt;(id) &lt; op.size(),</span>
@@ -240,19 +240,19 @@
 <span id="L170"><span class="lineNum">     170</span>              :     PalaceCeedCall(ceed, CeedVectorTakeArray(u[id], mem, nullptr));</span>
 <span id="L171"><span class="lineNum">     171</span>              :     PalaceCeedCall(ceed, CeedVectorTakeArray(v[id], mem, nullptr));</span>
 <span id="L172"><span class="lineNum">     172</span>              :   }</span>
-<span id="L173"><span class="lineNum">     173</span> <span class="tlaGNC">      153028 : }</span></span>
+<span id="L173"><span class="lineNum">     173</span> <span class="tlaGNC">      153025 : }</span></span>
 <span id="L174"><span class="lineNum">     174</span>              : </span>
 <span id="L175"><span class="lineNum">     175</span>              : }  // namespace</span>
 <span id="L176"><span class="lineNum">     176</span>              : </span>
-<span id="L177"><span class="lineNum">     177</span> <span class="tlaGNC">       86451 : void Operator::Mult(const Vector &amp;x, Vector &amp;y) const</span></span>
+<span id="L177"><span class="lineNum">     177</span> <span class="tlaGNC">       86448 : void Operator::Mult(const Vector &amp;x, Vector &amp;y) const</span></span>
 <span id="L178"><span class="lineNum">     178</span>              : {</span>
-<span id="L179"><span class="lineNum">     179</span> <span class="tlaGNC">       86451 :   y = 0.0;</span></span>
-<span id="L180"><span class="lineNum">     180</span> <span class="tlaGNC">       86451 :   CeedAddMult(op, u, v, x, y);</span></span>
-<span id="L181"><span class="lineNum">     181</span> <span class="tlaGNC">       86451 :   if (dof_multiplicity.Size() &gt; 0)</span></span>
+<span id="L179"><span class="lineNum">     179</span> <span class="tlaGNC">       86448 :   y = 0.0;</span></span>
+<span id="L180"><span class="lineNum">     180</span> <span class="tlaGNC">       86448 :   CeedAddMult(op, u, v, x, y);</span></span>
+<span id="L181"><span class="lineNum">     181</span> <span class="tlaGNC">       86448 :   if (dof_multiplicity.Size() &gt; 0)</span></span>
 <span id="L182"><span class="lineNum">     182</span>              :   {</span>
 <span id="L183"><span class="lineNum">     183</span> <span class="tlaGNC">        9246 :     y *= dof_multiplicity;</span></span>
 <span id="L184"><span class="lineNum">     184</span>              :   }</span>
-<span id="L185"><span class="lineNum">     185</span> <span class="tlaGNC">       86451 : }</span></span>
+<span id="L185"><span class="lineNum">     185</span> <span class="tlaGNC">       86448 : }</span></span>
 <span id="L186"><span class="lineNum">     186</span>              : </span>
 <span id="L187"><span class="lineNum">     187</span> <span class="tlaGNC">       57418 : void Operator::AddMult(const Vector &amp;x, Vector &amp;y, const double a) const</span></span>
 <span id="L188"><span class="lineNum">     188</span>              : {</span>
