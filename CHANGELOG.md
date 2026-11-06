@@ -21,6 +21,8 @@ See the [developer notes on schema versioning](https://awslabs.github.io/palace/
 
   - Added an analytic Floquet-port regression for vacuum propagation, checking complex
     transmission phase, reflection, polarization leakage, and power conservation.
+  - Added analytic lossless and lossy dielectric-slab regressions for complex Floquet
+    reflection/transmission and passive absorption with constant material coefficients.
 
 #### Performance Improvements
 
